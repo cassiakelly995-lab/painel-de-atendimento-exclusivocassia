@@ -7,7 +7,7 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#f3f5fa;--surface:#fff;--border:#e1e6f0;--text:#0d1526;--text2:#455069;--text3:#8b95ae;
+  --bg:#f3f5fa;--surface:#fff;--border:#e1e6f0;--text:#0d1526;--text2:#455069;--text3:#7d879f;
   --navy:#0f2d6b;--blue:#1a56db;--blue-l:#eaf1ff;--green:#0d7a4e;--green-l:#e7f8ef;
   --amber:#8a5a00;--amber-l:#fff6df;--red:#b42318;--red-l:#fdecea;--purple:#5b21b6;--purple-l:#f1ebff;
   --ff:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
@@ -15,32 +15,39 @@
 }
 html,body{min-height:100%;font-family:var(--ff);background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
 
-/* TOPO */
 #topbar{background:var(--navy);color:#fff;padding:14px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:sticky;top:0;z-index:50}
 .tb-title{font-size:15px;font-weight:700}
-.tb-sub{font-size:11.5px;opacity:.7}
-.tb-clock{margin-left:auto;font-family:var(--mono);font-size:13px;background:rgba(255,255,255,.1);padding:5px 12px;border-radius:7px}
+.tb-sub{font-size:11.5px;opacity:.75}
+.tb-clock{margin-left:auto;font-family:var(--mono);font-size:13px;background:rgba(255,255,255,.12);padding:5px 12px;border-radius:7px}
 
-/* ABAS */
 #tabs{background:#fff;border-bottom:1px solid var(--border);display:flex;gap:4px;padding:0 16px;overflow-x:auto;position:sticky;top:60px;z-index:40}
 .tab{padding:13px 16px;border:none;background:none;font:600 13px var(--ff);color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
 .tab:hover{color:var(--text2)}
 .tab.active{color:var(--blue);border-bottom-color:var(--blue)}
 
-#main{max-width:1100px;margin:0 auto;padding:24px 20px 60px}
+#caso{background:#fff;border-bottom:1px solid var(--border);padding:12px 20px;display:none}
+#caso.show{display:block}
+#caso-main{max-width:1100px;margin:0 auto}
+.caso-tt{font-size:12px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.caso-tt small{font-weight:500;color:var(--text3);text-transform:none;letter-spacing:0;margin-left:6px}
+.caso-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px}
+.campo label{display:block;font-size:11.5px;font-weight:700;color:var(--text2);margin-bottom:3px}
+.campo input,.campo select{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:7px 9px;font:13px var(--ff);background:#fafbfe}
+.campo input:focus,.campo select:focus{outline:none;border-color:var(--blue)}
+
+#main{max-width:1100px;margin:0 auto;padding:22px 20px 60px}
 .panel{display:none}
 .panel.active{display:block}
 .ptitle{font-size:19px;font-weight:800;color:var(--navy);margin-bottom:4px}
-.pdesc{color:var(--text3);font-size:13px;margin-bottom:18px}
-.sub{font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--text3);margin:22px 0 10px}
+.pdesc{color:var(--text3);font-size:13px;margin-bottom:16px}
+.h3{font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--text3);margin:22px 0 10px}
 
-/* ALERTAS */
 .aviso{border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:13px;border-left:4px solid}
 .aviso-azul{background:var(--blue-l);border-color:var(--blue);color:#1e3a6e}
 .aviso-amarelo{background:var(--amber-l);border-color:#e0a800;color:var(--amber)}
 .aviso-vermelho{background:var(--red-l);border-color:var(--red);color:#7a1207}
+.aviso ul{margin:6px 0 0 18px}
 
-/* CARTÕES DE MENSAGEM */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:14px}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
 .card-hd{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:8px}
@@ -51,34 +58,36 @@ html,body{min-height:100%;font-family:var(--ff);background:var(--bg);color:var(-
 .tag-vermelho{background:var(--red-l);color:var(--red)}
 .tag-amarelo{background:var(--amber-l);color:var(--amber)}
 .card-txt{padding:12px 14px;flex:1}
-.msg{white-space:pre-wrap;word-break:break-word;font-size:12.5px;color:var(--text2);line-height:1.65;max-height:230px;overflow-y:auto;font-family:var(--ff)}
+.msg{white-space:pre-wrap;word-break:break-word;font-size:12.5px;color:var(--text2);line-height:1.65;max-height:260px;overflow-y:auto}
 .card-ft{padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:8px}
-.btn{border:none;cursor:pointer;font:700 12px var(--ff);padding:8px 14px;border-radius:8px;transition:.15s}
+.btn{border:none;cursor:pointer;font:700 12px var(--ff);padding:8px 14px;border-radius:8px}
 .btn-copiar{background:var(--blue);color:#fff}
 .btn-copiar:hover{background:#1347c5}
-.btn-sec{background:var(--bg);color:var(--text2);border:1px solid var(--border)}
-.btn-sec:hover{background:#e9edf5}
 .btn-perigo{background:var(--red-l);color:var(--red)}
 .faltam{font-size:11.5px;font-weight:700;color:var(--amber);background:var(--amber-l);padding:5px 9px;border-radius:6px;margin-top:8px}
 
-/* CAMPOS */
-.campos{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:16px}
-.campo label{display:block;font-size:12px;font-weight:700;color:var(--text2);margin-bottom:4px}
-.campo input{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;font:13px var(--ff);background:#fafbfe}
-.campo input:focus{outline:none;border-color:var(--blue)}
-.campo small{display:block;color:var(--text3);font-size:11px;margin-top:3px}
+details{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+summary{padding:13px 16px;font-weight:700;color:var(--navy);cursor:pointer;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸ ";color:var(--blue)}
+details[open] summary::before{content:"▾ "}
+.det-body{padding:0 16px 14px;font-size:13px;color:var(--text2)}
+.det-body ol{margin:8px 0 0 20px}
+.det-body li{margin-bottom:6px}
+.det-body b{color:var(--text)}
+.sub-h{font-weight:700;color:var(--text);margin:10px 0 4px}
 
-/* FERIADOS */
 table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
 th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);font-size:13px}
 th{background:var(--navy);color:#fff;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px}
 tr:last-child td{border-bottom:none}
-.dia-fds td{color:var(--text3)}
 .badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px;background:var(--blue-l);color:var(--blue)}
 .badge-pf{background:var(--amber-l);color:var(--amber)}
 .badge-est{background:var(--purple-l);color:var(--purple)}
 
-/* AGENDA */
+.contatos{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;font-size:13px;color:var(--text2);margin-top:14px;line-height:1.7}
+.contatos b{color:var(--text)}
+
 .ag-form{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:18px}
 .ag-form .full{grid-column:1/-1}
 .ag-form input,.ag-form select,.ag-form textarea{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;font:13px var(--ff);background:#fafbfe}
@@ -119,65 +128,144 @@ tr:last-child td{border-bottom:none}
   <button class="tab" data-tab="recl">⚖️ Reclamação</button>
   <button class="tab" data-tab="advs">👨‍⚖️ Advogados</button>
   <button class="tab" data-tab="cobr">📨 Cobrança Advogado</button>
-  <button class="tab" data-tab="forum">🏛️ Fórum</button>
+  <button class="tab" data-tab="forum">🏛️ Fórum · Nomeações</button>
   <button class="tab" data-tab="fer">📅 Feriados 2027</button>
   <button class="tab" data-tab="agenda">🗓️ Agenda</button>
 </nav>
+
+<div id="caso">
+  <div id="caso-main">
+    <div class="caso-tt">Dados do caso <small>preencha uma vez; vale para Cobrança e Fórum</small></div>
+    <div class="caso-grid">
+      <div class="campo"><label for="cs-adv">Advogado(a)</label><input id="cs-adv" oninput="renderAll()" placeholder="Nome completo"></div>
+      <div class="campo"><label for="cs-oab">Nº OAB</label><input id="cs-oab" oninput="renderAll()" placeholder="000.000/SP"></div>
+      <div class="campo"><label for="cs-ass">Assistido(a)</label><input id="cs-ass" oninput="renderAll()" placeholder="Nome completo"></div>
+      <div class="campo"><label for="cs-proc">Nº do processo</label><input id="cs-proc" oninput="renderAll()" placeholder="0000000-00.0000.0.00.0000"></div>
+      <div class="campo"><label for="cs-vara">Vara / comarca</label><input id="cs-vara" oninput="renderAll()" placeholder="Ex.: 2ª Vara Cível"></div>
+      <div class="campo"><label for="cs-tipo">Audiência ou prazo</label>
+        <select id="cs-tipo" onchange="renderAll()"><option value="">— escolha —</option><option>audiência</option><option>prazo processual</option></select>
+      </div>
+      <div class="campo"><label for="cs-data">Data</label><input type="date" id="cs-data" oninput="renderAll()"></div>
+      <div class="campo"><label for="cs-prazo">Prazo para resposta</label><input id="cs-prazo" oninput="renderAll()" placeholder="Ex.: 5 dias úteis"></div>
+    </div>
+  </div>
+</div>
 
 <main id="main">
 
   <!-- ATENDIMENTO -->
   <section class="panel active" id="p-atend">
-    <div class="ptitle">Mensagens de Atendimento</div>
-    <div class="pdesc">Mensagens para o assistido. Todas começam com a saudação e se identificam como Cássia.</div>
-    <div class="aviso aviso-azul">💛 Trate cada pessoa com empatia e respeito, mantendo a formalidade. O objetivo é que todos se sintam acolhidos.</div>
+    <div class="ptitle">Atendimento ao Assistido</div>
+    <div class="pdesc">Mensagens para o assistido. Sempre se identifique como Cássia e confirme o dado certo antes de orientar.</div>
+    <div class="aviso aviso-azul">
+      <b>Antes de responder:</b>
+      <ul>
+        <li>Consulta de cadastro de advogado: peça o <b>número da OAB</b>.</li>
+        <li>Andamento de inscrição: peça o <b>CPF</b> e o <b>nome completo</b>.</li>
+        <li>Dúvidas de anuidade vêm do advogado: use a aba Advogados.</li>
+        <li>Se não souber a resposta, diga que vai verificar e retorne.</li>
+      </ul>
+    </div>
     <div class="grid" id="g-atend"></div>
   </section>
 
   <!-- RECLAMAÇÃO -->
   <section class="panel" id="p-recl">
-    <div class="ptitle">Reclamação de Advogado</div>
-    <div class="pdesc">Siga na ordem: pedir o CPF, verificar a nomeação e orientar conforme o caso.</div>
-    <div class="aviso aviso-vermelho"><strong>Reclamação contra advogado só é aceita presencialmente.</strong> Não aceitamos por WhatsApp, e-mail, áudio ou qualquer meio eletrônico.</div>
+    <div class="ptitle">Reclamação contra Advogado</div>
+    <div class="pdesc">Ordem: pedir o CPF, verificar a nomeação e orientar conforme o caso.</div>
+    <div class="aviso aviso-vermelho"><b>Reclamação contra advogado só é aceita presencialmente.</b> Não aceitamos por WhatsApp, e-mail, áudio ou outro meio eletrônico.</div>
     <div class="grid" id="g-recl"></div>
   </section>
 
   <!-- ADVOGADOS -->
   <section class="panel" id="p-advs">
     <div class="ptitle">Orientações para Advogados</div>
-    <div class="pdesc">Inscrição na OAB SP e Certificado Digital, somente as etapas que cabem ao advogado.</div>
+    <div class="pdesc">Inscrição na OAB SP e certificado digital, somente as etapas que cabem ao advogado. Também dúvidas de anuidade.</div>
     <div class="grid" id="g-advs"></div>
   </section>
 
   <!-- COBRANÇA -->
   <section class="panel" id="p-cobr">
     <div class="ptitle">Contato com Advogado Nomeado</div>
-    <div class="pdesc">Preencha os dados do caso. Os campos entram sozinhos nas mensagens.</div>
-    <div class="campos">
-      <div class="campo"><label for="c-adv">Nome do advogado</label><input id="c-adv" oninput="renderAll()" placeholder="Ex.: Maria da Silva"></div>
-      <div class="campo"><label for="c-ass">Nome do assistido</label><input id="c-ass" oninput="renderAll()" placeholder="Ex.: João Souza"></div>
-      <div class="campo"><label for="c-proc">Número do processo</label><input id="c-proc" oninput="renderAll()" placeholder="0000000-00.2026.8.26.0000"></div>
-      <div class="campo"><label for="c-data">Data da audiência ou prazo</label><input type="date" id="c-data" oninput="renderAll()"><small>Só se houver audiência ou prazo próximo</small></div>
-      <div class="campo"><label for="c-prazo">Prazo para resposta</label><input id="c-prazo" oninput="renderAll()" placeholder="Ex.: 5 dias úteis"></div>
-    </div>
+    <div class="pdesc">Preencha os dados do caso no topo. Os campos entram nas mensagens automaticamente.</div>
     <div class="grid" id="g-cobr"></div>
   </section>
 
   <!-- FÓRUM -->
   <section class="panel" id="p-forum">
-    <div class="ptitle">Respostas ao Fórum</div>
-    <div class="pdesc">Modelos para ofícios e avaliação financeira vencida.</div>
-    <div class="campos">
-      <div class="campo"><label for="f-proc">Número do processo</label><input id="f-proc" oninput="renderAll()" placeholder="0000000-00.2026.8.26.0000"></div>
-      <div class="campo"><label for="f-ass">Nome do assistido</label><input id="f-ass" oninput="renderAll()" placeholder="Nome completo"></div>
-    </div>
+    <div class="ptitle">Fórum · Nomeações Especiais</div>
+    <div class="pdesc">Passo a passo no sistema DOL e mensagens para o Fórum. Preencha os dados do caso no topo.</div>
+
+    <div class="h3">Passo a passo no DOL</div>
+
+    <details open>
+      <summary>Depoimento Especial (Lei 13.431/17)</summary>
+      <div class="det-body">
+        <div class="sub-h">Quando indicar</div>
+        Vítima de violência, acolhida institucionalmente ou em cumprimento de internação, e casos de proteção de identidade de gênero com oposição dos responsáveis. Não exige avaliação financeira.
+        <ol>
+          <li><b>Cadastro:</b> pesquise por CPF, nome ou nº de identificação DPESP e clique na seta (›) à direita.</li>
+          <li><b>Histórico DPESP → Inserir novo problema:</b> Área <b>Criminal — Criminal (Vara Singular)</b>; Problema <b>Depoimento Especial da Vítima</b>.</li>
+          <li><b>Envolvidos (ícone de pessoas):</b> posição <b>Autor/a</b>; marque <b>Usuário</b> e <b>Representado pela Defensoria</b>; Salvar; Fechar janela.</li>
+          <li><b>Encaminhamento:</b> marque <b>Convênio OAB</b>, informe e valide o nº OAB, preencha o responsável conveniado e Salvar.</li>
+          <li><b>Encaminhamento DPESP-OAB:</b> nº do processo, instância/comarca/foro/vara, justificativa (ex.: vítima em acolhimento institucional) e anexe o despacho ou ofício e os documentos da audiência. Salvar.</li>
+          <li><b>Acompanhamento:</b> a confirmação "Solicitação encaminhada com sucesso" indica o envio. A Assessoria de Convênios analisa; o resultado chega por e-mail. Se deferido, o ofício é gerado automaticamente.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary>Inventário / Arrolamento e Alvará de pessoa falecida (CAJ 017/2023)</summary>
+      <div class="det-body">
+        <div class="sub-h">Atenção</div>
+        <b>O falecido deve ser incluído como envolvido</b>, senão o sistema bloqueia a conclusão da nomeação. Ele não aparece no ofício final, e isso é normal.
+        <ol>
+          <li><b>Cadastro:</b> localize o herdeiro principal (CPF, nome ou nº DPESP). Se não existir, clique em "Não encontrou? Cadastre aqui".</li>
+          <li><b>Histórico DPESP → Inserir novo problema:</b> Área <b>Cível — Família e Sucessões</b>; Problema <b>Inventário/Arrolamento</b> (ou o tipo de alvará).</li>
+          <li><b>Envolvidos — herdeiros:</b> posição <b>Autor/a</b>; marque <b>Usuário</b> e <b>Representado pela Defensoria</b>; Salvar. Cada herdeiro assistido entra separadamente.</li>
+          <li><b>Envolvido falecido (obrigatório):</b> "Inserir novo envolvido", pesquise pelo <b>CPF do falecido</b>, clique em "Envolver", posição <b>Falecido</b>. <b>Não</b> marque Usuário nem Representado pela Defensoria. Salvar.</li>
+          <li><b>Verificação:</b> confirme os herdeiros (Autor/a, com avaliação financeira válida) e o falecido (Falecido). Fechar janela.</li>
+          <li><b>Convênio OAB:</b> marque e Salvar.</li>
+          <li><b>Encaminhamento:</b> Tipo <b>Propositura</b>, nº do processo e instância/comarca/foro/vara. Clique em "Solicitar Indicação". O ofício é gerado automaticamente.</li>
+          <li><b>Advogado já nomeado:</b> se aparecer o aviso "Clique aqui", consulte os dados. Se nenhum nome ou data aparecer, a nomeação anterior foi cancelada e é possível indicar novamente.</li>
+        </ol>
+      </div>
+    </details>
+
+    <details>
+      <summary>Curador Especial</summary>
+      <div class="det-body">
+        <div class="sub-h">Regra</div>
+        Se já existe nomeação <b>ativa</b> no processo, o sistema não permite nova indicação. O advogado nomeado atua como curador de <b>todos os requeridos</b> que precisarem. Nova indicação só quando a anterior estiver <b>cancelada</b>.
+        <ol>
+          <li>Anote o número completo do processo informado no ofício.</li>
+          <li>Consulte no DOL, na aba <b>Encaminhamento DPESP-OAB</b>.</li>
+          <li>Identifique o resultado: sem nomeação, nomeação ativa ou nomeação cancelada.</li>
+          <li><b>Se ativa:</b> anote nome, OAB e data e use a mensagem "Curador — nomeação ativa".</li>
+          <li><b>Se cancelada:</b> use "Curador — nomeação cancelada" e encaminhe a nova indicação.</li>
+          <li><b>Se faltar o nº do processo:</b> use "Solicitar dados para verificar curador".</li>
+          <li>Depois de gerado o ofício de indicação, envie-o com a mensagem "Envio de ofício de curador".</li>
+        </ol>
+      </div>
+    </details>
+
+    <div class="h3">Mensagens para o Fórum</div>
     <div class="grid" id="g-forum"></div>
+
+    <div class="contatos">
+      <b>Assessoria de Convênios DPESP:</b> (11) 4802-9622 e (11) 4802-9623 · ssi@defensoria.sp.def.br<br>
+      <b>Fórum de Santana de Parnaíba:</b> R. Prof. Eugênio Teani, 215 — Jardim Prof. Benoa<br>
+      1ª e 2ª Vara Cível: (11) 4322-9839 · Juizado Especial Cível: (11) 4322-9822 · Criminal: (11) 4322-9830<br>
+      Distribuição judicial: (11) 4322-9841 · Mandados: (11) 4322-9824 · Administração: (11) 4322-9836<br>
+      Atendimento ao público: seg. a sex., 13h às 17h · Advogado (com carteira OAB): seg. a sex., 9h às 17h<br>
+      <b>E-mails UPJ Cível:</b> parnaiba1cv@tjsp.jus.br · parnaiba2cv@tjsp.jus.br · parnaibafam@tjsp.jus.br · upj1e2famparnaiba@tjsp.jus.br
+    </div>
   </section>
 
   <!-- FERIADOS -->
   <section class="panel" id="p-fer">
     <div class="ptitle">Feriados e Pontos Facultativos — 2027</div>
-    <div class="pdesc">Feriados nacionais, estadual de São Paulo e pontos facultativos. Confira os feriados municipais de Santana de Parnaíba e Pirapora no calendário da prefeitura.</div>
+    <div class="pdesc">Feriados nacionais, estadual de São Paulo e pontos facultativos. Confira os feriados municipais de Santana de Parnaíba e Pirapora no calendário das prefeituras.</div>
     <table>
       <thead><tr><th>Data</th><th>Dia</th><th>Feriado</th><th>Tipo</th></tr></thead>
       <tbody id="tb-fer"></tbody>
@@ -214,9 +302,8 @@ tr:last-child td{border-bottom:none}
 <script>
 /* ===== UTILIDADES ===== */
 function fmtData(iso){ if(!iso) return ''; const p=iso.split('-'); return p[2]+'/'+p[1]+'/'+p[0]; }
-function val(id){ const el=document.getElementById(id); return el && el.value.trim() ? el.value.trim() : null; }
+function escapeHtml(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(window._tt); window._tt=setTimeout(()=>t.classList.remove('show'),2200); }
-
 function copiar(texto, btn){
   const feito=()=>{ const o=btn.textContent; btn.textContent='Copiado ✓'; setTimeout(()=>btn.textContent=o,1500); toast('Mensagem copiada!'); };
   const fallback=()=>{ const ta=document.createElement('textarea'); ta.value=texto; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); feito(); };
@@ -224,267 +311,296 @@ function copiar(texto, btn){
   else fallback();
 }
 
-/* ===== ASSINATURAS E SAUDAÇÕES ===== */
+/* ===== DADOS DO CASO (compartilhados) ===== */
+const CAMPOS = {adv:'cs-adv',oab:'cs-oab',ass:'cs-ass',proc:'cs-proc',vara:'cs-vara',tipo:'cs-tipo',data:'cs-data',prazo:'cs-prazo'};
+const ROTULO = {adv:'advogado(a)',oab:'nº OAB',ass:'assistido(a)',proc:'nº do processo',vara:'vara/comarca',tipo:'audiência ou prazo',data:'data',prazo:'prazo'};
+const PH = {adv:'[advogado(a)]',oab:'[nº OAB]',ass:'[assistido(a)]',proc:'[nº do processo]',vara:'[vara/comarca]',tipo:'[audiência/prazo]',data:'[data]',prazo:'[prazo]'};
+function bruto(k){ const el=document.getElementById(CAMPOS[k]); return el ? el.value.trim() : ''; }
+function V(){
+  const v={};
+  Object.keys(CAMPOS).forEach(k=>{
+    let x = bruto(k);
+    if(k==='data' && x) x = fmtData(x);
+    v[k] = x || PH[k];
+  });
+  return v;
+}
+function faltam(needs){ return (needs||[]).filter(k=>!bruto(k)).map(k=>ROTULO[k]); }
+
+/* ===== TEXTOS PADRÃO ===== */
 const SAUDA = "Olá, tudo bem? Aqui é a Cássia, da Assistência Judiciária da OAB SP — Subseção Santana de Parnaíba. Como posso te ajudar hoje?";
-const ASS_CASSIA = "\n\nCom carinho e à disposição,\nCássia\nAssistência Judiciária — OAB SP · Subseção Santana de Parnaíba\n(11) 4154-5191";
-const ASS_FORMAL = "\n\nAtenciosamente,\nCássia\nAssistência Judiciária — OAB SP · Subseção Santana de Parnaíba\n(11) 4154-5191";
-const LOCAL_SANTANA = "Av. Tenente Marques, 5297 — Jardim do Luar (Fazendinha), Santana de Parnaíba/SP, dentro do Poupatempo";
-const LOCAL_RECL = "Rua Alberto Frediani, 770 — Jardim Frediani, Santana de Parnaíba/SP — CEP 06502-155";
+const ASS = "\n\nAtenciosamente,\nCássia\nAssistência Judiciária — OAB SP · Subseção Santana de Parnaíba\n(11) 4154-5191";
+const END_SANT = "Av. Tenente Marques, 5297 — Jardim do Luar (Fazendinha), Santana de Parnaíba/SP, dentro do Poupatempo";
+const END_RECL = "Rua Alberto Frediani, 770 — Jardim Frediani, Santana de Parnaíba/SP — CEP 06502-155";
+const END_PIRA = "R. Bom Jesus, 106 — Centro, Pirapora do Bom Jesus/SP, CEP 06550-000";
 const DOCS = "— RG original e CPF\n— Comprovante de residência atualizado (água, luz, gás, telefone ou aluguel)\n— Comprovante de renda de todos os membros da família:\n   • Trabalhador registrado: os 3 últimos holerites\n   • Não registrado: carteira de trabalho, extrato bancário dos últimos 3 meses, declaração do empregador ou carta de próprio punho reconhecida em cartório\n— Comprovante de patrimônio, se houver (certidão de valor venal, IPTU, veículos, extrato de poupança)\n— Em casos de alimentos: documento da criança e endereço da parte contrária\n— Em casos de divórcio: certidão de casamento atualizada";
 
 /* ===== MENSAGENS ===== */
-/* tab: aba | pre: prefixo dos campos (ou null) | v: valores preenchidos */
 const MSGS = [
   /* ---------- ATENDIMENTO ---------- */
-  {tab:'atend', titulo:'Boas-vindas', tag:'Primeiro contato', tc:'tag', build:()=>
+  {tab:'atend', titulo:'Boas-vindas', tag:'Início', tc:'tag', needs:[], build:()=>
 `${SAUDA}
 
-Pode me contar com calma o que você precisa. Vou te orientar no que for possível e, se o assunto for de outro setor, explico direitinho o caminho.
+Me conte, por favor, qual é a sua necessidade. Se o assunto for de outro setor, explico o caminho correto.` + ASS},
 
-Você não está sozinho(a) nessa. Estou aqui para te acolher.` + ASS_CASSIA},
-
-  {tab:'atend', titulo:'Documentos necessários', tag:'Documentação', tc:'tag-verde', build:()=>
+  {tab:'atend', titulo:'Documentos e endereço — Santana de Parnaíba', tag:'Documentação', tc:'tag-verde', needs:[], build:()=>
 `${SAUDA}
 
-Para que possamos te atender, peço que traga os seguintes documentos:
+Segue o endereço e a documentação necessária para o atendimento.
 
-${DOCS}
-
-Sei que reunir tudo pode dar trabalho. Se tiver dúvida sobre algum documento, me avise que eu te ajudo a entender.` + ASS_CASSIA},
-
-  {tab:'atend', titulo:'Horário e local — Santana de Parnaíba', tag:'Horário', tc:'tag-amarelo', build:()=>
-`${SAUDA}
-
-Nosso atendimento presencial acontece de segunda a sexta-feira, das 9h às 12h. São distribuídas até 30 senhas por dia, no local, sem agendamento prévio.
-
-Endereço: ${LOCAL_SANTANA}
+Endereço: ${END_SANT}
+Atendimento: segunda a sexta-feira, das 9h às 12h (até 30 senhas por dia, distribuídas no local, sem agendamento)
 Telefone: (11) 4154-5191
 
-Fico feliz em te receber.` + ASS_CASSIA},
-
-  {tab:'atend', titulo:'Atendimento — Pirapora do Bom Jesus', tag:'Só sexta', tc:'tag-roxo', build:()=>
-`${SAUDA}
-
-Em Pirapora do Bom Jesus, o atendimento no CIC acontece somente às sextas-feiras, das 9h às 12h, com até 30 senhas por dia.
-
-Endereço: R. Bom Jesus, 106 — Centro, Pirapora do Bom Jesus/SP, CEP 06550-000
-
-Nos outros dias não há atendimento no local. Se for possível, volte na próxima sexta-feira com toda a documentação. Obrigada pela compreensão.` + ASS_CASSIA},
-
-  {tab:'atend', titulo:'Dúvida sobre anuidade', tag:'Anuidade', tc:'tag-amarelo', build:()=>
-`${SAUDA}
-
-Entendo como é importante esclarecer essa dúvida sobre a anuidade, e fico feliz em te ajudar.
-
-Um momento, por favor: vou verificar essa informação com calma e te retorno assim que tiver a resposta.
-
-Obrigada pela paciência.` + ASS_CASSIA},
-
-  {tab:'atend', titulo:'Não recebemos áudio', tag:'Áudio', tc:'tag-amarelo', build:()=>
-`${SAUDA}
-
-Por este canal não conseguimos ouvir mensagens de áudio, mas continuo à disposição para te ajudar por escrito. Pode enviar sua dúvida em texto, imagem ou documento, e faremos o possível para te orientar com agilidade.
-
-Obrigada pela compreensão.` + ASS_CASSIA},
-
-  {tab:'atend', titulo:'Aguardando retorno', tag:'Aguardo', tc:'tag-roxo', build:()=>
-`${SAUDA}
-
-Recebi o seu contato e já estou verificando as informações. Assim que tiver o retorno, te aviso.
-
-Agradeço muito a sua paciência.` + ASS_CASSIA},
-
-  {tab:'atend', titulo:'Avaliação financeira vencida', tag:'Pendência', tc:'tag-vermelho', build:()=>
-`${SAUDA}
-
-Verifiquei o seu cadastro e a sua avaliação financeira está vencida. A validade é de 1 (um) ano, mas isso tem solução.
-
-Para atualizá-la, você precisa comparecer presencialmente, de segunda a sexta-feira, das 9h às 12h, em:
-${LOCAL_SANTANA}
-
-Leve todos os documentos atualizados:
+Documentos necessários:
 ${DOCS}
 
-Assim que a avaliação for renovada, damos sequência ao seu pedido. Estou com você nessa.` + ASS_CASSIA},
+O atendimento não é realizado sem a documentação completa.` + ASS},
+
+  {tab:'atend', titulo:'Documentos e endereço — Pirapora (CIC)', tag:'Só sexta', tc:'tag-roxo', needs:[], build:()=>
+`${SAUDA}
+
+Em Pirapora do Bom Jesus, o atendimento é somente às sextas-feiras, das 9h às 12h, no CIC, com até 30 senhas por dia, distribuídas no local.
+
+Endereço: ${END_PIRA}
+
+Documentos necessários:
+${DOCS}
+
+Nos demais dias da semana não há atendimento no local.` + ASS},
+
+  {tab:'atend', titulo:'Avaliação financeira vencida', tag:'Pendência', tc:'tag-vermelho', needs:[], build:()=>
+`${SAUDA}
+
+Verifiquei que a sua avaliação financeira está vencida. A validade é de 1 (um) ano. Para renová-la, é preciso comparecer presencialmente, com os documentos atualizados abaixo.
+
+Endereço: ${END_SANT}
+Atendimento: segunda a sexta-feira, das 9h às 12h (até 30 senhas por dia)
+
+Documentos necessários:
+${DOCS}
+
+Após a renovação, a indicação do advogado segue normalmente.` + ASS},
+
+  {tab:'atend', titulo:'Consulta de cadastro de advogado — pedir OAB', tag:'Cadastro', tc:'tag-amarelo', needs:[], build:()=>
+`${SAUDA}
+
+Para consultar o cadastro de advogado, preciso do número da OAB. Pode me informar, por favor?` + ASS},
+
+  {tab:'atend', titulo:'Andamento de inscrição — pedir CPF e nome', tag:'Inscrição', tc:'tag-amarelo', needs:[], build:()=>
+`${SAUDA}
+
+Para verificar o andamento do pedido de inscrição, preciso do seu CPF e do seu nome completo. Pode me enviar, por favor?` + ASS},
+
+  {tab:'atend', titulo:'Aguardando retorno', tag:'Aguardo', tc:'tag-roxo', needs:[], build:()=>
+`${SAUDA}
+
+Recebi o seu contato e estou verificando as informações. Assim que tiver o retorno, te aviso.` + ASS},
+
+  {tab:'atend', titulo:'Não recebemos áudio', tag:'Áudio', tc:'tag-amarelo', needs:[], build:()=>
+`${SAUDA}
+
+Por este canal não conseguimos ouvir mensagens de áudio. Pode enviar sua dúvida por escrito, em texto, imagem ou documento, que eu te oriento.` + ASS},
 
   /* ---------- RECLAMAÇÃO ---------- */
-  {tab:'recl', titulo:'Passo 1 — Pedir o CPF', tag:'Passo 1', tc:'tag', build:()=>
+  {tab:'recl', titulo:'Passo 1 — Pedir o CPF', tag:'Passo 1', tc:'tag', needs:[], build:()=>
 `${SAUDA}
 
-Para eu verificar a situação da nomeação do seu caso com segurança, pode me informar o seu CPF, por favor?
+Para verificar a nomeação do seu caso, preciso do seu CPF. Pode me enviar, por favor?` + ASS},
 
-Vamos resolver isso juntos, com calma.` + ASS_CASSIA},
-
-  {tab:'recl', titulo:'Caso A — Nomeação recusada', tag:'Caso A', tc:'tag-amarelo', build:()=>
+  {tab:'recl', titulo:'Caso A — Nomeação recusada', tag:'Caso A', tc:'tag-amarelo', needs:[], build:()=>
 `${SAUDA}
 
-Verifiquei que a nomeação do seu caso consta como recusada pelo advogado. Para darmos continuidade, precisamos fazer uma nova triagem presencial.
+Verifiquei que a nomeação do seu caso consta como recusada pelo advogado. Será necessária uma nova triagem presencial.
 
 Atendimento: segunda a sexta-feira, das 9h às 12h
-Local: ${LOCAL_SANTANA}
+Endereço: ${END_SANT}
 
-Leve seus documentos pessoais. Estaremos te esperando com carinho.` + ASS_CASSIA},
+Documentos necessários:
+${DOCS}` + ASS},
 
-  {tab:'recl', titulo:'Caso B — Sem contato com o advogado', tag:'Caso B', tc:'tag-roxo', build:()=>
+  {tab:'recl', titulo:'Caso B — Relato por escrito', tag:'Caso B', tc:'tag-roxo', needs:[], build:()=>
 `${SAUDA}
 
-Vi que existe uma nomeação válida no seu processo, e sinto muito que você esteja com dificuldade para falar com o advogado.
+Verifiquei que há nomeação válida no seu processo. Para encaminhar o caso, preciso que me envie, por escrito, um relato com:
+— os meios que você usou para tentar contato (telefone, WhatsApp, e-mail, escritório);
+— as datas ou períodos das tentativas;
+— se houve alguma resposta, mesmo parcial, e qual foi;
+— se há audiência, prazo ou ato processual próximo.
 
-Para eu dar encaminhamento ao caso, peço que me envie, por escrito, um relato com calma, informando:
-— quais meios você usou para tentar contato (telefone, WhatsApp, e-mail, escritório);
-— em quais datas ou períodos você tentou;
-— se houve alguma resposta, mesmo que parcial, e qual foi;
-— se existe audiência, prazo ou ato processual próximo.
+Com essas informações, comunico o advogado e solicito o retorno a você.` + ASS},
 
-Com essas informações, comunico o advogado e solicito o retorno a você. Obrigada pela confiança.` + ASS_CASSIA},
-
-  {tab:'recl', titulo:'Caso C — Orientação para reclamação presencial', tag:'Caso C', tc:'tag-vermelho', build:()=>
+  {tab:'recl', titulo:'Caso C — Reclamação presencial', tag:'Caso C', tc:'tag-vermelho', needs:[], build:()=>
 `${SAUDA}
 
-Entendo que você queira formalizar uma reclamação, e quero te orientar com todo cuidado.
-
-Esse registro só pode ser feito presencialmente. Não aceitamos reclamações por WhatsApp, e-mail, áudio ou outro meio eletrônico.
+A reclamação contra advogado só pode ser feita presencialmente. Não aceitamos por WhatsApp, e-mail, áudio ou outro meio eletrônico.
 
 Ao comparecer, leve:
 — reclamação escrita de próprio punho, descrevendo os fatos;
 — número do processo;
 — senha do processo (se não tiver, ela é gerada no atendimento presencial);
 — RG e CPF;
-— demais documentos relacionados ao caso.
+— demais documentos do caso.
 
 Atendimento: segunda a sexta-feira, das 9h às 12h
-Local: ${LOCAL_RECL}
-Telefone: (11) 4154-5191
-
-Você será ouvido(a) com respeito.` + ASS_CASSIA},
+Endereço: ${END_RECL}
+Telefone: (11) 4154-5191` + ASS},
 
   /* ---------- ADVOGADOS ---------- */
-  {tab:'advs', titulo:'Inscrição na OAB SP — passo a passo', tag:'Inscrição', tc:'tag', build:()=>
-`Olá, Dr(a)., tudo bem? Aqui é a Cássia, da Subseção Santana de Parnaíba da OAB SP. Segue o passo a passo para o pedido de inscrição:
+  {tab:'advs', titulo:'Inscrição na OAB SP — passo a passo', tag:'Inscrição', tc:'tag', needs:[], build:()=>
+`Olá, Dr(a)., tudo bem? Aqui é a Cássia, da Assistência Judiciária da OAB SP — Subseção Santana de Parnaíba. Segue o passo a passo do pedido de inscrição:
 
 1. Acesse www2.oabsp.org.br e clique em "Pedido de Inscrição Online".
-2. Preencha o formulário de pré-inscrição com seus dados pessoais e de diploma.
+2. Preencha a pré-inscrição com seus dados pessoais e do diploma.
 3. Gere e pague o boleto da taxa de inscrição.
-4. Agende o atendimento presencial pelo Agendamento Online (oabsp.org.br/servicos/agendamento-online).
+4. Agende o atendimento presencial em oabsp.org.br/servicos/agendamento-online.
 5. Compareça com os documentos originais e as cópias solicitados.
 6. Aguarde a análise e a aprovação pelo Conselho Seccional.
 
-Lembrando que a veracidade dos documentos é de responsabilidade do interessado. Qualquer dúvida, estou à disposição.` + ASS_CASSIA},
+A veracidade dos documentos é de responsabilidade do interessado.` + ASS},
 
-  {tab:'advs', titulo:'Certificado Digital — orientação', tag:'Certificado', tc:'tag-roxo', build:()=>
-`Olá, Dr(a)., tudo bem? Aqui é a Cássia, da Subseção Santana de Parnaíba da OAB SP. Segue a orientação sobre o Certificado Digital:
+  {tab:'advs', titulo:'Certificado digital — orientação', tag:'Certificado', tc:'tag-roxo', needs:[], build:()=>
+`Olá, Dr(a)., tudo bem? Aqui é a Cássia, da Subseção Santana de Parnaíba da OAB SP. Segue a orientação sobre o certificado digital:
 
 1. Acesse oabsp.org.br e vá em Serviços → Certificado Digital.
-2. Lá você encontra as modalidades, os valores e as certificadoras parceiras (Certdata e Certisign).
-3. A compra e o agendamento da validação são feitos diretamente no site da certificadora escolhida.
-4. A validação pode ser presencial, por videoconferência ou online (esta última somente para renovação de certificado ainda válido).
+2. Escolha a certificadora parceira (Certdata ou Certisign).
+3. A compra e o agendamento da validação são feitos somente no site da certificadora escolhida.
+4. A validação pode ser presencial, por videoconferência ou online (esta última apenas para renovação de certificado ainda válido).
 
-Quero deixar claro, com todo carinho, que a Subseção não realiza a emissão de certificados digitais, então, para dúvidas específicas do processo, o ideal é falar diretamente com a certificadora escolhida.
+A Subseção não realiza o agendamento de certificado digital.` + ASS},
 
-Fico à disposição para o que precisar.` + ASS_CASSIA},
-
-  {tab:'advs', titulo:'Anuidade — um momento', tag:'Anuidade', tc:'tag-amarelo', build:()=>
+  {tab:'advs', titulo:'Retirada do token do certificado', tag:'Token', tc:'tag-roxo', needs:[], build:()=>
 `Olá, Dr(a)., tudo bem? Aqui é a Cássia, da Subseção Santana de Parnaíba da OAB SP.
 
-Vi a sua dúvida sobre a anuidade e quero te ajudar com todo cuidado. Um momento, por favor: vou verificar essa informação e te retorno em seguida.
+Após a compra pelo site da certificadora, o token é retirado na Subseção. Para isso, compareça com:
+— documento de identificação com foto e CPF;
+— o número do pedido gerado no site da certificadora.` + ASS},
 
-Obrigada pela compreensão.` + ASS_CASSIA},
+  {tab:'advs', titulo:'Anuidade — um momento', tag:'Anuidade', tc:'tag-amarelo', needs:[], build:()=>
+`Olá, Dr(a)., tudo bem? Aqui é a Cássia, da Subseção Santana de Parnaíba da OAB SP.
 
-  /* ---------- COBRANÇA (usa campos da aba) ---------- */
-  {tab:'cobr', titulo:'1ª cobrança — pedido de retorno', tag:'Cordial', tc:'tag', build:v=>
+Recebi a sua dúvida sobre a anuidade. Um momento, por favor: vou verificar essa informação e retorno em seguida.` + ASS},
+
+  /* ---------- COBRANÇA ---------- */
+  {tab:'cobr', titulo:'1ª cobrança — pedido de retorno', tag:'Cordial', tc:'tag', needs:['adv','ass','proc'], build:v=>
 `Prezado(a) Dr(a). ${v.adv}, tudo bem? Aqui é a Cássia, da Assistência Judiciária da OAB SP — Subseção Santana de Parnaíba.
 
-Entro em contato com cordialidade para informar que o(a) assistido(a) ${v.ass}, vinculado(a) ao processo nº ${v.proc}, procurou esta Subseção por não ter conseguido retorno de sua parte.
+Informo que o(a) assistido(a) ${v.ass}, processo nº ${v.proc}, relatou dificuldade para falar com o(a) senhor(a). Solicito que entre em contato com o(a) assistido(a) em breve.
 
-Peço, com todo respeito, que entre em contato com o(a) assistido(a) assim que possível para tratar do processo. Ficamos à disposição para qualquer esclarecimento.` + ASS_FORMAL, urgente:false},
+Fico à disposição para qualquer esclarecimento.` + ASS},
 
-  {tab:'cobr', titulo:'Urgente — audiência ou prazo próximo', tag:'Urgente', tc:'tag-vermelho', build:v=>
+  {tab:'cobr', titulo:'2ª cobrança — sem resposta', tag:'Reforço', tc:'tag-roxo', needs:['adv','ass','proc'], build:v=>
 `Prezado(a) Dr(a). ${v.adv}, tudo bem? Aqui é a Cássia, da Assistência Judiciária da OAB SP — Subseção Santana de Parnaíba.
 
-Entro em contato com caráter de urgência. O(a) assistido(a) ${v.ass}, processo nº ${v.proc}, tem ${v.tipoData} marcado(a) para ${v.data}, e ainda não conseguiu contato com o(a) senhor(a).
+Já entramos em contato solicitando retorno ao(à) assistido(a) ${v.ass}, processo nº ${v.proc}, e ainda não identificamos resposta.
 
-Peço que retorne ao assistido com a máxima brevidade. Caso haja algum impedimento, comunique-nos para que possamos ajudar.` + ASS_FORMAL, precisa:['data']},
+Reitero a solicitação e aguardo seu posicionamento com a maior brevidade possível.` + ASS},
 
-  {tab:'cobr', titulo:'2ª cobrança — sem resposta', tag:'Reforço', tc:'tag-roxo', build:v=>
+  {tab:'cobr', titulo:'Urgente — audiência ou prazo próximo', tag:'Urgente', tc:'tag-vermelho', needs:['adv','ass','proc','tipo','data'], build:v=>
 `Prezado(a) Dr(a). ${v.adv}, tudo bem? Aqui é a Cássia, da Assistência Judiciária da OAB SP — Subseção Santana de Parnaíba.
 
-Já realizamos contato anterior solicitando retorno ao(à) assistido(a) ${v.ass}, processo nº ${v.proc}, mas ainda não identificamos resposta.
+Entro em contato com caráter de urgência. O(a) assistido(a) ${v.ass}, processo nº ${v.proc}, tem ${v.tipo} marcado(a) para ${v.data} e ainda não conseguiu contato com o(a) senhor(a).
 
-Reiteramos a solicitação, com respeito, pois o(a) assistido(a) segue sem atendimento e isso nos preocupa. Aguardamos seu posicionamento com a maior brevidade possível.` + ASS_FORMAL, precisa:[]},
+Peço que retorne ao assistido com a máxima brevidade. Se houver algum impedimento, comunique-nos para que possamos ajudar.` + ASS},
 
-  {tab:'cobr', titulo:'Notificação formal — última etapa', tag:'Formal', tc:'tag-vermelho', build:v=>
+  {tab:'cobr', titulo:'Notificação formal — última etapa', tag:'Formal', tc:'tag-vermelho', needs:['adv','ass','proc','prazo'], build:v=>
 `Prezado(a) Dr(a). ${v.adv}, tudo bem? Aqui é a Cássia, da Assistência Judiciária da OAB SP — Subseção Santana de Parnaíba.
 
-Por meio desta comunicação formal, informamos a situação do(a) assistido(a) ${v.ass}, vinculado(a) ao processo nº ${v.proc}. Conforme registros desta Subseção, o(a) assistido(a) relatou a ausência de contato ou retorno, apesar de tentativas por diferentes meios.
+Por meio desta comunicação formal, informo a situação do(a) assistido(a) ${v.ass}, processo nº ${v.proc}. Conforme os registros desta Subseção, o(a) assistido(a) relatou ausência de contato ou retorno, apesar de tentativas por diferentes meios.
 
-Diante do exposto, solicitamos que adote as providências necessárias e entre em contato com o(a) assistido(a) no prazo de ${v.prazo}, sob pena de encaminhamento do caso às instâncias competentes da OAB SP.
+Solicito que adote as providências necessárias e entre em contato com o(a) assistido(a) no prazo de ${v.prazo}, sob pena de encaminhamento do caso às instâncias competentes da OAB SP.
 
-Este comunicado está sendo registrado no histórico do caso.` + ASS_FORMAL, precisa:['prazo']},
+Este comunicado será registrado no histórico do caso.` + ASS},
 
-  /* ---------- FÓRUM (usa campos da aba) ---------- */
-  {tab:'forum', titulo:'Resposta padrão ao ofício', tag:'Ofício', tc:'tag', build:v=>
+  /* ---------- FÓRUM ---------- */
+  {tab:'forum', titulo:'Confirmação de nomeação ao juízo', tag:'Nomeação', tc:'tag-verde', needs:['proc','adv','oab','data'], build:v=>
 `Prezada(o) Meritíssima(o),
 
-Cumprimentando cordialmente, em atenção ao ofício recebido, apresento as informações solicitadas referentes ao processo nº ${v.proc}, colocando-me à inteira disposição para quaisquer esclarecimentos adicionais.` + ASS_FORMAL, precisa:['proc']},
+Em atenção ao ofício recebido, informo que foi realizada a indicação de advogado(a) conveniado(a) para o processo nº ${v.proc}, perante a ${v.vara}.
 
-  {tab:'forum', titulo:'Acuse de recebimento', tag:'Acuse', tc:'tag-verde', build:v=>
+Advogado(a): ${v.adv}
+Inscrição OAB: ${v.oab}
+Data da indicação: ${v.data}
+
+O ofício de indicação será encaminhado ao(à) advogado(a) pela Defensoria Pública, nos termos do Convênio DPESP/OAB-SP.` + ASS},
+
+  {tab:'forum', titulo:'Curador especial — nomeação ativa', tag:'Curador', tc:'tag-amarelo', needs:['proc','adv','oab','data'], build:v=>
+`Prezada(o) Meritíssima(o),
+
+Em atenção ao ofício recebido, após consulta ao sistema DOL, verifiquei que, no processo nº ${v.proc}, já consta advogado(a) nomeado(a) como curador(a) especial:
+
+Advogado(a): ${v.adv}
+Inscrição OAB: ${v.oab}
+Data da indicação: ${v.data}
+
+Informo que o sistema não permite nova indicação enquanto a nomeação estiver ativa. Assim, o(a) advogado(a) acima atuará como curador(a) especial de todos os requeridos que necessitem de curador neste processo.
+
+Caso o Juízo entenda necessária a substituição, solicito comunicação formal para verificarmos as providências junto à Assessoria de Convênios.` + ASS},
+
+  {tab:'forum', titulo:'Curador especial — nomeação cancelada', tag:'Nova indicação', tc:'tag-roxo', needs:['proc'], build:v=>
+`Prezada(o) Meritíssima(o),
+
+Em atenção ao ofício recebido, informo que, no processo nº ${v.proc}, a nomeação anterior de curador(a) especial foi cancelada e não há advogado(a) ativo(a) indicado(a).
+
+Diante disso, encaminhamos nova solicitação de indicação à Assessoria de Convênios da Defensoria Pública, que emitirá o ofício ao(à) advogado(a) indicado(a).` + ASS},
+
+  {tab:'forum', titulo:'Solicitar dados para verificar curador', tag:'Pendência', tc:'tag-amarelo', needs:[], build:v=>
+`Prezada(o) Meritíssima(o),
+
+Em atenção ao ofício recebido, para verificar a existência de curador(a) especial já nomeado(a) e dar o encaminhamento adequado, solicito:
+
+— número completo do processo;
+— nome completo e dados da parte a ser assistida;
+— cópia do despacho ou decisão que determinou a nomeação.
+
+Após o recebimento, realizaremos a consulta e daremos retorno.` + ASS},
+
+  {tab:'forum', titulo:'Envio de ofício de curador especial', tag:'Envio', tc:'tag-verde', needs:['proc'], build:v=>
 `Prezada(o),
 
-Acuso o recebimento do ofício referente ao processo nº ${v.proc}, que foi encaminhado ao setor competente. Qualquer atualização será comunicada oportunamente.` + ASS_FORMAL, precisa:['proc']},
+Em atendimento à demanda de V. Sa., segue em anexo o Ofício de Indicação de Curador Especial referente ao processo nº ${v.proc}, para as devidas providências.` + ASS},
 
-  {tab:'forum', titulo:'Avaliação financeira vencida — intimação', tag:'Impedimento', tc:'tag-amarelo', build:v=>
+  {tab:'forum', titulo:'Dados para inventário ou alvará', tag:'Inventário', tc:'tag-roxo', needs:['proc'], build:v=>
 `Prezada(o) Meritíssima(o),
 
-Em atenção ao ofício recebido, informo que a avaliação financeira do(a) assistido(a) ${v.ass}, referente ao processo nº ${v.proc}, encontra-se vencida, pois sua validade é de 1 (um) ano.
+Em atenção ao ofício recebido, para dar andamento à indicação no processo nº ${v.proc}, informo que, nos casos de inventário ou alvará, é necessário:
 
-Por isso, solicitamos que o(a) assistido(a) seja intimado(a) a comparecer presencialmente, munido(a) dos documentos atualizados, em:
-${LOCAL_SANTANA}
-Horário: segunda a sexta-feira, das 9h às 12h (até 30 senhas por dia, sem agendamento prévio).
+— CPF do(a) falecido(a);
+— identificação completa dos herdeiros;
+— número completo do processo, comarca e vara.
+
+Assim que recebermos os dados, daremos seguimento ao encaminhamento.` + ASS},
+
+  {tab:'forum', titulo:'Avaliação financeira vencida — intimação', tag:'Impedimento', tc:'tag-amarelo', needs:['proc','ass'], build:v=>
+`Prezada(o) Meritíssima(o),
+
+Em atenção ao ofício recebido, informo que a avaliação financeira do(a) assistido(a) ${v.ass}, referente ao processo nº ${v.proc}, está vencida (validade de 1 ano), o que impede a indicação neste momento.
+
+Solicito que o(a) assistido(a) seja intimado(a) a comparecer presencialmente a:
+${END_SANT}
+Horário: segunda a sexta-feira, das 9h às 12h (até 30 senhas por dia, sem agendamento)
 
 Documentos necessários:
 ${DOCS}
 
-Após a renovação da avaliação, daremos seguimento imediato à indicação.` + ASS_FORMAL, precisa:['proc','ass']},
+Após a renovação, a indicação será providenciada.` + ASS},
+
+  {tab:'forum', titulo:'Acuse de recebimento', tag:'Acuse', tc:'tag-verde', needs:[], build:v=>
+`Prezada(o),
+
+Acuso o recebimento do ofício referente ao processo nº ${v.proc}, encaminhado ao setor competente para as providências cabíveis. Qualquer atualização será comunicada oportunamente.` + ASS},
 ];
 
-/* ===== RENDERIZAÇÃO DAS MENSAGENS ===== */
-function valoresCobr(){
-  const data = val('c-data');
-  return {
-    adv: val('c-adv') || '[nome do advogado]',
-    ass: val('c-ass') || '[nome do assistido]',
-    proc: val('c-proc') || '[número do processo]',
-    data: data ? fmtData(data) : '[data]',
-    prazo: val('c-prazo') || '[prazo]',
-    tipoData: 'audiência ou prazo'
-  };
-}
-function valoresForum(){
-  return {
-    proc: val('f-proc') || '[número do processo]',
-    ass: val('f-ass') || '[nome do assistido]'
-  };
-}
-
-function textoDe(m){
-  if(m.tab==='cobr') return m.build(valoresCobr());
-  if(m.tab==='forum') return m.build(valoresForum());
-  return m.build();
-}
-
-function faltantes(m){
-  if(!m.precisa || !m.precisa.length) return [];
-  const campos = m.tab==='cobr' ? {data:'c-data', prazo:'c-prazo', proc:'c-proc', ass:'c-ass'} : {proc:'f-proc', ass:'f-ass'};
-  return m.precisa.filter(k => campos[k] && !val(campos[k])).map(k=>({data:'data',prazo:'prazo',proc:'processo',ass:'assistido'})[k]);
-}
+/* ===== RENDERIZAÇÃO ===== */
+function textoDe(m){ return m.build(V()); }
 
 function renderCards(tab, id){
   const cont = document.getElementById(id);
   if(!cont) return;
-  const lista = MSGS.map((m,i)=>({m,i})).filter(x=>x.m.tab===tab);
-  cont.innerHTML = lista.map(({m,i})=>{
-    const txt = textoDe(m);
-    const falta = faltantes(m);
+  const v = V();
+  cont.innerHTML = MSGS.map((m,i)=>({m,i})).filter(x=>x.m.tab===tab).map(({m,i})=>{
+    const txt = m.build(v);
+    const falta = faltam(m.needs);
     const aviso = falta.length ? `<div class="faltam">⚠️ Falta preencher: ${falta.join(', ')}</div>` : '';
     return `<div class="card">
       <div class="card-hd"><div class="card-title">${m.titulo}</div><span class="tag ${m.tc}">${m.tag}</span></div>
@@ -494,7 +610,6 @@ function renderCards(tab, id){
   }).join('');
 }
 function copiarIdx(i, btn){ copiar(textoDe(MSGS[i]), btn); }
-function escapeHtml(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 function renderAll(){
   renderCards('atend','g-atend');
@@ -536,32 +651,33 @@ function renderFeriados(){
 const AG_KEY = 'cassia-agenda-2027';
 let agenda = JSON.parse(localStorage.getItem(AG_KEY) || '[]');
 function salvarAgenda(){ localStorage.setItem(AG_KEY, JSON.stringify(agenda)); }
-
 function addAgenda(){
-  const data = val('a-data'), titulo = val('a-titulo');
+  const data = document.getElementById('a-data').value;
+  const titulo = document.getElementById('a-titulo').value.trim();
   if(!data || !titulo){ toast('Preencha pelo menos a data e a demanda.'); return; }
   agenda.push({
-    id: Date.now(), data, hora: val('a-hora') || '',
+    id: Date.now(), data,
+    hora: document.getElementById('a-hora').value,
     tipo: document.getElementById('a-tipo').value,
-    titulo, obs: val('a-obs') || '', feito: false
+    titulo, obs: document.getElementById('a-obs').value.trim(), feito: false
   });
   salvarAgenda();
   ['a-data','a-hora','a-titulo','a-obs'].forEach(id=>document.getElementById(id).value='');
   renderAgenda();
   toast('Adicionado à agenda!');
 }
-function alternarFeito(id){ const it = agenda.find(x=>x.id===id); if(it){ it.feito=!it.feito; salvarAgenda(); renderAgenda(); } }
-function removerAgenda(id){ if(!confirm('Remover esta demanda da agenda?')) return; agenda = agenda.filter(x=>x.id!==id); salvarAgenda(); renderAgenda(); toast('Removido'); }
-
+function alternarFeito(id){ const it=agenda.find(x=>x.id===id); if(it){ it.feito=!it.feito; salvarAgenda(); renderAgenda(); } }
+function removerAgenda(id){ if(!confirm('Remover esta demanda da agenda?')) return; agenda=agenda.filter(x=>x.id!==id); salvarAgenda(); renderAgenda(); toast('Removido'); }
 function renderAgenda(){
   const cont = document.getElementById('lista-agenda');
-  if(!agenda.length){ cont.innerHTML = '<div class="vazio">Nenhuma demanda anotada ainda.</div>'; return; }
-  const ordenada = [...agenda].sort((a,b)=> (a.data+a.hora).localeCompare(b.data+b.hora));
-  let html = ''; let diaAtual = '';
+  if(!agenda.length){ cont.innerHTML='<div class="vazio">Nenhuma demanda anotada ainda.</div>'; return; }
+  const ordenada = [...agenda].sort((a,b)=>(a.data+a.hora).localeCompare(b.data+b.hora));
+  let html=''; let diaAtual='';
   ordenada.forEach(it=>{
-    if(it.data !== diaAtual){
+    if(it.data!==diaAtual){
       diaAtual = it.data;
-      const dia = new Date(...it.data.split('-').map((n,i)=> i===1 ? Number(n)-1 : Number(n))).toLocaleDateString('pt-BR',{weekday:'long', day:'2-digit', month:'long'});
+      const [y,m,d] = it.data.split('-').map(Number);
+      const dia = new Date(y,m-1,d).toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
       html += `<div class="ag-dia">${dia}</div>`;
     }
     html += `<div class="ag-item ${it.feito?'feito':''}">
@@ -584,6 +700,7 @@ document.querySelectorAll('.tab').forEach(btn=>{
     document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('p-'+btn.dataset.tab).classList.add('active');
+    document.getElementById('caso').classList.toggle('show', ['cobr','forum'].includes(btn.dataset.tab));
     window.scrollTo({top:0,behavior:'smooth'});
   });
 });
