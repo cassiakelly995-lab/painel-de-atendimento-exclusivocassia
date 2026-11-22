@@ -24,10 +24,17 @@ html,body{min-height:100%;font-family:var(--ff);background:var(--bg);color:var(-
 .tb-clock{font-family:var(--mono);font-size:13px;background:rgba(255,255,255,.12);padding:5px 12px;border-radius:7px}
 
 /* ABAS */
-#tabs{background:#fff;border-bottom:1px solid var(--border);display:flex;gap:4px;padding:0 16px;overflow-x:auto;position:sticky;top:60px;z-index:40}
-.tab{padding:13px 16px;border:none;background:none;font:600 13px var(--ff);color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+#tabs{background:#fff;border-bottom:1px solid var(--border);display:flex;gap:4px;padding:0 16px;overflow-x:auto;position:sticky;top:60px;z-index:40;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
+.tab{padding:13px 16px;border:none;background:none;font:600 13px var(--ff);color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0}
 .tab:hover{color:var(--text2)}
 .tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+
+/* BUSCA GLOBAL */
+#gbar{background:#fff;border-bottom:1px solid var(--border);padding:10px 20px}
+#gbar-in{max-width:1100px;margin:0 auto;display:flex;gap:8px;align-items:center}
+#gq{flex:1;border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font:13.5px var(--ff);background:#fafbfe}
+#gq:focus{outline:none;border-color:var(--blue)}
+#gq-info{font-size:12px;color:var(--text3);white-space:nowrap}
 
 /* DADOS DO CASO */
 #caso{background:#fff;border-bottom:1px solid var(--border);padding:12px 20px;display:none}
@@ -74,13 +81,18 @@ html,body{min-height:100%;font-family:var(--ff);background:var(--bg);color:var(-
 .card.enviado{opacity:.62;border-color:#9bd7b6}
 .card.enviado .card-hd{background:var(--green-l)}
 .card-hd{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.hd-dir{display:flex;align-items:center;gap:6px;flex-shrink:0}
 .card-title{font-weight:700;font-size:13.5px}
+.star{background:none;border:1px solid var(--border);border-radius:7px;width:28px;height:26px;cursor:pointer;color:var(--text3);font-size:13px;line-height:1}
+.star.on{color:#c98a00;border-color:#f0d27a;background:var(--amber-l)}
+.star:hover{border-color:#c98a00}
 .tag{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:20px;background:var(--blue-l);color:var(--blue);white-space:nowrap}
 .tag-verde{background:var(--green-l);color:var(--green)}
 .tag-roxo{background:var(--purple-l);color:var(--purple)}
 .tag-vermelho{background:var(--red-l);color:var(--red)}
 .tag-amarelo{background:var(--amber-l);color:var(--amber)}
 .card-txt{padding:12px 14px;flex:1}
+.origem{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--text3);margin-bottom:6px}
 .pede{font-size:12px;color:var(--navy);background:var(--blue-l);padding:6px 9px;border-radius:6px;margin-bottom:8px}
 .msg{white-space:pre-wrap;word-break:break-word;font-size:12.5px;color:var(--text2);line-height:1.65;max-height:120px;overflow:hidden}
 .msg.aberto{max-height:none}
@@ -156,21 +168,26 @@ tr.passado td{color:var(--text3)}
 .em-layout{display:grid;grid-template-columns:minmax(260px,340px) 1fr;gap:16px;align-items:start}
 @media(max-width:800px){.em-layout{grid-template-columns:1fr}}
 .em-painel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px}
-.em-painel label{display:block;font-size:12px;font-weight:700;color:var(--text2);margin-bottom:4px}
-.em-painel input,.em-painel select{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;font:13px var(--ff);background:#fafbfe}
-.em-painel input:focus,.em-painel select:focus{outline:none;border-color:var(--blue)}
+.em-painel label.rot{display:block;font-size:12px;font-weight:700;color:var(--text2);margin-bottom:4px}
+.em-painel input[type=text],.em-painel input[type=email],.em-painel input:not([type]){width:100%;border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;font:13px var(--ff);background:#fafbfe}
+.em-painel input:focus{outline:none;border-color:var(--blue)}
 .em-opcoes{display:flex;flex-direction:column;gap:8px}
 .em-opt{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--text2);cursor:pointer;border:1px solid var(--border);border-radius:8px;padding:9px 10px}
 .em-opt:has(input:checked){border-color:var(--blue);background:var(--blue-l)}
 .em-opt input{margin-top:3px}
 .em-opt b{color:var(--text);display:block}
+.em-ass{display:flex;gap:8px}
+.em-ass .em-opt{flex:1;align-items:center}
 .em-acoes{display:flex;gap:8px;flex-wrap:wrap}
 .em-acoes .btn{flex:1;justify-content:center}
 .em-preview{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.em-head{padding:12px 16px;border-bottom:1px solid var(--border);font-size:12.5px;color:var(--text2)}
+.em-head{padding:12px 16px;border-bottom:1px solid var(--border);font-size:12.5px;color:var(--text2);display:flex;flex-direction:column;gap:4px}
 .em-head b{color:var(--text)}
 .em-corpo{padding:18px 20px;font:14px/1.6 var(--ff);color:var(--text);white-space:pre-wrap;word-break:break-word;min-height:200px}
-.em-nota{font-size:12px;color:var(--text3);margin-top:10px}
+.em-nota{font-size:12px;color:var(--text3)}
+
+/* HISTÓRICO */
+.hist-tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
 
 /* AGENDA */
 .ag-form{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px}
@@ -198,14 +215,25 @@ tr.passado td{color:var(--text3)}
 .b-atras{background:var(--red-l);color:var(--red)}
 .b-hoje{background:var(--blue-l);color:var(--blue)}
 .b-fer{background:var(--purple-l);color:var(--purple)}
+.b-prox{background:var(--amber-l);color:var(--amber)}
 
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 20px;border-radius:10px;font-weight:600;opacity:0;transition:.2s;pointer-events:none;z-index:99;max-width:90vw;text-align:center}
 #toast.show{opacity:1}
 
 @media(max-width:640px){
+  #topbar{position:static;padding:10px 14px}
+  .tb-title{font-size:14px}
+  .tb-sub{display:none}
+  .tb-right{margin-left:0;width:100%;justify-content:space-between}
+  #tabs{top:0;padding:0 6px;-webkit-mask-image:linear-gradient(to right,#000 88%,transparent);mask-image:linear-gradient(to right,#000 88%,transparent)}
+  .tab{padding:13px 12px;font-size:12.5px}
+  #gbar{padding:8px 12px}
+  #gq-info{display:none}
+  #main{padding:16px 12px 60px}
   .grid{grid-template-columns:1fr}
-  .tb-right{margin-left:0}
   .ag-btns{flex-direction:row}
+  .btn{padding:10px 14px}
+  .chip{padding:7px 12px}
 }
 </style>
 </head>
@@ -229,9 +257,17 @@ tr.passado td{color:var(--text3)}
   <button class="tab" data-tab="cobr" onclick="switchTab('cobr')">📨 Cobrança Advogado</button>
   <button class="tab" data-tab="forum" onclick="switchTab('forum')">🏛️ Fórum · Nomeações</button>
   <button class="tab" data-tab="email" onclick="switchTab('email')">✉️ E-mail</button>
+  <button class="tab" data-tab="hist" onclick="switchTab('hist')">📋 Histórico de envios</button>
   <button class="tab" data-tab="fer" onclick="switchTab('fer')">📅 Feriados 2027</button>
   <button class="tab" data-tab="agenda" onclick="switchTab('agenda')">🗓️ Agenda</button>
 </nav>
+
+<div id="gbar">
+  <div id="gbar-in">
+    <input id="gq" type="search" placeholder="Buscar mensagem em todas as abas..." oninput="buscaGlobal(this.value)" autocomplete="off">
+    <span id="gq-info"></span>
+  </div>
+</div>
 
 <div id="caso">
   <div id="caso-main">
@@ -257,6 +293,13 @@ tr.passado td{color:var(--text3)}
 <main id="main">
 
   <div id="alerta"></div>
+
+  <!-- BUSCA GLOBAL -->
+  <section class="panel" id="p-busca">
+    <div class="ptitle">Resultados da busca</div>
+    <div class="pdesc">Mensagens de todas as abas que correspondem à pesquisa. Cada cartão mostra a aba de origem.</div>
+    <div class="grid" id="g-busca"></div>
+  </section>
 
   <!-- ATENDIMENTO -->
   <section class="panel active" id="p-atend">
@@ -338,19 +381,31 @@ tr.passado td{color:var(--text3)}
     <div class="em-layout">
       <div class="em-painel">
         <div>
-          <label for="em-dest">Nome do destinatário (opcional)</label>
-          <input id="em-dest" placeholder="Ex.: Dr(a). Maria da Silva" oninput="renderEmail()">
+          <label class="rot" for="em-dest">Nome do destinatário (opcional)</label>
+          <input type="text" id="em-dest" placeholder="Ex.: Dr(a). Maria da Silva" oninput="renderEmail()">
         </div>
         <div>
-          <label for="em-assunto">Assunto</label>
-          <input id="em-assunto" oninput="renderEmail()">
+          <label class="rot" for="em-para">E-mail do destinatário (opcional)</label>
+          <input type="email" id="em-para" placeholder="nome@exemplo.com" oninput="renderEmail()">
         </div>
         <div>
-          <label>Modelo</label>
+          <label class="rot" for="em-assunto">Assunto (opcional, troca o padrão)</label>
+          <input type="text" id="em-assunto" oninput="renderEmail()">
+        </div>
+        <div>
+          <label class="rot">Modelo</label>
           <div class="em-opcoes">
             <label class="em-opt"><input type="radio" name="em-modelo" value="docs" checked onchange="escolherModelo()"><span><b>Documentação necessária</b>Lista de documentos e endereço para o atendimento.</span></label>
             <label class="em-opt"><input type="radio" name="em-modelo" value="dias" onchange="escolherModelo()"><span><b>Dias e horários de atendimento</b>Atendimento ao público em Santana de Parnaíba e Pirapora.</span></label>
             <label class="em-opt"><input type="radio" name="em-modelo" value="ambos" onchange="escolherModelo()"><span><b>Documentação e dias de atendimento</b>Os dois assuntos em um único e-mail.</span></label>
+            <label class="em-opt"><input type="radio" name="em-modelo" value="reforco" onchange="escolherModelo()"><span><b>Lembrete de documentação</b>Reforço para quem já recebeu a orientação e ainda não enviou.</span></label>
+          </div>
+        </div>
+        <div>
+          <label class="rot">Assinatura</label>
+          <div class="em-ass">
+            <label class="em-opt"><input type="radio" name="em-ass" value="formal" checked onchange="renderEmail()"><span><b>Formal</b></span></label>
+            <label class="em-opt"><input type="radio" name="em-ass" value="cordial" onchange="renderEmail()"><span><b>Cordial</b></span></label>
           </div>
         </div>
         <div class="em-acoes">
@@ -360,13 +415,26 @@ tr.passado td{color:var(--text3)}
         <div class="em-nota">O botão "Abrir no Outlook" usa o programa de e-mail padrão do seu computador. Confira o texto antes de enviar.</div>
       </div>
       <div class="em-preview">
-        <div class="em-head"><b>Assunto:</b> <span id="em-assunto-view"></span></div>
+        <div class="em-head">
+          <div><b>Para:</b> <span id="em-para-view"></span></div>
+          <div><b>Assunto:</b> <span id="em-assunto-view"></span></div>
+        </div>
         <div class="em-corpo" id="em-corpo"></div>
       </div>
     </div>
   </section>
 
-  <!-- COBRANÇA E FÓRUM -->
+  <!-- HISTÓRICO DE ENVIOS -->
+  <section class="panel" id="p-hist">
+    <div class="ptitle">Histórico de envios</div>
+    <div class="pdesc">Registro de cada mensagem marcada como "Enviada", com data, hora e destinatário. Fica salvo neste navegador.</div>
+    <div class="hist-tools">
+      <button class="btn btn-sec" onclick="exportarHistorico()">⬇ Exportar .txt</button>
+      <button class="btn btn-perigo" onclick="limparHistorico()">Limpar histórico</button>
+    </div>
+    <div id="lista-hist"></div>
+  </section>
+
   <!-- FERIADOS -->
   <section class="panel" id="p-fer">
     <div class="ptitle">Feriados e Pontos Facultativos — 2027</div>
@@ -505,7 +573,7 @@ function onCampo(el){
   const k=el.dataset.k;
   if(FMT[k]) el.value = FMT[k](el.value);
   validarCampos();
-  renderAll();
+  refrescar();
 }
 
 /* ===================== DADOS DO CASO ===================== */
@@ -769,10 +837,18 @@ Após a renovação, a indicação será providenciada.` + ASS_F},
 `${APRES_GERAL}Acuso o recebimento do ofício referente ao processo nº ${v.proc}, encaminhado ao setor competente para as providências cabíveis. Qualquer atualização será comunicada oportunamente.` + ASS_F},
 ];
 const POR_ID = Object.fromEntries(MSGS.map(m=>[m.id,m]));
+const NOME_ABA = {atend:'Atendimento', recl:'Reclamação', advs:'Advogados', cobr:'Cobrança', forum:'Fórum'};
 
 /* ===================== E-MAIL PADRONIZADO ===================== */
+function valorEmDest(){ return $('em-dest').value.trim(); }
+function saudacaoEm(){ const n=valorEmDest(); return n ? `Prezada(o) ${n},` : 'Prezada(o),'; }
+function assinaturaEm(){
+  const tipo = document.querySelector('input[name="em-ass"]:checked');
+  const fecho = (tipo && tipo.value==='cordial') ? 'Com carinho e à disposição,' : 'Atenciosamente,';
+  return `\n\n${fecho}\nCássia\nAssistência Judiciária — OAB SP · Subseção Santana de Parnaíba\n(11) 4154-5191`;
+}
 const EM_DOCS_CORPO = () =>
-`Prezada(o) ${valorEmDest()},
+`${saudacaoEm()}
 
 Espero que esteja bem.
 
@@ -788,7 +864,7 @@ O atendimento é realizado de segunda a sexta-feira, das 9h às 12h, com distrib
 Caso tenha dúvidas, fico à disposição.`;
 
 const EM_DIAS_CORPO = () =>
-`Prezada(o) ${valorEmDest()},
+`${saudacaoEm()}
 
 Espero que esteja bem.
 
@@ -810,7 +886,7 @@ Senhas: até 30 por dia, distribuídas no local
 Caso tenha dúvidas, fico à disposição.`;
 
 const EM_AMBOS_CORPO = () =>
-`Prezada(o) ${valorEmDest()},
+`${saudacaoEm()}
 
 Espero que esteja bem.
 
@@ -839,60 +915,95 @@ O atendimento só é realizado com a documentação completa.
 
 Caso tenha dúvidas, fico à disposição.`;
 
+const EM_REFORCO_CORPO = () =>
+`${saudacaoEm()}
+
+Espero que esteja bem.
+
+Aqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba. Retomo o contato sobre a documentação necessária para o atendimento, já informada anteriormente.
+
+Pedimos que traga, no dia do atendimento:
+
+${DOCS}
+
+Endereço: ${END_SANT}
+Atendimento: segunda a sexta-feira, das 9h às 12h, com até 30 senhas por dia.
+
+Se já tiver providenciado os documentos, pode desconsiderar este lembrete. Caso tenha dúvidas, fico à disposição.`;
+
 const EM_MODELOS = {
-  docs:  {assunto:'Documentação necessária para atendimento na Assistência Judiciária', corpo:EM_DOCS_CORPO},
-  dias:  {assunto:'Dias e horários de atendimento ao público — Assistência Judiciária', corpo:EM_DIAS_CORPO},
-  ambos: {assunto:'Documentação e dias de atendimento — Assistência Judiciária', corpo:EM_AMBOS_CORPO}
+  docs:    {assunto:'Documentação necessária para atendimento na Assistência Judiciária', corpo:EM_DOCS_CORPO},
+  dias:    {assunto:'Dias e horários de atendimento ao público — Assistência Judiciária', corpo:EM_DIAS_CORPO},
+  ambos:   {assunto:'Documentação e dias de atendimento — Assistência Judiciária', corpo:EM_AMBOS_CORPO},
+  reforco: {assunto:'Lembrete: documentação para atendimento — Assistência Judiciária', corpo:EM_REFORCO_CORPO}
 };
-function valorEmDest(){ const n=$('em-dest').value.trim(); return n || '(nome)'; }
 function modeloEscolhido(){ const r=document.querySelector('input[name="em-modelo"]:checked'); return r ? r.value : 'docs'; }
-function textoEmail(){ const m=EM_MODELOS[modeloEscolhido()]; return {assunto:m.assunto, corpo:m.corpo()}; }
+function textoEmail(){
+  const m=EM_MODELOS[modeloEscolhido()];
+  const assunto = $('em-assunto').value.trim() || m.assunto;
+  return {para:$('em-para').value.trim(), assunto, corpo:m.corpo()+assinaturaEm()};
+}
 function renderEmail(){
   const t=textoEmail();
-  const assuntoCampo=$('em-assunto').value.trim();
-  $('em-assunto-view').textContent = assuntoCampo || t.assunto;
+  $('em-para-view').textContent = t.para || '(digite o e-mail do destinatário)';
+  $('em-assunto-view').textContent = t.assunto;
   $('em-corpo').textContent = t.corpo;
 }
-function escolherModelo(){
-  $('em-assunto').value='';
-  renderEmail();
-}
+function escolherModelo(){ $('em-assunto').value=''; renderEmail(); }
 function copiarEmail(btn){
   const t=textoEmail();
-  const assunto=$('em-assunto').value.trim() || t.assunto;
-  copiar('Assunto: '+assunto+'\n\n'+t.corpo, btn);
+  const cab = (t.para ? 'Para: '+t.para+'\n' : '') + 'Assunto: '+t.assunto+'\n\n';
+  copiar(cab + t.corpo, btn);
 }
 function abrirOutlook(){
   const t=textoEmail();
-  const assunto=$('em-assunto').value.trim() || t.assunto;
-  window.location.href='mailto:?subject='+encodeURIComponent(assunto)+'&body='+encodeURIComponent(t.corpo);
+  if(t.para && !/^\S+@\S+\.\S+$/.test(t.para)){ toast('Confira o e-mail do destinatário.'); return; }
+  const to = t.para ? encodeURIComponent(t.para) : '';
+  window.location.href = 'mailto:'+to+'?subject='+encodeURIComponent(t.assunto)+'&body='+encodeURIComponent(t.corpo);
 }
 
 /* ===================== ESTADO ===================== */
-const ENV_KEY='cassia-enviados', PASSOS_KEY='cassia-passos', AG_KEY='cassia-agenda', CFG_KEY='cassia-config';
+const ENV_KEY='cassia-enviados', ENVIOS_KEY='cassia-envios', FAV_KEY='cassia-fav', PASSOS_KEY='cassia-passos', AG_KEY='cassia-agenda', CFG_KEY='cassia-config';
 let ENVIADOS = load(ENV_KEY, []);
+let ENVIOS = load(ENVIOS_KEY, []);
+let FAV = load(FAV_KEY, []);
 let CFG = Object.assign({salvarObs:true}, load(CFG_KEY, {}));
 const PAINEIS = ['atend','recl','advs','cobr','forum'];
 const ESTADO = {atend:{cat:'Todas',q:''}, recl:{cat:'Todas',q:''}, advs:{cat:'Todas',q:''}, cobr:{cat:'Todas',q:''}, forum:{cat:'Todas',q:''}};
 const ABAS_COM_CASO = ['advs','cobr','forum'];
+let ATUAL = 'atend';
+
+function refrescar(){
+  renderAll();
+  const q=$('gq').value.trim();
+  if(q) buscaGlobal(q);
+}
 
 /* ===================== CARTÕES DE MENSAGEM ===================== */
-function cardHtml(m, v){
+function cardHtml(m, v, comOrigem){
   const txt = m.build(v);
   const falta = faltam(m.needs);
   const env = ENVIADOS.includes(m.id);
+  const fav = FAV.includes(m.id);
   const pede = m.pede ? `<div class="pede">📌 <b>Pedir:</b> ${escapeHtml(m.pede)}</div>` : '';
+  const origem = comOrigem ? `<div class="origem">Aba: ${NOME_ABA[m.tab]}</div>` : '';
   return `<div class="card ${env?'enviado':''}" id="c-${m.id}">
-    <div class="card-hd"><div class="card-title">${m.pin?'📌 ':''}${m.titulo}</div><span class="tag ${m.tc}">${m.cat}</span></div>
+    <div class="card-hd">
+      <div class="card-title">${m.pin?'📌 ':''}${m.titulo}</div>
+      <div class="hd-dir">
+        <button class="star ${fav?'on':''}" title="${fav?'Remover dos favoritos':'Marcar como favorita'}" onclick="toggleFav('${m.id}')">★</button>
+        <span class="tag ${m.tc}">${m.cat}</span>
+      </div>
+    </div>
     <div class="card-txt">
-      ${pede}
+      ${origem}${pede}
       <div class="msg" id="t-${m.id}">${escapeHtml(txt)}</div>
       <button class="mais" onclick="toggleMais('${m.id}',this)">Ver mensagem completa ▾</button>
       ${falta.length ? `<div class="faltam">⚠️ Falta preencher: ${falta.join(', ')}</div>` : ''}
     </div>
     <div class="card-ft">
       <button class="btn btn-copiar" onclick="copiarMsg('${m.id}',this)">Copiar</button>
-      <label class="chk"><input type="checkbox" ${env?'checked':''} onchange="marcarEnviado('${m.id}',this.checked)"> Enviada</label>
+      <label class="chk"><input type="checkbox" ${env?'checked':''} onchange="marcarEnviado('${m.id}',this)"> Enviada</label>
     </div>
   </div>`;
 }
@@ -901,11 +1012,10 @@ function renderPanel(tab){
   const doTab = MSGS.filter(m=>m.tab===tab);
   const cats = ['Todas', ...new Set(doTab.map(m=>m.cat))];
   $('chips-'+tab).innerHTML = cats.map(c=>`<button class="chip ${c===st.cat?'on':''}" onclick="setCat('${tab}','${c}')">${c}</button>`).join('');
-  const lista = doTab.filter(m =>
-    (st.cat==='Todas' || m.cat===st.cat) &&
-    (!q || (m.titulo+' '+(m.pede||'')+' '+m.build(v)).toLowerCase().includes(q))
-  );
-  $('g-'+tab).innerHTML = lista.length ? lista.map(m=>cardHtml(m,v)).join('') : '<div class="vazio">Nenhuma mensagem encontrada. Tente outra palavra ou escolha "Todas".</div>';
+  const lista = doTab
+    .filter(m => (st.cat==='Todas' || m.cat===st.cat) && (!q || (m.titulo+' '+(m.pede||'')+' '+m.build(v)).toLowerCase().includes(q)))
+    .sort((a,b)=> (FAV.includes(b.id)?1:0) - (FAV.includes(a.id)?1:0));
+  $('g-'+tab).innerHTML = lista.length ? lista.map(m=>cardHtml(m,v,false)).join('') : '<div class="vazio">Nenhuma mensagem encontrada. Tente outra palavra ou escolha "Todas".</div>';
 }
 function setCat(tab,c){ ESTADO[tab].cat=c; renderPanel(tab); }
 function setQ(tab,q){ ESTADO[tab].q=q; renderPanel(tab); }
@@ -915,17 +1025,81 @@ function toggleMais(id,btn){
   btn.textContent = t.classList.contains('aberto') ? 'Recolher ▴' : 'Ver mensagem completa ▾';
 }
 function copiarMsg(id,btn){ copiar(POR_ID[id].build(V()), btn); }
-function marcarEnviado(id,v){
-  ENVIADOS = v ? [...new Set([...ENVIADOS,id])] : ENVIADOS.filter(x=>x!==id);
+function toggleFav(id){
+  FAV = FAV.includes(id) ? FAV.filter(x=>x!==id) : [...FAV, id];
+  save(FAV_KEY, FAV);
+  refrescar();
+}
+function marcarEnviado(id, el){
+  if(el.checked){
+    const m=POR_ID[id];
+    const sugestao = bruto('adv') || bruto('ass') || '';
+    const dest = prompt('Para quem foi enviada? (opcional, pode deixar em branco)', sugestao);
+    if(dest===null){ el.checked=false; return; }
+    const agora=new Date();
+    ENVIOS.unshift({id, titulo:m.titulo, cat:m.cat, dest:dest.trim(), data:hojeISO(), hora:pad(agora.getHours())+':'+pad(agora.getMinutes())});
+    save(ENVIOS_KEY, ENVIOS);
+    if(!ENVIADOS.includes(id)) ENVIADOS.push(id);
+  } else {
+    ENVIADOS = ENVIADOS.filter(x=>x!==id);
+  }
   save(ENV_KEY, ENVIADOS);
-  const c=$('c-'+id); if(c) c.classList.toggle('enviado', v);
+  const c=$('c-'+id); if(c) c.classList.toggle('enviado', el.checked);
+  if(ATUAL==='hist') renderHist();
 }
 function novoCaso(){
   Object.values(CAMPOS).forEach(id=>{ const el=$(id); if(el) el.value=''; });
   ENVIADOS = ENVIADOS.filter(id=>{ const m=POR_ID[id]; return !m || (m.tab!=='cobr' && m.tab!=='forum'); });
   save(ENV_KEY, ENVIADOS);
-  validarCampos(); renderAll();
+  validarCampos(); refrescar();
   toast('Caso limpo.');
+}
+
+/* ===================== BUSCA GLOBAL ===================== */
+function mostrarPainel(name){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active', p.id==='p-'+name));
+}
+function buscaGlobal(termo){
+  const q=(termo||'').trim().toLowerCase();
+  if(!q){
+    $('gq-info').textContent='';
+    mostrarPainel(ATUAL);
+    $('caso').classList.toggle('show', ABAS_COM_CASO.includes(ATUAL));
+    return;
+  }
+  const v=V();
+  const res=MSGS.filter(m=>(m.titulo+' '+(m.pede||'')+' '+m.build(v)).toLowerCase().includes(q));
+  $('gq-info').textContent = res.length + ' resultado' + (res.length===1?'':'s');
+  $('g-busca').innerHTML = res.length ? res.map(m=>cardHtml(m,v,true)).join('') : '<div class="vazio">Nenhuma mensagem encontrada em nenhuma aba.</div>';
+  mostrarPainel('busca');
+  $('caso').classList.remove('show');
+}
+
+/* ===================== HISTÓRICO DE ENVIOS ===================== */
+function renderHist(){
+  const el=$('lista-hist');
+  if(!ENVIOS.length){ el.innerHTML='<div class="vazio">Nenhum envio registrado. Ao marcar uma mensagem como "Enviada", o registro aparece aqui.</div>'; return; }
+  el.innerHTML = ENVIOS.map(e=>`<div class="ag-item">
+    <div class="ag-corpo">
+      <div class="ag-titulo">${escapeHtml(e.titulo)}</div>
+      <div class="ag-meta"><span>${fmtData(e.data)} às ${e.hora}</span><span>· ${escapeHtml(e.cat)}</span>${e.dest?`<span>· Para: ${escapeHtml(e.dest)}</span>`:''}</div>
+    </div>
+  </div>`).join('');
+}
+function limparHistorico(){
+  if(!ENVIOS.length){ toast('O histórico já está vazio.'); return; }
+  if(!confirm('Limpar o histórico de envios? As mensagens continuarão marcadas como enviadas.')) return;
+  ENVIOS=[]; save(ENVIOS_KEY, ENVIOS); renderHist(); toast('Histórico limpo.');
+}
+function exportarHistorico(){
+  if(!ENVIOS.length){ toast('O histórico está vazio.'); return; }
+  const linhas=['HISTÓRICO DE ENVIOS — ASSISTÊNCIA JUDICIÁRIA SANTANA DE PARNAÍBA',''];
+  ENVIOS.forEach(e=>{
+    linhas.push(`${fmtData(e.data)} ${e.hora} — ${e.titulo} (${e.cat})${e.dest?' — Para: '+e.dest:''}`);
+  });
+  baixarArquivo('historico-envios-'+hojeISO()+'.txt', linhas.join('\n'), 'text/plain;charset=utf-8');
+  toast('Arquivo gerado.');
 }
 
 /* ===================== PASSOS DO DOL (FÓRUM) ===================== */
@@ -1194,7 +1368,7 @@ function exportarAgenda(){
   toast('Arquivo gerado.');
 }
 function exportarBackup(){
-  const dados={versao:2, data:hojeISO(), agenda, enviados:ENVIADOS, passos:load(PASSOS_KEY,{}), config:CFG};
+  const dados={versao:3, data:hojeISO(), agenda, enviados:ENVIADOS, envios:ENVIOS, favoritas:FAV, passos:load(PASSOS_KEY,{}), config:CFG};
   baixarArquivo('backup-painel-cassia-'+hojeISO()+'.json', JSON.stringify(dados,null,2), 'application/json');
   toast('Backup gerado. Guarde o arquivo em local seguro.');
 }
@@ -1208,10 +1382,13 @@ function importarBackup(ev){
       if(!confirm('Substituir os dados atuais pelos do backup? Esta ação não pode ser desfeita.')) return;
       agenda=d.agenda;
       ENVIADOS=Array.isArray(d.enviados)?d.enviados:[];
+      ENVIOS=Array.isArray(d.envios)?d.envios:[];
+      FAV=Array.isArray(d.favoritas)?d.favoritas:[];
       CFG=Object.assign({salvarObs:true}, d.config||{});
-      save(AG_KEY,agenda); save(ENV_KEY,ENVIADOS); save(PASSOS_KEY,d.passos||{}); save(CFG_KEY,CFG);
+      save(AG_KEY,agenda); save(ENV_KEY,ENVIADOS); save(ENVIOS_KEY,ENVIOS); save(FAV_KEY,FAV);
+      save(PASSOS_KEY,d.passos||{}); save(CFG_KEY,CFG);
       carregarConfigUI();
-      renderAll(); renderProc(); renderAgenda(); renderAlerta();
+      refrescar(); renderProc(); renderAgenda(); renderAlerta(); renderHist();
       toast('Backup importado.');
     }catch(e){
       toast('Arquivo inválido. Use um backup gerado por este painel.');
@@ -1221,11 +1398,11 @@ function importarBackup(ev){
   leitor.readAsText(f);
 }
 function apagarTudo(){
-  if(!confirm('Apagar agenda, marcações de "Enviada" e passos do DOL deste navegador? Faça backup antes, pois esta ação não pode ser desfeita.')) return;
-  ['cassia-agenda','cassia-enviados','cassia-passos','cassia-config'].forEach(k=>localStorage.removeItem(k));
-  agenda=[]; ENVIADOS=[]; CFG={salvarObs:true};
+  if(!confirm('Apagar agenda, marcações, favoritas, histórico de envios e passos do DOL deste navegador? Faça backup antes, pois esta ação não pode ser desfeita.')) return;
+  ['cassia-agenda','cassia-enviados','cassia-envios','cassia-fav','cassia-passos','cassia-config'].forEach(k=>localStorage.removeItem(k));
+  agenda=[]; ENVIADOS=[]; ENVIOS=[]; FAV=[]; CFG={salvarObs:true};
   carregarConfigUI();
-  renderAll(); renderProc(); renderAgenda(); renderAlerta();
+  refrescar(); renderProc(); renderAgenda(); renderAlerta(); renderHist();
   toast('Dados apagados deste navegador.');
 }
 function carregarConfigUI(){ $('a-salvarobs').checked = CFG.salvarObs !== false; }
@@ -1256,6 +1433,8 @@ function renderAgenda(){
     }
     const isAtras=!x.feito && x.data<h;
     const isHoje=!x.feito && x.data===h;
+    const dias=diffDias(h,x.data);
+    const isProx=!x.feito && dias>0 && dias<=3;
     html+=`<div class="ag-item ${x.feito?'feito':''}">
       <input type="checkbox" class="ag-check" ${x.feito?'checked':''} onchange="alternarFeito(${x.id})" title="Marcar como concluída">
       <div class="ag-corpo">
@@ -1264,6 +1443,7 @@ function renderAgenda(){
           ${x.hora?'<span>'+x.hora+'</span> · ':''}<span>${x.tipo}</span>
           ${isAtras?'<span class="badge b-atras">Atrasada</span>':''}
           ${isHoje?'<span class="badge b-hoje">Hoje</span>':''}
+          ${isProx?`<span class="badge b-prox">Vence em ${dias} dia${dias>1?'s':''}</span>`:''}
         </div>
         ${x.obs?`<div class="ag-obs">${escapeHtml(x.obs)}</div>`:''}
       </div>
@@ -1276,19 +1456,23 @@ function renderAgenda(){
   $('lista-agenda').innerHTML=html;
 }
 
-/* ===================== ALERTA AO ABRIR ===================== */
+/* ===================== ALERTA AO ABRIR (inclui lembrete de 3 dias) ===================== */
 let ALERTA_ON=true;
 function renderAlerta(){
-  const h=hojeISO();
-  const hoje=agenda.filter(x=>!x.feito && x.data===h);
-  const atras=agenda.filter(x=>!x.feito && x.data<h);
-  if(!ALERTA_ON || (!hoje.length && !atras.length)){ $('alerta').innerHTML=''; return; }
-  const nomes=[...hoje,...atras].slice(0,3).map(x=>escapeHtml(x.titulo)).join('; ');
+  const h=hojeISO(), lim=addDias(h,3);
+  const pend=agenda.filter(x=>!x.feito);
+  const hoje=pend.filter(x=>x.data===h);
+  const atras=pend.filter(x=>x.data<h);
+  const prox=pend.filter(x=>x.data>h && x.data<=lim);
+  if(!ALERTA_ON || (!hoje.length && !atras.length && !prox.length)){ $('alerta').innerHTML=''; return; }
   const partes=[];
   if(hoje.length) partes.push(`${hoje.length} para hoje`);
   if(atras.length) partes.push(`${atras.length} atrasada(s)`);
+  if(prox.length) partes.push(`${prox.length} nos próximos 3 dias`);
+  const nomes=[...atras,...hoje,...prox].slice(0,3).map(x=>escapeHtml(x.titulo)).join('; ');
+  const total=hoje.length+atras.length+prox.length;
   $('alerta').innerHTML=`<div class="aviso aviso-alerta">
-    <span><b>Agenda:</b> ${partes.join(' e ')}. ${nomes}${hoje.length+atras.length>3?'…':''}</span>
+    <span><b>Agenda:</b> ${partes.join(' · ')}. ${nomes}${total>3?'…':''}</span>
     <button class="mais" onclick="switchTab('agenda')">Abrir agenda</button>
     <button class="mais" onclick="fecharAlerta()">Fechar</button>
   </div>`;
@@ -1297,10 +1481,12 @@ function fecharAlerta(){ ALERTA_ON=false; renderAlerta(); }
 
 /* ===================== NAVEGAÇÃO E RELÓGIO ===================== */
 function switchTab(name){
-  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
-  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active', p.id==='p-'+name));
+  ATUAL=name;
+  $('gq').value=''; $('gq-info').textContent='';
+  mostrarPainel(name);
   $('caso').classList.toggle('show', ABAS_COM_CASO.includes(name));
   if(name==='email') renderEmail();
+  if(name==='hist') renderHist();
   window.scrollTo({top:0, behavior:'smooth'});
 }
 function atualizarRelogio(){
@@ -1319,6 +1505,7 @@ renderProc();
 renderEmail();
 renderFeriados();
 renderAgenda();
+renderHist();
 renderAlerta();
 avisoDia();
 </script>
