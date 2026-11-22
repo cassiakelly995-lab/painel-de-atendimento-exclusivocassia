@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel da Cássia — OAB SP Santana de Parnaíba</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f3f5fa;--surface:#fff;--border:#e1e6f0;--text:#0d1526;--text2:#455069;--text3:#8b95ae;
+  --navy:#0f2d6b;--blue:#1a56db;--blue-l:#eaf1ff;--green:#0d7a4e;--green-l:#e7f8ef;
+  --amber:#8a5a00;--amber-l:#fff6df;--red:#b42318;--red-l:#fdecea;--purple:#5b21b6;--purple-l:#f1ebff;
+  --ff:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:ui-monospace,Menlo,Consolas,monospace;
+}
+html,body{min-height:100%;font-family:var(--ff);background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+
+/* TOPO */
+#topbar{background:var(--navy);color:#fff;padding:14px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:sticky;top:0;z-index:50}
+.tb-title{font-size:15px;font-weight:700}
+.tb-sub{font-size:11.5px;opacity:.7}
+.tb-clock{margin-left:auto;font-family:var(--mono);font-size:13px;background:rgba(255,255,255,.1);padding:5px 12px;border-radius:7px}
+
+/* ABAS */
+#tabs{background:#fff;border-bottom:1px solid var(--border);display:flex;gap:4px;padding:0 16px;overflow-x:auto;position:sticky;top:60px;z-index:40}
+.tab{padding:13px 16px;border:none;background:none;font:600 13px var(--ff);color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+.tab:hover{color:var(--text2)}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+
+#main{max-width:1100px;margin:0 auto;padding:24px 20px 60px}
+.panel{display:none}
+.panel.active{display:block}
+.ptitle{font-size:19px;font-weight:800;color:var(--navy);margin-bottom:4px}
+.pdesc{color:var(--text3);font-size:13px;margin-bottom:18px}
+.sub{font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--text3);margin:22px 0 10px}
+
+/* ALERTAS */
+.aviso{border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:13px;border-left:4px solid}
+.aviso-azul{background:var(--blue-l);border-color:var(--blue);color:#1e3a6e}
+.aviso-amarelo{background:var(--amber-l);border-color:#e0a800;color:var(--amber)}
+.aviso-vermelho{background:var(--red-l);border-color:var(--red);color:#7a1207}
+
+/* CARTÕES DE MENSAGEM */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.card-hd{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.card-title{font-weight:700;font-size:13.5px}
+.tag{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:20px;background:var(--blue-l);color:var(--blue);white-space:nowrap}
+.tag-verde{background:var(--green-l);color:var(--green)}
+.tag-roxo{background:var(--purple-l);color:var(--purple)}
+.tag-vermelho{background:var(--red-l);color:var(--red)}
+.tag-amarelo{background:var(--amber-l);color:var(--amber)}
+.card-txt{padding:12px 14px;flex:1}
+.msg{white-space:pre-wrap;word-break:break-word;font-size:12.5px;color:var(--text2);line-height:1.65;max-height:230px;overflow-y:auto;font-family:var(--ff)}
+.card-ft{padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:8px}
+.btn{border:none;cursor:pointer;font:700 12px var(--ff);padding:8px 14px;border-radius:8px;transition:.15s}
+.btn-copiar{background:var(--blue);color:#fff}
+.btn-copiar:hover{background:#1347c5}
+.btn-sec{background:var(--bg);color:var(--text2);border:1px solid var(--border)}
+.btn-sec:hover{background:#e9edf5}
+.btn-perigo{background:var(--red-l);color:var(--red)}
+.faltam{font-size:11.5px;font-weight:700;color:var(--amber);background:var(--amber-l);padding:5px 9px;border-radius:6px;margin-top:8px}
+
+/* CAMPOS */
+.campos{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:16px}
+.campo label{display:block;font-size:12px;font-weight:700;color:var(--text2);margin-bottom:4px}
+.campo input{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;font:13px var(--ff);background:#fafbfe}
+.campo input:focus{outline:none;border-color:var(--blue)}
+.campo small{display:block;color:var(--text3);font-size:11px;margin-top:3px}
+
+/* FERIADOS */
+table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);font-size:13px}
+th{background:var(--navy);color:#fff;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px}
+tr:last-child td{border-bottom:none}
+.dia-fds td{color:var(--text3)}
+.badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px;background:var(--blue-l);color:var(--blue)}
+.badge-pf{background:var(--amber-l);color:var(--amber)}
+.badge-est{background:var(--purple-l);color:var(--purple)}
+
+/* AGENDA */
+.ag-form{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:18px}
+.ag-form .full{grid-column:1/-1}
+.ag-form input,.ag-form select,.ag-form textarea{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;font:13px var(--ff);background:#fafbfe}
+.ag-form textarea{min-height:60px;resize:vertical}
+.ag-form label{display:block;font-size:12px;font-weight:700;color:var(--text2);margin-bottom:4px}
+.ag-dia{font-size:12px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.4px;margin:18px 0 8px}
+.ag-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start;margin-bottom:8px}
+.ag-item.feito{opacity:.5}
+.ag-item.feito .ag-titulo{text-decoration:line-through}
+.ag-check{width:18px;height:18px;margin-top:2px;cursor:pointer}
+.ag-corpo{flex:1}
+.ag-titulo{font-weight:700;font-size:13.5px}
+.ag-meta{font-size:12px;color:var(--text3);margin-top:2px}
+.ag-obs{font-size:12.5px;color:var(--text2);margin-top:4px;white-space:pre-wrap}
+.vazio{text-align:center;color:var(--text3);padding:30px;background:var(--surface);border:1.5px dashed var(--border);border-radius:12px}
+
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 20px;border-radius:10px;font-weight:600;opacity:0;transition:.2s;pointer-events:none;z-index:99}
+#toast.show{opacity:1}
+
+@media(max-width:640px){
+  .grid{grid-template-columns:1fr}
+  .tb-clock{margin-left:0}
+}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <div>
+    <div class="tb-title">Painel de Atendimento — Cássia</div>
+    <div class="tb-sub">OAB SP · 247ª Subseção Santana de Parnaíba · Assistência Judiciária</div>
+  </div>
+  <div class="tb-clock" id="clock">--:--:--</div>
+</div>
+
+<nav id="tabs">
+  <button class="tab active" data-tab="atend">💬 Atendimento</button>
+  <button class="tab" data-tab="recl">⚖️ Reclamação</button>
+  <button class="tab" data-tab="advs">👨‍⚖️ Advogados</button>
+  <button class="tab" data-tab="cobr">📨 Cobrança Advogado</button>
+  <button class="tab" data-tab="forum">🏛️ Fórum</button>
+  <button class="tab" data-tab="fer">📅 Feriados 2027</button>
+  <button class="tab" data-tab="agenda">🗓️ Agenda</button>
+</nav>
+
+<main id="main">
+
+  <!-- ATENDIMENTO -->
+  <section class="panel active" id="p-atend">
+    <div class="ptitle">Mensagens de Atendimento</div>
+    <div class="pdesc">Mensagens para o assistido. Todas começam com a saudação e se identificam como Cássia.</div>
+    <div class="aviso aviso-azul">💛 Trate cada pessoa com empatia e respeito, mantendo a formalidade. O objetivo é que todos se sintam acolhidos.</div>
+    <div class="grid" id="g-atend"></div>
+  </section>
+
+  <!-- RECLAMAÇÃO -->
+  <section class="panel" id="p-recl">
+    <div class="ptitle">Reclamação de Advogado</div>
+    <div class="pdesc">Siga na ordem: pedir o CPF, verificar a nomeação e orientar conforme o caso.</div>
+    <div class="aviso aviso-vermelho"><strong>Reclamação contra advogado só é aceita presencialmente.</strong> Não aceitamos por WhatsApp, e-mail, áudio ou qualquer meio eletrônico.</div>
+    <div class="grid" id="g-recl"></div>
+  </section>
+
+  <!-- ADVOGADOS -->
+  <section class="panel" id="p-advs">
+    <div class="ptitle">Orientações para Advogados</div>
+    <div class="pdesc">Inscrição na OAB SP e Certificado Digital, somente as etapas que cabem ao advogado.</div>
+    <div class="grid" id="g-advs"></div>
+  </section>
+
+  <!-- COBRANÇA -->
+  <section class="panel" id="p-cobr">
+    <div class="ptitle">Contato com Advogado Nomeado</div>
+    <div class="pdesc">Preencha os dados do caso. Os campos entram sozinhos nas mensagens.</div>
+    <div class="campos">
+      <div class="campo"><label for="c-adv">Nome do advogado</label><input id="c-adv" oninput="renderAll()" placeholder="Ex.: Maria da Silva"></div>
+      <div class="campo"><label for="c-ass">Nome do assistido</label><input id="c-ass" oninput="renderAll()" placeholder="Ex.: João Souza"></div>
+      <div class="campo"><label for="c-proc">Número do processo</label><input id="c-proc" oninput="renderAll()" placeholder="0000000-00.2026.8.26.0000"></div>
+      <div class="campo"><label for="c-data">Data da audiência ou prazo</label><input type="date" id="c-data" oninput="renderAll()"><small>Só se houver audiência ou prazo próximo</small></div>
+      <div class="campo"><label for="c-prazo">Prazo para resposta</label><input id="c-prazo" oninput="renderAll()" placeholder="Ex.: 5 dias úteis"></div>
+    </div>
+    <div class="grid" id="g-cobr"></div>
+  </section>
+
+  <!-- FÓRUM -->
+  <section class="panel" id="p-forum">
+    <div class="ptitle">Respostas ao Fórum</div>
+    <div class="pdesc">Modelos para ofícios e avaliação financeira vencida.</div>
+    <div class="campos">
+      <div class="campo"><label for="f-proc">Número do processo</label><input id="f-proc" oninput="renderAll()" placeholder="0000000-00.2026.8.26.0000"></div>
+      <div class="campo"><label for="f-ass">Nome do assistido</label><input id="f-ass" oninput="renderAll()" placeholder="Nome completo"></div>
+    </div>
+    <div class="grid" id="g-forum"></div>
+  </section>
+
+  <!-- FERIADOS -->
+  <section class="panel" id="p-fer">
+    <div class="ptitle">Feriados e Pontos Facultativos — 2027</div>
+    <div class="pdesc">Feriados nacionais, estadual de São Paulo e pontos facultativos. Confira os feriados municipais de Santana de Parnaíba e Pirapora no calendário da prefeitura.</div>
+    <table>
+      <thead><tr><th>Data</th><th>Dia</th><th>Feriado</th><th>Tipo</th></tr></thead>
+      <tbody id="tb-fer"></tbody>
+    </table>
+  </section>
+
+  <!-- AGENDA -->
+  <section class="panel" id="p-agenda">
+    <div class="ptitle">Agenda — Demandas da Subseção</div>
+    <div class="pdesc">Anote aqui as demandas do calendário da Subseção. Os dados ficam salvos neste navegador.</div>
+    <div class="ag-form">
+      <div><label for="a-data">Data</label><input type="date" id="a-data"></div>
+      <div><label for="a-hora">Horário</label><input type="time" id="a-hora"></div>
+      <div><label for="a-tipo">Tipo</label>
+        <select id="a-tipo">
+          <option>Calendário da Subseção</option>
+          <option>Prazo</option>
+          <option>Audiência</option>
+          <option>Reunião</option>
+          <option>Outro</option>
+        </select>
+      </div>
+      <div class="full"><label for="a-titulo">Demanda</label><input id="a-titulo" placeholder="Ex.: Entregar relatório mensal"></div>
+      <div class="full"><label for="a-obs">Observações</label><textarea id="a-obs" placeholder="Detalhes, pessoas envolvidas, documentos..."></textarea></div>
+      <div class="full"><button class="btn btn-copiar" onclick="addAgenda()">+ Adicionar à agenda</button></div>
+    </div>
+    <div id="lista-agenda"></div>
+  </section>
+
+</main>
+
+<div id="toast"></div>
+
+<script>
+/* ===== UTILIDADES ===== */
+function fmtData(iso){ if(!iso) return ''; const p=iso.split('-'); return p[2]+'/'+p[1]+'/'+p[0]; }
+function val(id){ const el=document.getElementById(id); return el && el.value.trim() ? el.value.trim() : null; }
+function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(window._tt); window._tt=setTimeout(()=>t.classList.remove('show'),2200); }
+
+function copiar(texto, btn){
+  const feito=()=>{ const o=btn.textContent; btn.textContent='Copiado ✓'; setTimeout(()=>btn.textContent=o,1500); toast('Mensagem copiada!'); };
+  const fallback=()=>{ const ta=document.createElement('textarea'); ta.value=texto; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); feito(); };
+  if(navigator.clipboard && window.isSecureContext!==false){ navigator.clipboard.writeText(texto).then(feito).catch(fallback); }
+  else fallback();
+}
+
+/* ===== ASSINATURAS E SAUDAÇÕES ===== */
+const SAUDA = "Olá, tudo bem? Aqui é a Cássia, da Assistência Judiciária da OAB SP — Subseção Santana de Parnaíba. Como posso te ajudar hoje?";
+const ASS_CASSIA = "\n\nCom carinho e à disposição,\nCássia\nAssistência Judiciária — OAB SP · Subseção Santana de Parnaíba\n(11) 4154-5191";
+const ASS_FORMAL = "\n\nAtenciosamente,\nCássia\nAssistência Judiciária — OAB SP · Subseção Santana de Parnaíba\n(11) 4154-5191";
+const LOCAL_SANTANA = "Av. Tenente Marques, 5297 — Jardim do Luar (Fazendinha), Santana de Parnaíba/SP, dentro do Poupatempo";
+const LOCAL_RECL = "Rua Alberto Frediani, 770 — Jardim Frediani, Santana de Parnaíba/SP — CEP 06502-155";
+const DOCS = "— RG original e CPF\n— Comprovante de residência atualizado (água, luz, gás, telefone ou aluguel)\n— Comprovante de renda de todos os membros da família:\n   • Trabalhador registrado: os 3 últimos holerites\n   • Não registrado: carteira de trabalho, extrato bancário dos últimos 3 meses, declaração do empregador ou carta de próprio punho reconhecida em cartório\n— Comprovante de patrimônio, se houver (certidão de valor venal, IPTU, veículos, extrato de poupança)\n— Em casos de alimentos: documento da criança e endereço da parte contrária\n— Em casos de divórcio: certidão de casamento atualizada";
+
+/* ===== MENSAGENS ===== */
+/* tab: aba | pre: prefixo dos campos (ou null) | v: valores preenchidos */
+const MSGS = [
+  /* ---------- ATENDIMENTO ---------- */
+  {tab:'atend', titulo:'Boas-vindas', tag:'Primeiro contato', tc:'tag', build:()=>
+`${SAUDA}
+
+Pode me contar com calma o que você precisa. Vou te orientar no que for possível e, se o assunto for de outro setor, explico direitinho o caminho.
+
+Você não está sozinho(a) nessa. Estou aqui para te acolher.` + ASS_CASSIA},
+
+  {tab:'atend', titulo:'Documentos necessários', tag:'Documentação', tc:'tag-verde', build:()=>
+`${SAUDA}
+
+Para que possamos te atender, peço que traga os seguintes documentos:
+
+${DOCS}
+
+Sei que reunir tudo pode dar trabalho. Se tiver dúvida sobre algum documento, me avise que eu te ajudo a entender.` + ASS_CASSIA},
+
+  {tab:'atend', titulo:'Horário e local — Santana de Parnaíba', tag:'Horário', tc:'tag-amarelo', build:()=>
+`${SAUDA}
+
+Nosso atendimento presencial acontece de segunda a sexta-feira, das 9h às 12h. São distribuídas até 30 senhas por dia, no local, sem agendamento prévio.
+
+Endereço: ${LOCAL_SANTANA}
+Telefone: (11) 4154-5191
+
+Fico feliz em te receber.` + ASS_CASSIA},
+
+  {tab:'atend', titulo:'Atendimento — Pirapora do Bom Jesus', tag:'Só sexta', tc:'tag-roxo', build:()=>
+`${SAUDA}
+
+Em Pirapora do Bom Jesus, o atendimento no CIC acontece somente às sextas-feiras, das 9h às 12h, com até 30 senhas por dia.
+
+Endereço: R. Bom Jesus, 106 — Centro, Pirapora do Bom Jesus/SP, CEP 06550-000
+
+Nos outros dias não há atendimento no local. Se for possível, volte na próxima sexta-feira com toda a documentação. Obrigada pela compreensão.` + ASS_CASSIA},
+
+  {tab:'atend', titulo:'Dúvida sobre anuidade', tag:'Anuidade', tc:'tag-amarelo', build:()=>
+`${SAUDA}
+
+Entendo como é importante esclarecer essa dúvida sobre a anuidade, e fico feliz em te ajudar.
+
+Um momento, por favor: vou verificar essa informação com calma e te retorno assim que tiver a resposta.
+
+Obrigada pela paciência.` + ASS_CASSIA},
+
+  {tab:'atend', titulo:'Não recebemos áudio', tag:'Áudio', tc:'tag-amarelo', build:()=>
+`${SAUDA}
+
+Por este canal não conseguimos ouvir mensagens de áudio, mas continuo à disposição para te ajudar por escrito. Pode enviar sua dúvida em texto, imagem ou documento, e faremos o possível para te orientar com agilidade.
+
+Obrigada pela compreensão.` + ASS_CASSIA},
+
+  {tab:'atend', titulo:'Aguardando retorno', tag:'Aguardo', tc:'tag-roxo', build:()=>
+`${SAUDA}
+
+Recebi o seu contato e já estou verificando as informações. Assim que tiver o retorno, te aviso.
+
+Agradeço muito a sua paciência.` + ASS_CASSIA},
+
+  {tab:'atend', titulo:'Avaliação financeira vencida', tag:'Pendência', tc:'tag-vermelho', build:()=>
+`${SAUDA}
+
+Verifiquei o seu cadastro e a sua avaliação financeira está vencida. A validade é de 1 (um) ano, mas isso tem solução.
+
+Para atualizá-la, você precisa comparecer presencialmente, de segunda a sexta-feira, das 9h às 12h, em:
+${LOCAL_SANTANA}
+
+Leve todos os documentos atualizados:
+${DOCS}
+
+Assim que a avaliação for renovada, damos sequência ao seu pedido. Estou com você nessa.` + ASS_CASSIA},
+
+  /* ---------- RECLAMAÇÃO ---------- */
+  {tab:'recl', titulo:'Passo 1 — Pedir o CPF', tag:'Passo 1', tc:'tag', build:()=>
+`${SAUDA}
+
+Para eu verificar a situação da nomeação do seu caso com segurança, pode me informar o seu CPF, por favor?
+
+Vamos resolver isso juntos, com calma.` + ASS_CASSIA},
+
+  {tab:'recl', titulo:'Caso A — Nomeação recusada', tag:'Caso A', tc:'tag-amarelo', build:()=>
+`${SAUDA}
+
+Verifiquei que a nomeação do seu caso consta como recusada pelo advogado. Para darmos continuidade, precisamos fazer uma nova triagem presencial.
+
+Atendimento: segunda a sexta-feira, das 9h às 12h
+Local: ${LOCAL_SANTANA}
+
+Leve seus documentos pessoais. Estaremos te esperando com carinho.` + ASS_CASSIA},
+
+  {tab:'recl', titulo:'Caso B — Sem contato com o advogado', tag:'Caso B', tc:'tag-roxo', build:()=>
+`${SAUDA}
+
+Vi que existe uma nomeação válida no seu processo, e sinto muito que você esteja com dificuldade para falar com o advogado.
+
+Para eu dar encaminhamento ao caso, peço que me envie, por escrito, um relato com calma, informando:
+— quais meios você usou para tentar contato (telefone, WhatsApp, e-mail, escritório);
+— em quais datas ou períodos você tentou;
+— se houve alguma resposta, mesmo que parcial, e qual foi;
+— se existe audiência, prazo ou ato processual próximo.
+
+Com essas informações, comunico o advogado e solicito o retorno a você. Obrigada pela confiança.` + ASS_CASSIA},
+
+  {tab:'recl', titulo:'Caso C — Orientação para reclamação presencial', tag:'Caso C', tc:'tag-vermelho', build:()=>
+`${SAUDA}
+
+Entendo que você queira formalizar uma reclamação, e quero te orientar com todo cuidado.
+
+Esse registro só pode ser feito presencialmente. Não aceitamos reclamações por WhatsApp, e-mail, áudio ou outro meio eletrônico.
+
+Ao comparecer, leve:
+— reclamação escrita de próprio punho, descrevendo os fatos;
+— número do processo;
+— senha do processo (se não tiver, ela é gerada no atendimento presencial);
+— RG e CPF;
+— demais documentos relacionados ao caso.
+
+Atendimento: segunda a sexta-feira, das 9h às 12h
+Local: ${LOCAL_RECL}
+Telefone: (11) 4154-5191
+
+Você será ouvido(a) com respeito.` + ASS_CASSIA},
+
+  /* ---------- ADVOGADOS ---------- */
+  {tab:'advs', titulo:'Inscrição na OAB SP — passo a passo', tag:'Inscrição', tc:'tag', build:()=>
+`Olá, Dr(a)., tudo bem? Aqui é a Cássia, da Subseção Santana de Parnaíba da OAB SP. Segue o passo a passo para o pedido de inscrição:
+
+1. Acesse www2.oabsp.org.br e clique em "Pedido de Inscrição Online".
+2. Preencha o formulário de pré-inscrição com seus dados pessoais e de diploma.
+3. Gere e pague o boleto da taxa de inscrição.
+4. Agende o atendimento presencial pelo Agendamento Online (oabsp.org.br/servicos/agendamento-online).
+5. Compareça com os documentos originais e as cópias solicitados.
+6. Aguarde a análise e a aprovação pelo Conselho Seccional.
+
+Lembrando que a veracidade dos documentos é de responsabilidade do interessado. Qualquer dúvida, estou à disposição.` + ASS_CASSIA},
+
+  {tab:'advs', titulo:'Certificado Digital — orientação', tag:'Certificado', tc:'tag-roxo', build:()=>
+`Olá, Dr(a)., tudo bem? Aqui é a Cássia, da Subseção Santana de Parnaíba da OAB SP. Segue a orientação sobre o Certificado Digital:
+
+1. Acesse oabsp.org.br e vá em Serviços → Certificado Digital.
+2. Lá você encontra as modalidades, os valores e as certificadoras parceiras (Certdata e Certisign).
+3. A compra e o agendamento da validação são feitos diretamente no site da certificadora escolhida.
+4. A validação pode ser presencial, por videoconferência ou online (esta última somente para renovação de certificado ainda válido).
+
+Quero deixar claro, com todo carinho, que a Subseção não realiza a emissão de certificados digitais, então, para dúvidas específicas do processo, o ideal é falar diretamente com a certificadora escolhida.
+
+Fico à disposição para o que precisar.` + ASS_CASSIA},
+
+  {tab:'advs', titulo:'Anuidade — um momento', tag:'Anuidade', tc:'tag-amarelo', build:()=>
+`Olá, Dr(a)., tudo bem? Aqui é a Cássia, da Subseção Santana de Parnaíba da OAB SP.
+
+Vi a sua dúvida sobre a anuidade e quero te ajudar com todo cuidado. Um momento, por favor: vou verificar essa informação e te retorno em seguida.
+
+Obrigada pela compreensão.` + ASS_CASSIA},
+
+  /* ---------- COBRANÇA (usa campos da aba) ---------- */
+  {tab:'cobr', titulo:'1ª cobrança — pedido de retorno', tag:'Cordial', tc:'tag', build:v=>
+`Prezado(a) Dr(a). ${v.adv}, tudo bem? Aqui é a Cássia, da Assistência Judiciária da OAB SP — Subseção Santana de Parnaíba.
+
+Entro em contato com cordialidade para informar que o(a) assistido(a) ${v.ass}, vinculado(a) ao processo nº ${v.proc}, procurou esta Subseção por não ter conseguido retorno de sua parte.
+
+Peço, com todo respeito, que entre em contato com o(a) assistido(a) assim que possível para tratar do processo. Ficamos à disposição para qualquer esclarecimento.` + ASS_FORMAL, urgente:false},
+
+  {tab:'cobr', titulo:'Urgente — audiência ou prazo próximo', tag:'Urgente', tc:'tag-vermelho', build:v=>
+`Prezado(a) Dr(a). ${v.adv}, tudo bem? Aqui é a Cássia, da Assistência Judiciária da OAB SP — Subseção Santana de Parnaíba.
+
+Entro em contato com caráter de urgência. O(a) assistido(a) ${v.ass}, processo nº ${v.proc}, tem ${v.tipoData} marcado(a) para ${v.data}, e ainda não conseguiu contato com o(a) senhor(a).
+
+Peço que retorne ao assistido com a máxima brevidade. Caso haja algum impedimento, comunique-nos para que possamos ajudar.` + ASS_FORMAL, precisa:['data']},
+
+  {tab:'cobr', titulo:'2ª cobrança — sem resposta', tag:'Reforço', tc:'tag-roxo', build:v=>
+`Prezado(a) Dr(a). ${v.adv}, tudo bem? Aqui é a Cássia, da Assistência Judiciária da OAB SP — Subseção Santana de Parnaíba.
+
+Já realizamos contato anterior solicitando retorno ao(à) assistido(a) ${v.ass}, processo nº ${v.proc}, mas ainda não identificamos resposta.
+
+Reiteramos a solicitação, com respeito, pois o(a) assistido(a) segue sem atendimento e isso nos preocupa. Aguardamos seu posicionamento com a maior brevidade possível.` + ASS_FORMAL, precisa:[]},
+
+  {tab:'cobr', titulo:'Notificação formal — última etapa', tag:'Formal', tc:'tag-vermelho', build:v=>
+`Prezado(a) Dr(a). ${v.adv}, tudo bem? Aqui é a Cássia, da Assistência Judiciária da OAB SP — Subseção Santana de Parnaíba.
+
+Por meio desta comunicação formal, informamos a situação do(a) assistido(a) ${v.ass}, vinculado(a) ao processo nº ${v.proc}. Conforme registros desta Subseção, o(a) assistido(a) relatou a ausência de contato ou retorno, apesar de tentativas por diferentes meios.
+
+Diante do exposto, solicitamos que adote as providências necessárias e entre em contato com o(a) assistido(a) no prazo de ${v.prazo}, sob pena de encaminhamento do caso às instâncias competentes da OAB SP.
+
+Este comunicado está sendo registrado no histórico do caso.` + ASS_FORMAL, precisa:['prazo']},
+
+  /* ---------- FÓRUM (usa campos da aba) ---------- */
+  {tab:'forum', titulo:'Resposta padrão ao ofício', tag:'Ofício', tc:'tag', build:v=>
+`Prezada(o) Meritíssima(o),
+
+Cumprimentando cordialmente, em atenção ao ofício recebido, apresento as informações solicitadas referentes ao processo nº ${v.proc}, colocando-me à inteira disposição para quaisquer esclarecimentos adicionais.` + ASS_FORMAL, precisa:['proc']},
+
+  {tab:'forum', titulo:'Acuse de recebimento', tag:'Acuse', tc:'tag-verde', build:v=>
+`Prezada(o),
+
+Acuso o recebimento do ofício referente ao processo nº ${v.proc}, que foi encaminhado ao setor competente. Qualquer atualização será comunicada oportunamente.` + ASS_FORMAL, precisa:['proc']},
+
+  {tab:'forum', titulo:'Avaliação financeira vencida — intimação', tag:'Impedimento', tc:'tag-amarelo', build:v=>
+`Prezada(o) Meritíssima(o),
+
+Em atenção ao ofício recebido, informo que a avaliação financeira do(a) assistido(a) ${v.ass}, referente ao processo nº ${v.proc}, encontra-se vencida, pois sua validade é de 1 (um) ano.
+
+Por isso, solicitamos que o(a) assistido(a) seja intimado(a) a comparecer presencialmente, munido(a) dos documentos atualizados, em:
+${LOCAL_SANTANA}
+Horário: segunda a sexta-feira, das 9h às 12h (até 30 senhas por dia, sem agendamento prévio).
+
+Documentos necessários:
+${DOCS}
+
+Após a renovação da avaliação, daremos seguimento imediato à indicação.` + ASS_FORMAL, precisa:['proc','ass']},
+];
+
+/* ===== RENDERIZAÇÃO DAS MENSAGENS ===== */
+function valoresCobr(){
+  const data = val('c-data');
+  return {
+    adv: val('c-adv') || '[nome do advogado]',
+    ass: val('c-ass') || '[nome do assistido]',
+    proc: val('c-proc') || '[número do processo]',
+    data: data ? fmtData(data) : '[data]',
+    prazo: val('c-prazo') || '[prazo]',
+    tipoData: 'audiência ou prazo'
+  };
+}
+function valoresForum(){
+  return {
+    proc: val('f-proc') || '[número do processo]',
+    ass: val('f-ass') || '[nome do assistido]'
+  };
+}
+
+function textoDe(m){
+  if(m.tab==='cobr') return m.build(valoresCobr());
+  if(m.tab==='forum') return m.build(valoresForum());
+  return m.build();
+}
+
+function faltantes(m){
+  if(!m.precisa || !m.precisa.length) return [];
+  const campos = m.tab==='cobr' ? {data:'c-data', prazo:'c-prazo', proc:'c-proc', ass:'c-ass'} : {proc:'f-proc', ass:'f-ass'};
+  return m.precisa.filter(k => campos[k] && !val(campos[k])).map(k=>({data:'data',prazo:'prazo',proc:'processo',ass:'assistido'})[k]);
+}
+
+function renderCards(tab, id){
+  const cont = document.getElementById(id);
+  if(!cont) return;
+  const lista = MSGS.map((m,i)=>({m,i})).filter(x=>x.m.tab===tab);
+  cont.innerHTML = lista.map(({m,i})=>{
+    const txt = textoDe(m);
+    const falta = faltantes(m);
+    const aviso = falta.length ? `<div class="faltam">⚠️ Falta preencher: ${falta.join(', ')}</div>` : '';
+    return `<div class="card">
+      <div class="card-hd"><div class="card-title">${m.titulo}</div><span class="tag ${m.tc}">${m.tag}</span></div>
+      <div class="card-txt"><div class="msg">${escapeHtml(txt)}</div>${aviso}</div>
+      <div class="card-ft"><button class="btn btn-copiar" onclick="copiarIdx(${i}, this)">Copiar</button></div>
+    </div>`;
+  }).join('');
+}
+function copiarIdx(i, btn){ copiar(textoDe(MSGS[i]), btn); }
+function escapeHtml(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function renderAll(){
+  renderCards('atend','g-atend');
+  renderCards('recl','g-recl');
+  renderCards('advs','g-advs');
+  renderCards('cobr','g-cobr');
+  renderCards('forum','g-forum');
+}
+
+/* ===== FERIADOS 2027 ===== */
+const FERIADOS = [
+  ['2027-01-01','Confraternização Universal','Nacional'],
+  ['2027-02-08','Segunda-feira de Carnaval','Ponto facultativo'],
+  ['2027-02-09','Terça-feira de Carnaval','Ponto facultativo'],
+  ['2027-02-10','Quarta-feira de Cinzas','Ponto facultativo'],
+  ['2027-03-26','Sexta-feira Santa','Nacional'],
+  ['2027-04-21','Tiradentes','Nacional'],
+  ['2027-05-01','Dia do Trabalho','Nacional'],
+  ['2027-05-27','Corpus Christi','Ponto facultativo (feriado em vários municípios)'],
+  ['2027-07-09','Revolução Constitucionalista','Estadual (SP)'],
+  ['2027-09-07','Independência do Brasil','Nacional'],
+  ['2027-10-12','Nossa Senhora Aparecida','Nacional'],
+  ['2027-11-02','Finados','Nacional'],
+  ['2027-11-15','Proclamação da República','Nacional'],
+  ['2027-11-20','Dia Nacional de Zumbi e da Consciência Negra','Nacional'],
+  ['2027-12-25','Natal','Nacional'],
+];
+function renderFeriados(){
+  const tb = document.getElementById('tb-fer');
+  tb.innerHTML = FERIADOS.map(([iso,nome,tipo])=>{
+    const [y,m,d] = iso.split('-').map(Number);
+    const dia = new Date(y,m-1,d).toLocaleDateString('pt-BR',{weekday:'long'});
+    const cls = tipo.startsWith('Ponto') ? 'badge badge-pf' : tipo.startsWith('Estadual') ? 'badge badge-est' : 'badge';
+    return `<tr><td><strong>${fmtData(iso)}</strong></td><td style="text-transform:capitalize">${dia}</td><td>${nome}</td><td><span class="${cls}">${tipo}</span></td></tr>`;
+  }).join('');
+}
+
+/* ===== AGENDA ===== */
+const AG_KEY = 'cassia-agenda-2027';
+let agenda = JSON.parse(localStorage.getItem(AG_KEY) || '[]');
+function salvarAgenda(){ localStorage.setItem(AG_KEY, JSON.stringify(agenda)); }
+
+function addAgenda(){
+  const data = val('a-data'), titulo = val('a-titulo');
+  if(!data || !titulo){ toast('Preencha pelo menos a data e a demanda.'); return; }
+  agenda.push({
+    id: Date.now(), data, hora: val('a-hora') || '',
+    tipo: document.getElementById('a-tipo').value,
+    titulo, obs: val('a-obs') || '', feito: false
+  });
+  salvarAgenda();
+  ['a-data','a-hora','a-titulo','a-obs'].forEach(id=>document.getElementById(id).value='');
+  renderAgenda();
+  toast('Adicionado à agenda!');
+}
+function alternarFeito(id){ const it = agenda.find(x=>x.id===id); if(it){ it.feito=!it.feito; salvarAgenda(); renderAgenda(); } }
+function removerAgenda(id){ if(!confirm('Remover esta demanda da agenda?')) return; agenda = agenda.filter(x=>x.id!==id); salvarAgenda(); renderAgenda(); toast('Removido'); }
+
+function renderAgenda(){
+  const cont = document.getElementById('lista-agenda');
+  if(!agenda.length){ cont.innerHTML = '<div class="vazio">Nenhuma demanda anotada ainda.</div>'; return; }
+  const ordenada = [...agenda].sort((a,b)=> (a.data+a.hora).localeCompare(b.data+b.hora));
+  let html = ''; let diaAtual = '';
+  ordenada.forEach(it=>{
+    if(it.data !== diaAtual){
+      diaAtual = it.data;
+      const dia = new Date(...it.data.split('-').map((n,i)=> i===1 ? Number(n)-1 : Number(n))).toLocaleDateString('pt-BR',{weekday:'long', day:'2-digit', month:'long'});
+      html += `<div class="ag-dia">${dia}</div>`;
+    }
+    html += `<div class="ag-item ${it.feito?'feito':''}">
+      <input type="checkbox" class="ag-check" ${it.feito?'checked':''} onchange="alternarFeito(${it.id})" title="Marcar como concluída">
+      <div class="ag-corpo">
+        <div class="ag-titulo">${escapeHtml(it.titulo)}</div>
+        <div class="ag-meta">${fmtData(it.data)}${it.hora?' · '+it.hora:''} · ${it.tipo}</div>
+        ${it.obs?`<div class="ag-obs">${escapeHtml(it.obs)}</div>`:''}
+      </div>
+      <button class="btn btn-perigo" onclick="removerAgenda(${it.id})">Remover</button>
+    </div>`;
+  });
+  cont.innerHTML = html;
+}
+
+/* ===== NAVEGAÇÃO E RELÓGIO ===== */
+document.querySelectorAll('.tab').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('p-'+btn.dataset.tab).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+function atualizarRelogio(){
+  const n = new Date();
+  document.getElementById('clock').textContent = [n.getHours(),n.getMinutes(),n.getSeconds()].map(x=>String(x).padStart(2,'0')).join(':');
+}
+setInterval(atualizarRelogio,1000); atualizarRelogio();
+
+/* ===== INICIALIZAÇÃO ===== */
+renderAll();
+renderFeriados();
+renderAgenda();
+</script>
+</body>
+</html>
