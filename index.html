@@ -88,7 +88,7 @@ html,body{min-height:100%;font-family:var(--ff);background:var(--bg);color:var(-
 .mais:hover{text-decoration:underline}
 .card-ft{padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:center}
 .chk{font-size:12px;color:var(--text2);display:flex;gap:6px;align-items:center;margin-left:auto;cursor:pointer;user-select:none}
-.btn{border:none;cursor:pointer;font:700 12px var(--ff);padding:8px 14px;border-radius:8px;display:inline-flex;align-items:center;gap:6px}
+.btn{border:none;cursor:pointer;font:700 12px var(--ff);padding:8px 14px;border-radius:8px;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
 .btn-copiar{background:var(--blue);color:#fff}
 .btn-copiar:hover{background:#1347c5}
 .btn-sec{background:var(--bg);color:var(--text2);border:1px solid var(--border)}
@@ -152,6 +152,26 @@ tr.passado td{color:var(--text3)}
 .tipo.municipal{background:var(--green-l);color:var(--green)}
 .tabela-wrap{overflow-x:auto}
 
+/* E-MAIL */
+.em-layout{display:grid;grid-template-columns:minmax(260px,340px) 1fr;gap:16px;align-items:start}
+@media(max-width:800px){.em-layout{grid-template-columns:1fr}}
+.em-painel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.em-painel label{display:block;font-size:12px;font-weight:700;color:var(--text2);margin-bottom:4px}
+.em-painel input,.em-painel select{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;font:13px var(--ff);background:#fafbfe}
+.em-painel input:focus,.em-painel select:focus{outline:none;border-color:var(--blue)}
+.em-opcoes{display:flex;flex-direction:column;gap:8px}
+.em-opt{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--text2);cursor:pointer;border:1px solid var(--border);border-radius:8px;padding:9px 10px}
+.em-opt:has(input:checked){border-color:var(--blue);background:var(--blue-l)}
+.em-opt input{margin-top:3px}
+.em-opt b{color:var(--text);display:block}
+.em-acoes{display:flex;gap:8px;flex-wrap:wrap}
+.em-acoes .btn{flex:1;justify-content:center}
+.em-preview{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.em-head{padding:12px 16px;border-bottom:1px solid var(--border);font-size:12.5px;color:var(--text2)}
+.em-head b{color:var(--text)}
+.em-corpo{padding:18px 20px;font:14px/1.6 var(--ff);color:var(--text);white-space:pre-wrap;word-break:break-word;min-height:200px}
+.em-nota{font-size:12px;color:var(--text3);margin-top:10px}
+
 /* AGENDA */
 .ag-form{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px}
 .ag-form .full{grid-column:1/-1}
@@ -208,6 +228,7 @@ tr.passado td{color:var(--text3)}
   <button class="tab" data-tab="advs" onclick="switchTab('advs')">👨‍⚖️ Advogados</button>
   <button class="tab" data-tab="cobr" onclick="switchTab('cobr')">📨 Cobrança Advogado</button>
   <button class="tab" data-tab="forum" onclick="switchTab('forum')">🏛️ Fórum · Nomeações</button>
+  <button class="tab" data-tab="email" onclick="switchTab('email')">✉️ E-mail</button>
   <button class="tab" data-tab="fer" onclick="switchTab('fer')">📅 Feriados 2027</button>
   <button class="tab" data-tab="agenda" onclick="switchTab('agenda')">🗓️ Agenda</button>
 </nav>
@@ -310,6 +331,42 @@ tr.passado td{color:var(--text3)}
     </div>
   </section>
 
+  <!-- E-MAIL -->
+  <section class="panel" id="p-email">
+    <div class="ptitle">E-mail padronizado</div>
+    <div class="pdesc">Textos prontos para enviar pelo Outlook. Escolha o modelo, preencha o destinatário e copie ou abra no Outlook.</div>
+    <div class="em-layout">
+      <div class="em-painel">
+        <div>
+          <label for="em-dest">Nome do destinatário (opcional)</label>
+          <input id="em-dest" placeholder="Ex.: Dr(a). Maria da Silva" oninput="renderEmail()">
+        </div>
+        <div>
+          <label for="em-assunto">Assunto</label>
+          <input id="em-assunto" oninput="renderEmail()">
+        </div>
+        <div>
+          <label>Modelo</label>
+          <div class="em-opcoes">
+            <label class="em-opt"><input type="radio" name="em-modelo" value="docs" checked onchange="escolherModelo()"><span><b>Documentação necessária</b>Lista de documentos e endereço para o atendimento.</span></label>
+            <label class="em-opt"><input type="radio" name="em-modelo" value="dias" onchange="escolherModelo()"><span><b>Dias e horários de atendimento</b>Atendimento ao público em Santana de Parnaíba e Pirapora.</span></label>
+            <label class="em-opt"><input type="radio" name="em-modelo" value="ambos" onchange="escolherModelo()"><span><b>Documentação e dias de atendimento</b>Os dois assuntos em um único e-mail.</span></label>
+          </div>
+        </div>
+        <div class="em-acoes">
+          <button class="btn btn-copiar" onclick="copiarEmail(this)">Copiar e-mail</button>
+          <button class="btn btn-sec" onclick="abrirOutlook()">Abrir no Outlook</button>
+        </div>
+        <div class="em-nota">O botão "Abrir no Outlook" usa o programa de e-mail padrão do seu computador. Confira o texto antes de enviar.</div>
+      </div>
+      <div class="em-preview">
+        <div class="em-head"><b>Assunto:</b> <span id="em-assunto-view"></span></div>
+        <div class="em-corpo" id="em-corpo"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COBRANÇA E FÓRUM -->
   <!-- FERIADOS -->
   <section class="panel" id="p-fer">
     <div class="ptitle">Feriados e Pontos Facultativos — 2027</div>
@@ -392,7 +449,7 @@ function load(k,def){ try{ const v=JSON.parse(localStorage.getItem(k)); return v
 function save(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
 function toast(m){ const t=$('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(window._tt); window._tt=setTimeout(()=>t.classList.remove('show'),2400); }
 function copiar(texto, btn){
-  const feito=()=>{ if(btn){ const o=btn.textContent; btn.textContent='Copiado ✓'; setTimeout(()=>btn.textContent=o,1500); } toast('Mensagem copiada!'); };
+  const feito=()=>{ if(btn){ const o=btn.textContent; btn.textContent='Copiado ✓'; setTimeout(()=>btn.textContent=o,1500); } toast('Copiado!'); };
   const fallback=()=>{ const ta=document.createElement('textarea'); ta.value=texto; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); feito(); };
   if(navigator.clipboard && window.isSecureContext!==false){ navigator.clipboard.writeText(texto).then(feito).catch(fallback); }
   else fallback();
@@ -446,10 +503,7 @@ function validarCampos(){
 }
 function onCampo(el){
   const k=el.dataset.k;
-  if(FMT[k]){
-    const pos=el.value.length;
-    el.value = FMT[k](el.value);
-  }
+  if(FMT[k]) el.value = FMT[k](el.value);
   validarCampos();
   renderAll();
 }
@@ -478,14 +532,12 @@ const END_RECL = "Rua Alberto Frediani, 770 — Jardim Frediani, Santana de Parn
 const END_PIRA = "R. Bom Jesus, 106 — Centro, Pirapora do Bom Jesus/SP, CEP 06550-000";
 const DOCS = "— RG original e CPF\n— Comprovante de residência atualizado (água, luz, gás, telefone ou aluguel)\n— Comprovante de renda de todos os membros da família:\n   • Trabalhador registrado: os 3 últimos holerites\n   • Não registrado: carteira de trabalho, extrato bancário dos últimos 3 meses, declaração do empregador ou carta de próprio punho reconhecida em cartório\n— Comprovante de patrimônio, se houver (certidão de valor venal, IPTU, veículos, extrato de poupança)\n— Em casos de alimentos: documento da criança e endereço da parte contrária\n— Em casos de divórcio: certidão de casamento atualizada";
 
-/* Saudações: advogados (com nome, se preenchido) e juízo/geral */
 function saudaAdv(){ const n=bruto('adv'); return 'Olá, ' + (n ? 'Dr(a). '+n : 'Dr(a).') + ', tudo bem? '; }
 function APRES_ADV(){ return saudaAdv() + 'Aqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba.'; }
 const APRES_JUIZO = "Prezada(o) Meritíssima(o),\n\nAqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba.\n\n";
 const APRES_GERAL = "Prezada(o),\n\nAqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba.\n\n";
 
-/* ===================== MENSAGENS =====================
-   id · tab · cat (assunto) · pede (o que pedir, mostrado no cartão) · tc (cor) · needs (campos do caso) */
+/* ===================== MENSAGENS ===================== */
 const MSGS = [
   /* ---------- ATENDIMENTO ---------- */
   {id:'bv', tab:'atend', cat:'Início', pin:true, titulo:'Boas-vindas (apresentação)', tc:'tag', needs:[], build:()=>
@@ -576,7 +628,7 @@ Atendimento: segunda a sexta-feira, das 9h às 12h
 Endereço: ${END_RECL}
 Telefone: (11) 4154-5191` + FECHO},
 
-  /* ---------- ADVOGADOS (todas se apresentam) ---------- */
+  /* ---------- ADVOGADOS ---------- */
   {id:'adv_cad', tab:'advs', cat:'Cadastro', pede:'Número da OAB', titulo:'Consulta de cadastro', tc:'tag-amarelo', needs:[], build:()=>
 `${APRES_ADV()}
 
@@ -627,7 +679,7 @@ Para retirar, leve:
 
 Recebi a sua dúvida sobre a anuidade. Um momento, por favor: vou verificar essa informação e retorno em seguida.` + FECHO},
 
-  /* ---------- COBRANÇA (usa dados do caso) ---------- */
+  /* ---------- COBRANÇA ---------- */
   {id:'cob1', tab:'cobr', cat:'Cordial', pede:'Retorno do advogado ao assistido', titulo:'1ª cobrança — pedido de retorno', tc:'tag', needs:['adv','ass','proc'], build:v=>
 `${APRES_ADV()}
 
@@ -654,7 +706,7 @@ Solicito que adote as providências necessárias e entre em contato com o(a) ass
 
 Este comunicado será registrado no histórico do caso.` + ASS_F},
 
-  /* ---------- FÓRUM (usa dados do caso) ---------- */
+  /* ---------- FÓRUM ---------- */
   {id:'f_nom', tab:'forum', cat:'Nomeação', pede:'Dados do caso preenchidos no topo', titulo:'Confirmação de nomeação ao juízo', tc:'tag-verde', needs:['proc','vara','adv','oab','data'], build:v=>
 `${APRES_JUIZO}Em atenção ao ofício recebido, informo que foi realizada a indicação de advogado(a) conveniado(a) para o processo nº ${v.proc}, perante a ${v.vara}.
 
@@ -717,6 +769,104 @@ Após a renovação, a indicação será providenciada.` + ASS_F},
 `${APRES_GERAL}Acuso o recebimento do ofício referente ao processo nº ${v.proc}, encaminhado ao setor competente para as providências cabíveis. Qualquer atualização será comunicada oportunamente.` + ASS_F},
 ];
 const POR_ID = Object.fromEntries(MSGS.map(m=>[m.id,m]));
+
+/* ===================== E-MAIL PADRONIZADO ===================== */
+const EM_DOCS_CORPO = () =>
+`Prezada(o) ${valorEmDest()},
+
+Espero que esteja bem.
+
+Aqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba. Segue a relação de documentos necessários para o atendimento:
+
+${DOCS}
+
+Endereço para atendimento presencial:
+${END_SANT}
+
+O atendimento é realizado de segunda a sexta-feira, das 9h às 12h, com distribuição de até 30 senhas por dia, no local e sem agendamento. O atendimento só é realizado com a documentação completa.
+
+Caso tenha dúvidas, fico à disposição.`;
+
+const EM_DIAS_CORPO = () =>
+`Prezada(o) ${valorEmDest()},
+
+Espero que esteja bem.
+
+Aqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba. Seguem os dias e horários de atendimento ao público:
+
+Santana de Parnaíba
+Endereço: ${END_SANT}
+Dias: segunda a sexta-feira
+Horário: das 9h às 12h
+Senhas: até 30 por dia, distribuídas no local, sem agendamento
+Telefone: (11) 4154-5191
+
+Pirapora do Bom Jesus (CIC)
+Endereço: ${END_PIRA}
+Dia: somente às sextas-feiras
+Horário: das 9h às 12h
+Senhas: até 30 por dia, distribuídas no local
+
+Caso tenha dúvidas, fico à disposição.`;
+
+const EM_AMBOS_CORPO = () =>
+`Prezada(o) ${valorEmDest()},
+
+Espero que esteja bem.
+
+Aqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba. Seguem as informações sobre a documentação necessária e os dias de atendimento ao público.
+
+1. DOCUMENTAÇÃO NECESSÁRIA
+
+${DOCS}
+
+2. DIAS E HORÁRIOS DE ATENDIMENTO
+
+Santana de Parnaíba
+Endereço: ${END_SANT}
+Dias: segunda a sexta-feira
+Horário: das 9h às 12h
+Senhas: até 30 por dia, distribuídas no local, sem agendamento
+Telefone: (11) 4154-5191
+
+Pirapora do Bom Jesus (CIC)
+Endereço: ${END_PIRA}
+Dia: somente às sextas-feiras
+Horário: das 9h às 12h
+Senhas: até 30 por dia, distribuídas no local
+
+O atendimento só é realizado com a documentação completa.
+
+Caso tenha dúvidas, fico à disposição.`;
+
+const EM_MODELOS = {
+  docs:  {assunto:'Documentação necessária para atendimento na Assistência Judiciária', corpo:EM_DOCS_CORPO},
+  dias:  {assunto:'Dias e horários de atendimento ao público — Assistência Judiciária', corpo:EM_DIAS_CORPO},
+  ambos: {assunto:'Documentação e dias de atendimento — Assistência Judiciária', corpo:EM_AMBOS_CORPO}
+};
+function valorEmDest(){ const n=$('em-dest').value.trim(); return n || '(nome)'; }
+function modeloEscolhido(){ const r=document.querySelector('input[name="em-modelo"]:checked'); return r ? r.value : 'docs'; }
+function textoEmail(){ const m=EM_MODELOS[modeloEscolhido()]; return {assunto:m.assunto, corpo:m.corpo()}; }
+function renderEmail(){
+  const t=textoEmail();
+  const assuntoCampo=$('em-assunto').value.trim();
+  $('em-assunto-view').textContent = assuntoCampo || t.assunto;
+  $('em-corpo').textContent = t.corpo;
+}
+function escolherModelo(){
+  $('em-assunto').value='';
+  renderEmail();
+}
+function copiarEmail(btn){
+  const t=textoEmail();
+  const assunto=$('em-assunto').value.trim() || t.assunto;
+  copiar('Assunto: '+assunto+'\n\n'+t.corpo, btn);
+}
+function abrirOutlook(){
+  const t=textoEmail();
+  const assunto=$('em-assunto').value.trim() || t.assunto;
+  window.location.href='mailto:?subject='+encodeURIComponent(assunto)+'&body='+encodeURIComponent(t.corpo);
+}
 
 /* ===================== ESTADO ===================== */
 const ENV_KEY='cassia-enviados', PASSOS_KEY='cassia-passos', AG_KEY='cassia-agenda', CFG_KEY='cassia-config';
@@ -1145,14 +1295,12 @@ function renderAlerta(){
 }
 function fecharAlerta(){ ALERTA_ON=false; renderAlerta(); }
 
-/* ===================== FILTROS DOS PAINÉIS (busca/chips) ===================== */
-/* Os chips de cada painel usam ESTADO; a busca do painel também */
-
 /* ===================== NAVEGAÇÃO E RELÓGIO ===================== */
 function switchTab(name){
   document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
   document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active', p.id==='p-'+name));
   $('caso').classList.toggle('show', ABAS_COM_CASO.includes(name));
+  if(name==='email') renderEmail();
   window.scrollTo({top:0, behavior:'smooth'});
 }
 function atualizarRelogio(){
@@ -1168,6 +1316,7 @@ carregarConfigUI();
 validarCampos();
 renderAll();
 renderProc();
+renderEmail();
 renderFeriados();
 renderAgenda();
 renderAlerta();
