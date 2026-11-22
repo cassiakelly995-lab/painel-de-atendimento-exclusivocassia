@@ -18,6 +18,7 @@ body.dark{
   --amber:#f2c162;--amber-l:#3a2f14;--red:#ff8a7a;--red-l:#3d1f22;--purple:#c0a8ff;--purple-l:#2a2148;
 }
 html,body{min-height:100%;font-family:var(--ff);background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
+#erro-fatal{display:none;margin:20px;padding:16px;border:2px solid var(--red);background:var(--red-l);color:var(--red);border-radius:10px;font-size:13px;white-space:pre-wrap}
 
 /* TOPO */
 #topbar{background:var(--topbg);color:#fff;padding:14px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:sticky;top:0;z-index:50}
@@ -289,6 +290,8 @@ tr.passado td{color:var(--text3)}
 </head>
 <body>
 
+<div id="erro-fatal"></div>
+
 <div id="topbar">
   <div>
     <div class="tb-title">Painel de Atendimento — Cássia</div>
@@ -351,7 +354,6 @@ tr.passado td{color:var(--text3)}
 
   <div id="alerta"></div>
 
-  <!-- HOJE -->
   <section class="panel" id="p-hoje">
     <div class="ptitle">Hoje</div>
     <div class="pdesc">Resumo do seu dia: demandas, mensagens aguardando envio, próximo feriado e conferência institucional.</div>
@@ -376,14 +378,12 @@ tr.passado td{color:var(--text3)}
     </div>
   </section>
 
-  <!-- BUSCA GLOBAL -->
   <section class="panel" id="p-busca">
     <div class="ptitle">Resultados da busca</div>
     <div class="pdesc">Mensagens de todas as abas que correspondem à pesquisa. Cada cartão mostra a aba de origem.</div>
     <div class="grid" id="g-busca"></div>
   </section>
 
-  <!-- ATENDIMENTO -->
   <section class="panel" id="p-atend">
     <div class="ptitle">Atendimento ao Assistido</div>
     <div class="pdesc">Escolha o assunto ou pesquise. A apresentação completa fica na mensagem de boas-vindas.</div>
@@ -395,7 +395,6 @@ tr.passado td{color:var(--text3)}
     <div class="grid" id="g-atend"></div>
   </section>
 
-  <!-- RECLAMAÇÃO -->
   <section class="panel" id="p-recl">
     <div class="ptitle">Reclamação contra Advogado</div>
     <div class="pdesc">Ordem: pedir o CPF, verificar a nomeação e orientar conforme o caso.</div>
@@ -407,7 +406,6 @@ tr.passado td{color:var(--text3)}
     <div class="grid" id="g-recl"></div>
   </section>
 
-  <!-- ADVOGADOS -->
   <section class="panel" id="p-advs">
     <div class="ptitle">Orientações para Advogados</div>
     <div class="pdesc">Consulta de cadastro, andamento de inscrição, inscrição, certificado digital, token e anuidade. Toda mensagem se apresenta ao advogado.</div>
@@ -418,7 +416,6 @@ tr.passado td{color:var(--text3)}
     <div class="grid" id="g-advs"></div>
   </section>
 
-  <!-- COBRANÇA -->
   <section class="panel" id="p-cobr">
     <div class="ptitle">Contato com Advogado Nomeado</div>
     <div class="pdesc">Preencha os dados do caso no topo. Os campos entram nas mensagens automaticamente.</div>
@@ -429,7 +426,6 @@ tr.passado td{color:var(--text3)}
     <div class="grid" id="g-cobr"></div>
   </section>
 
-  <!-- FÓRUM -->
   <section class="panel" id="p-forum">
     <div class="ptitle">Fórum · Nomeações Especiais</div>
     <div class="pdesc">Confira o que tem em mãos, marque cada passo no DOL e use as mensagens. Os dados do caso ficam no topo.</div>
@@ -451,7 +447,6 @@ tr.passado td{color:var(--text3)}
     </div>
   </section>
 
-  <!-- E-MAIL -->
   <section class="panel" id="p-email">
     <div class="ptitle">E-mail padronizado</div>
     <div class="pdesc">Textos prontos para enviar pelo Outlook. Escolha o modelo, preencha o destinatário e copie ou abra no Outlook.</div>
@@ -501,7 +496,6 @@ tr.passado td{color:var(--text3)}
     </div>
   </section>
 
-  <!-- HISTÓRICO -->
   <section class="panel" id="p-hist">
     <div class="ptitle">Histórico de envios</div>
     <div class="pdesc">"Enviada" foi confirmada por você. "Copiada" significa que o texto foi copiado. "Abrir no Outlook" não confirma envio. Tudo fica salvo neste navegador.</div>
@@ -528,7 +522,6 @@ tr.passado td{color:var(--text3)}
     <div id="lista-hist"></div>
   </section>
 
-  <!-- FERIADOS -->
   <section class="panel" id="p-fer">
     <div class="ptitle">Feriados e Pontos Facultativos — 2027</div>
     <div class="pdesc">Feriados nacionais, estadual de São Paulo e pontos facultativos. Os municipais de Santana de Parnaíba e Pirapora do Bom Jesus serão incluídos assim que o calendário oficial for cadastrado.</div>
@@ -545,7 +538,6 @@ tr.passado td{color:var(--text3)}
     </div>
   </section>
 
-  <!-- AGENDA -->
   <section class="panel" id="p-agenda">
     <div class="ptitle">Agenda — Demandas da Subseção</div>
     <div class="pdesc">Anote as demandas do calendário da Subseção. Ctrl+Enter salva rapidamente. Os dados ficam salvos neste navegador.</div>
@@ -621,6 +613,12 @@ tr.passado td{color:var(--text3)}
 <div id="toast"></div>
 
 <script>
+/* ===================== PROTEÇÃO CONTRA FALHAS ===================== */
+window.addEventListener('error', function(ev){
+  const box = document.getElementById('erro-fatal');
+  if(box){ box.style.display='block'; box.textContent = 'Erro ao carregar o painel:\n' + (ev.message||'') + '\nLinha ' + (ev.lineno||'?'); }
+});
+
 /* ===================== UTILIDADES ===================== */
 const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2,'0');
@@ -629,10 +627,12 @@ function hojeISO(){ const d=new Date(); return d.getFullYear()+'-'+pad(d.getMont
 function addDias(iso,n){ const [y,m,d]=iso.split('-').map(Number); const x=new Date(Date.UTC(y,m-1,d+n)); return x.getUTCFullYear()+'-'+pad(x.getUTCMonth()+1)+'-'+pad(x.getUTCDate()); }
 function addMes(iso,n){ const [y,m,d]=iso.split('-').map(Number); const x=new Date(Date.UTC(y,m-1+n,d)); return x.getUTCFullYear()+'-'+pad(x.getUTCMonth()+1)+'-'+pad(x.getUTCDate()); }
 function diffDias(a,b){ const [y1,m1,d1]=a.split('-').map(Number); const [y2,m2,d2]=b.split('-').map(Number); return Math.round((Date.UTC(y2,m2-1,d2)-Date.UTC(y1,m1-1,d1))/86400000); }
-function fmtData(iso){ const [y,m,d]=iso.split('-'); return d+'/'+m+'/'+y; }
+function fmtData(iso){ const [y,m,d]=String(iso).split('-'); return d+'/'+m+'/'+y; }
 function diaSemana(iso, opts){ const [y,m,d]=iso.split('-').map(Number); return new Date(y,m-1,d).toLocaleDateString('pt-BR', opts||{weekday:'long'}); }
-function load(k,def){ try{ const v=JSON.parse(localStorage.getItem(k)); return v ?? def; }catch(e){ return def; } }
+function load(k,def){ try{ const v=JSON.parse(localStorage.getItem(k)); return (v===null || v===undefined) ? def : v; }catch(e){ return def; } }
 function save(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+function arr(v){ return Array.isArray(v) ? v : []; }
+function obj(v){ return (v && typeof v==='object' && !Array.isArray(v)) ? v : {}; }
 function novoId(){ return Date.now()+Math.floor(Math.random()*1000000); }
 function toast(m){ const t=$('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(window._tt); window._tt=setTimeout(()=>t.classList.remove('show'),2400); }
 function copiar(texto, btn, cb){
@@ -1054,7 +1054,7 @@ const EM_MODELOS = {
 };
 function modeloEscolhido(){ const r=document.querySelector('input[name="em-modelo"]:checked'); return r ? r.value : 'docs'; }
 function textoEmail(){
-  const m=EM_MODELOS[modeloEscolhido()];
+  const m=EM_MODELOS[modeloEscolhido()] || EM_MODELOS.docs;
   const assunto = $('em-assunto').value.trim() || m.assunto;
   return {para:$('em-para').value.trim(), assunto, corpo:m.corpo()+assinaturaEm(), modelo:modeloEscolhido()};
 }
@@ -1078,7 +1078,7 @@ function abrirOutlook(){
   window.location.href = 'mailto:'+to+'?subject='+encodeURIComponent(t.assunto)+'&body='+encodeURIComponent(t.corpo);
 }
 
-/* ===================== ESTADO ===================== */
+/* ===================== ESTADO (com validação) ===================== */
 const ENV_KEY='cassia-enviados', ENVIOS_KEY='cassia-envios', FAV_KEY='cassia-fav', PASSOS_KEY='cassia-passos', AG_KEY='cassia-agenda', CFG_KEY='cassia-config';
 const DEFAULT_MODELOS = [
   {nome:'Retorno ao advogado', titulo:'Retorno ao advogado', tipo:'Prazo', rec:'none', subs:['Verificar o caso no sistema','Enviar cobrança ou retorno']},
@@ -1092,20 +1092,46 @@ const BLOCOS = [
   {k:'ends', n:'Endereços, horários e senhas'},
   {k:'fer',  n:'Feriados e expediente'}
 ];
-const cfgSalva = load(CFG_KEY, null);
-let CFG = Object.assign({salvarObs:true, tema:'claro', aba:'hoje', agFiltro:'todas', agOrdem:'data', agView:'lista', conf:{}, privOk:false}, cfgSalva||{});
-if(!cfgSalva) CFG.modelos = JSON.parse(JSON.stringify(DEFAULT_MODELOS));
-if(!CFG.modelos) CFG.modelos = [];
+function configPadrao(){
+  return {salvarObs:true, tema:'claro', aba:'hoje', agFiltro:'todas', agOrdem:'data', agView:'lista', conf:{}, privOk:false, modelos:JSON.parse(JSON.stringify(DEFAULT_MODELOS))};
+}
+function carregarCfg(){
+  const c = Object.assign(configPadrao(), obj(load(CFG_KEY, {})));
+  c.conf = obj(c.conf);
+  c.modelos = arr(c.modelos).filter(m=>m && typeof m==='object' && m.titulo).map(m=>({nome:String(m.nome||m.titulo), titulo:String(m.titulo), tipo:String(m.tipo||'Outro'), rec:String(m.rec||'none'), subs:arr(m.subs).map(String)}));
+  if(!c.modelos.length) c.modelos = JSON.parse(JSON.stringify(DEFAULT_MODELOS));
+  return c;
+}
+let CFG = carregarCfg();
 function saveCfg(){ save(CFG_KEY, CFG); }
 
-let ENVIADOS = load(ENV_KEY, []);
-let ENVIOS = load(ENVIOS_KEY, []).map(e=>Object.assign({tipo:'enviada'},e));
-let FAV = load(FAV_KEY, []);
+function normAg(x){
+  x = obj(x);
+  const subs = arr(x.subs).map(s=> typeof s==='string' ? {t:s, ok:false} : {t:String(s.t||''), ok:!!s.ok}).filter(s=>s.t);
+  return {
+    id: x.id || novoId(),
+    data: /^\d{4}-\d{2}-\d{2}$/.test(x.data) ? x.data : hojeISO(),
+    hora: typeof x.hora==='string' ? x.hora : '',
+    tipo: typeof x.tipo==='string' ? x.tipo : 'Outro',
+    titulo: String(x.titulo||'(sem título)'),
+    obs: typeof x.obs==='string' ? x.obs : '',
+    rec: ['none','semanal','mensal'].includes(x.rec) ? x.rec : 'none',
+    subs, feito: !!x.feito
+  };
+}
+let ENVIADOS = arr(load(ENV_KEY, [])).filter(x=>typeof x==='string');
+let ENVIOS = arr(load(ENVIOS_KEY, [])).filter(e=>e && typeof e==='object').map(e=>Object.assign({tipo:'enviada'},e));
+let FAV = arr(load(FAV_KEY, [])).filter(x=>typeof x==='string');
+let agenda = arr(load(AG_KEY, [])).map(normAg);
+
 const PAINEIS = ['atend','recl','advs','cobr','forum'];
 const ESTADO = {atend:{cat:'Todas',q:''}, recl:{cat:'Todas',q:''}, advs:{cat:'Todas',q:''}, cobr:{cat:'Todas',q:''}, forum:{cat:'Todas',q:''}};
 const ABAS_COM_CASO = ['advs','cobr','forum'];
 let ATUAL = 'hoje';
 let ALERTA_ON = true;
+let editId = null, SEL = new Set(), dragId = null;
+let CAL = {ano:new Date().getFullYear(), mes:new Date().getMonth()};
+const AG_FILTROS = [['todas','Todas'],['hoje','Hoje'],['semana','Próximos 7 dias'],['pend','Pendentes'],['atras','Atrasadas'],['feitas','Concluídas']];
 
 function refrescar(){
   renderAll();
@@ -1117,7 +1143,7 @@ function refrescar(){
 
 /* ===================== REGISTRO DE ENVIOS ===================== */
 function logEnvio(tipo, id, dest, meta){
-  const m = meta || (POR_ID[id] ? {titulo:POR_ID[id].titulo, cat:POR_ID[id].cat} : {titulo:id, cat:'Outros'});
+  const m = meta || (POR_ID[id] ? {titulo:POR_ID[id].titulo, cat:POR_ID[id].cat} : {titulo:String(id), cat:'Outros'});
   const hoje=hojeISO();
   if(tipo==='copiada' && ENVIOS.some(e=>e.tipo==='copiada' && e.id===id && e.data===hoje)) return;
   const agora=new Date();
@@ -1133,7 +1159,7 @@ function pendentesEnvio(){
   return out.slice(0,10);
 }
 
-/* ===================== CARTÕES DE MENSAGEM ===================== */
+/* ===================== CARTÕES ===================== */
 function cardHtml(m, v, comOrigem){
   const txt = m.build(v);
   const falta = faltam(m.needs);
@@ -1346,7 +1372,7 @@ function exportarHistorico(){
   toast('Arquivo gerado.');
 }
 
-/* ===================== PASSOS DO DOL (FÓRUM) ===================== */
+/* ===================== PASSOS DO DOL ===================== */
 const PROC = [
   {key:'dep', aberto:true, titulo:'Depoimento Especial (Lei 13.431/17)',
    quando:'Quando indicar: vítima de violência, acolhida institucionalmente ou em internação; proteção de identidade de gênero com oposição dos responsáveis. Não exige avaliação financeira.',
@@ -1386,9 +1412,9 @@ const PROC = [
    ]}
 ];
 function renderProc(){
-  const st = load(PASSOS_KEY, {});
+  const st = obj(load(PASSOS_KEY, {}));
   $('proc').innerHTML = PROC.map(p=>{
-    const marc = st[p.key] || [];
+    const marc = arr(st[p.key]);
     const feitos = p.passos.filter((_,i)=>marc[i]).length;
     return `<details id="det-${p.key}" ${p.aberto?'open':''}>
       <summary>${p.titulo} <span class="prog">${feitos}/${p.passos.length}</span></summary>
@@ -1402,14 +1428,14 @@ function renderProc(){
   }).join('');
 }
 function togglePasso(k,i,v,el){
-  const st = load(PASSOS_KEY, {});
-  st[k] = st[k] || []; st[k][i] = v; save(PASSOS_KEY, st);
+  const st = obj(load(PASSOS_KEY, {}));
+  st[k] = arr(st[k]); st[k][i] = v; save(PASSOS_KEY, st);
   el.closest('label').classList.toggle('ok', v);
   const det=$('det-'+k);
   det.querySelector('.prog').textContent = det.querySelectorAll('.passo input:checked').length+'/'+det.querySelectorAll('.passo').length;
 }
 function reiniciarProc(k){
-  const st = load(PASSOS_KEY, {}); st[k]=[]; save(PASSOS_KEY, st);
+  const st = obj(load(PASSOS_KEY, {})); st[k]=[]; save(PASSOS_KEY, st);
   const det=$('det-'+k);
   det.querySelectorAll('.passo').forEach(l=>{ l.classList.remove('ok'); l.querySelector('input').checked=false; });
   det.querySelector('.prog').textContent = '0/'+det.querySelectorAll('.passo').length;
@@ -1434,7 +1460,6 @@ const FERIADOS = [
   ['2027-11-20','Dia Nacional de Zumbi e da Consciência Negra','nacional'],
   ['2027-12-25','Natal','nacional'],
 ];
-/* Feriados municipais: ['AAAA-MM-DD','Nome','municipal'] com o calendário oficial das prefeituras */
 const MUNICIPAIS = [];
 const TODOS_FER = [...FERIADOS, ...MUNICIPAIS].sort((a,b)=>a[0].localeCompare(b[0]));
 const FER_MAP = Object.fromEntries(TODOS_FER.map(([iso,nome,tipo])=>[iso,{nome,tipo}]));
@@ -1513,15 +1538,7 @@ function agendarFeriado(iso){
   avisoDia();
 }
 
-/* ===================== AGENDA: DADOS ===================== */
-function normAg(x){
-  return Object.assign({rec:'none', subs:[], obs:'', hora:'', tipo:'Outro', feito:false}, x, {subs:Array.isArray(x.subs)?x.subs:[]});
-}
-let agenda = load(AG_KEY, []).map(normAg);
-let editId = null, SEL = new Set(), dragId = null;
-let CAL = {ano:new Date().getFullYear(), mes:new Date().getMonth()};
-const AG_FILTROS = [['todas','Todas'],['hoje','Hoje'],['semana','Próximos 7 dias'],['pend','Pendentes'],['atras','Atrasadas'],['feitas','Concluídas']];
-
+/* ===================== AGENDA ===================== */
 function setAgFiltro(f){ CFG.agFiltro=f; saveCfg(); renderAgenda(); }
 function setAgOrdem(v){ CFG.agOrdem=v; saveCfg(); renderAgenda(); }
 function setAgView(v){ CFG.agView=v; saveCfg(); renderAgenda(); }
@@ -1640,7 +1657,7 @@ function limparConcluidas(){
   save(AG_KEY, agenda); atualizarTudoAg(); toast('Concluídas removidas.');
 }
 
-/* ===================== AGENDA: MODELOS ===================== */
+/* ===================== MODELOS ===================== */
 function renderModelos(){
   $('a-modelo').innerHTML = '<option value="">— modelos salvos —</option>' + CFG.modelos.map((m,i)=>`<option value="${i}">${esc(m.nome)}</option>`).join('');
 }
@@ -1667,7 +1684,7 @@ function excluirModelo(){
   CFG.modelos.splice(Number(i),1); saveCfg(); renderModelos(); toast('Modelo excluído.');
 }
 
-/* ===================== AGENDA: SELEÇÃO EM LOTE ===================== */
+/* ===================== SELEÇÃO EM LOTE ===================== */
 function toggleSel(id,v){ if(v) SEL.add(id); else SEL.delete(id); renderBulk(); }
 function renderBulk(){
   const b=$('bulk');
@@ -1722,27 +1739,4 @@ function itemHtml(x){
 }
 function renderLista(lista){
   if(!lista.length){ $('lista-agenda').innerHTML='<div class="vazio">Nenhuma demanda com este filtro.</div>'; return; }
-  const agrupar = CFG.agOrdem==='data';
-  let html='', dia='';
-  lista.forEach(x=>{
-    if(agrupar && x.data!==dia){
-      dia=x.data;
-      const f=FER_MAP[dia];
-      html+=`<div class="ag-dia">${diaSemana(dia,{weekday:'long',day:'2-digit',month:'long'})}${f?` <span class="badge b-fer">Feriado: ${esc(f.nome)}</span>`:''}</div>`;
-    }
-    html+=itemHtml(x);
-  });
-  $('lista-agenda').innerHTML=html;
-}
-function calMes(d){ const x=new Date(CAL.ano, CAL.mes+d, 1); CAL={ano:x.getFullYear(), mes:x.getMonth()}; renderAgenda(); }
-function calHoje(){ CAL={ano:new Date().getFullYear(), mes:new Date().getMonth()}; renderAgenda(); }
-function renderCal(lista){
-  const {ano,mes}=CAL, primeiro=new Date(ano,mes,1).getDay(), dias=new Date(ano,mes+1,0).getDate(), h=hojeISO();
-  let html=`<div class="cal-nav">
-    <button class="btn btn-sec" onclick="calMes(-1)">◀</button>
-    <b>${MESES[mes]} de ${ano}</b>
-    <button class="btn btn-sec" onclick="calMes(1)">▶</button>
-    <button class="btn btn-sec" onclick="calHoje()">Hoje</button>
-    <span class="muted" style="font-size:12px">Arraste uma demanda para outro dia para reagendar. Clique em um dia vazio para preencher a data.</span>
-  </div>`;
-  html+='<div class="cal-grid">'+['D','S','T','Q','Q','S','S'].map(d=>`<div class="cal-dsem">${d
+  cons
