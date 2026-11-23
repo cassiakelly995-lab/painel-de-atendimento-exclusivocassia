@@ -5,1738 +5,268 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Painel da Cássia — OAB SP Santana de Parnaíba</title>
 <style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --bg:#f3f5fa;--surface:#fff;--inp:#fafbfe;--border:#e1e6f0;--text:#0d1526;--text2:#455069;--text3:#7d879f;
-  --topbg:#0f2d6b;--navy:#0f2d6b;--blue:#1a56db;--blue-l:#eaf1ff;--green:#0d7a4e;--green-l:#e7f8ef;
-  --amber:#8a5a00;--amber-l:#fff6df;--red:#b42318;--red-l:#fdecea;--purple:#5b21b6;--purple-l:#f1ebff;
-  --ff:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;--mono:ui-monospace,Menlo,Consolas,monospace;
-}
-body.dark{
-  --bg:#0e1420;--surface:#162032;--inp:#1b2740;--border:#2a3852;--text:#e6ecf7;--text2:#b8c3d9;--text3:#8a96ad;
-  --topbg:#0a1a3d;--navy:#a9c4ff;--blue:#6b9bff;--blue-l:#1d2f54;--green:#5fd6a6;--green-l:#173a2d;
-  --amber:#f2c162;--amber-l:#3a2f14;--red:#ff8a7a;--red-l:#3d1f22;--purple:#c0a8ff;--purple-l:#2a2148;
-}
-html,body{min-height:100%;font-family:var(--ff);background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
-#erro-fatal{display:none;margin:20px;padding:16px;border:2px solid var(--red);background:var(--red-l);color:var(--red);border-radius:10px;font-size:13px;white-space:pre-wrap}
-
-/* TOPO */
-#topbar{background:var(--topbg);color:#fff;padding:14px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:sticky;top:0;z-index:50}
-.tb-title{font-size:15px;font-weight:700}
-.tb-sub{font-size:11.5px;opacity:.75}
-.tb-right{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.tb-hoje{font-size:12px;opacity:.85;text-transform:capitalize}
-.tb-clock{font-family:var(--mono);font-size:13px;background:rgba(255,255,255,.12);padding:5px 12px;border-radius:7px}
-.tema-btn{background:rgba(255,255,255,.12);border:none;color:#fff;border-radius:7px;padding:5px 10px;cursor:pointer;font-size:14px}
-#privacy{background:var(--amber-l);color:var(--amber);font-size:12px;padding:7px 20px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;border-bottom:1px solid var(--border)}
-#privacy.oculto{display:none}
-
-/* ABAS */
-#tabs{background:var(--surface);border-bottom:1px solid var(--border);display:flex;gap:4px;padding:0 16px;overflow-x:auto;position:sticky;top:60px;z-index:40;scrollbar-width:thin;-webkit-overflow-scrolling:touch}
-.tab{padding:13px 16px;border:none;background:none;font:600 13px var(--ff);color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;flex-shrink:0}
-.tab:hover{color:var(--text2)}
-.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
-
-/* BUSCA GLOBAL */
-#gbar{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 20px}
-#gbar-in{max-width:1100px;margin:0 auto;display:flex;gap:8px;align-items:center}
-#gq{flex:1;border:1.5px solid var(--border);border-radius:10px;padding:9px 12px;font:13.5px var(--ff);background:var(--inp);color:var(--text)}
-#gq:focus{outline:none;border-color:var(--blue)}
-#gq-info{font-size:12px;color:var(--text3);white-space:nowrap}
-
-/* DADOS DO CASO */
-#caso{background:var(--surface);border-bottom:1px solid var(--border);padding:12px 20px;display:none}
-#caso.show{display:block}
-#caso-main{max-width:1100px;margin:0 auto}
-.caso-tt{font-size:12px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.caso-tt small{font-weight:500;color:var(--text3);text-transform:none;letter-spacing:0}
-.caso-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px}
-.campo label{display:block;font-size:11.5px;font-weight:700;color:var(--text2);margin-bottom:3px}
-.campo input,.campo select{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:7px 9px;font:13px var(--ff);background:var(--inp);color:var(--text)}
-.campo input:focus,.campo select:focus{outline:none;border-color:var(--blue)}
-.campo input.inv{border-color:var(--red);background:var(--red-l)}
-.erro{font-size:11px;color:var(--red);font-weight:600;margin-top:3px}
-.erro:empty{display:none}
-
-/* LAYOUT */
-#main{max-width:1100px;margin:0 auto;padding:22px 20px 60px}
-.panel{display:none}
-.panel.active{display:block}
-.ptitle{font-size:19px;font-weight:800;color:var(--navy);margin-bottom:4px}
-.pdesc{color:var(--text3);font-size:13px;margin-bottom:16px}
-.h3{font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--text3);margin:22px 0 10px}
-.muted{color:var(--text3)}
-
-/* FERRAMENTAS */
-.toolbar{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
-.busca{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font:13.5px var(--ff);background:var(--surface);color:var(--text)}
-.busca:focus{outline:none;border-color:var(--blue)}
-.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.chip{border:1px solid var(--border);background:var(--surface);border-radius:20px;padding:5px 12px;font:600 12px var(--ff);color:var(--text2);cursor:pointer}
-.chip:hover{border-color:var(--blue);color:var(--blue)}
-.chip.on{background:var(--blue);border-color:var(--blue);color:#fff}
-.sel-box{border:1.5px solid var(--border);border-radius:8px;padding:6px 8px;font:13px var(--ff);background:var(--inp);color:var(--text)}
-.ag-linha{display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between}
-
-/* AVISOS */
-.aviso{border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:13px;border-left:4px solid}
-.aviso-azul{background:var(--blue-l);border-color:var(--blue);color:var(--navy)}
-.aviso-vermelho{background:var(--red-l);border-color:var(--red);color:var(--red)}
-.aviso-alerta{background:var(--amber-l);border-color:#e0a800;color:var(--amber);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-
-/* CARTÕES */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;transition:opacity .15s,border-color .15s}
-.card.enviado{opacity:.62;border-color:#9bd7b6}
-.card.enviado .card-hd{background:var(--green-l)}
-.card-hd{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:8px}
-.hd-dir{display:flex;align-items:center;gap:6px;flex-shrink:0}
-.card-title{font-weight:700;font-size:13.5px}
-.star{background:none;border:1px solid var(--border);border-radius:7px;width:28px;height:26px;cursor:pointer;color:var(--text3);font-size:13px;line-height:1}
-.star.on{color:#c98a00;border-color:#f0d27a;background:var(--amber-l)}
-.tag{font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:20px;background:var(--blue-l);color:var(--blue);white-space:nowrap}
-.tag-verde{background:var(--green-l);color:var(--green)}
-.tag-roxo{background:var(--purple-l);color:var(--purple)}
-.tag-vermelho{background:var(--red-l);color:var(--red)}
-.tag-amarelo{background:var(--amber-l);color:var(--amber)}
-.card-txt{padding:12px 14px;flex:1}
-.origem{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:var(--text3);margin-bottom:6px}
-.pede{font-size:12px;color:var(--navy);background:var(--blue-l);padding:6px 9px;border-radius:6px;margin-bottom:8px}
-.msg{white-space:pre-wrap;word-break:break-word;font-size:12.5px;color:var(--text2);line-height:1.65;max-height:120px;overflow:hidden}
-.msg.aberto{max-height:none}
-.mais{background:none;border:none;color:var(--blue);font:700 12px var(--ff);cursor:pointer;padding:6px 0 0}
-.mais:hover{text-decoration:underline}
-.card-ft{padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:center}
-.chk{font-size:12px;color:var(--text2);display:flex;gap:6px;align-items:center;margin-left:auto;cursor:pointer;user-select:none}
-.btn{border:none;cursor:pointer;font:700 12px var(--ff);padding:8px 14px;border-radius:8px;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
-.btn-copiar{background:var(--blue);color:#fff}
-.btn-copiar:hover{filter:brightness(.92)}
-.btn-sec{background:var(--bg);color:var(--text2);border:1px solid var(--border)}
-.btn-sec:hover{filter:brightness(.97)}
-.btn-perigo{background:var(--red-l);color:var(--red)}
-.faltam{font-size:11.5px;font-weight:700;color:var(--amber);background:var(--amber-l);padding:5px 9px;border-radius:6px;margin-top:8px}
-.vazio{text-align:center;color:var(--text3);padding:30px;background:var(--surface);border:1.5px dashed var(--border);border-radius:12px;grid-column:1/-1}
-
-/* HOJE */
-.hoje-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-@media(max-width:800px){.hoje-cols{grid-template-columns:1fr}}
-.conf-row{display:flex;justify-content:space-between;align-items:center;gap:8px;border:1px solid var(--border);border-radius:10px;padding:9px 12px;margin-bottom:8px;background:var(--surface)}
-.st-red{color:var(--red);font-weight:700}
-.st-amber{color:var(--amber);font-weight:700}
-.st-green{color:var(--green);font-weight:700}
-
-/* PROCEDIMENTOS */
-details{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
-summary{padding:13px 16px;font-weight:700;color:var(--navy);cursor:pointer;list-style:none;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-summary::-webkit-details-marker{display:none}
-summary::before{content:"▸";color:var(--blue)}
-details[open] summary::before{content:"▾"}
-.prog{margin-left:auto;font:700 11.5px var(--mono);background:var(--bg);border:1px solid var(--border);padding:2px 9px;border-radius:20px;color:var(--text2)}
-.det-body{padding:0 16px 14px;font-size:13px;color:var(--text2)}
-.sub-h{font-weight:700;color:var(--text);margin:6px 0 8px}
-.tenha{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px;margin-bottom:10px}
-.tenha b{color:var(--text)}
-.tenha ul{margin:6px 0 0 18px}
-.passo{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--border);cursor:pointer}
-.passo:last-of-type{border-bottom:none}
-.passo input{margin-top:3px;width:16px;height:16px;flex-shrink:0;cursor:pointer}
-.passo.ok span{text-decoration:line-through;color:var(--text3)}
-.passo b{color:var(--text)}
-.contatos{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;font-size:13px;color:var(--text2);margin-top:16px;line-height:1.7}
-.contatos b{color:var(--text)}
-
-/* STATS */
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
-.stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px;font-size:12px;color:var(--text3)}
-.stat b{display:block;font-size:22px;color:var(--navy);line-height:1.2}
-.stat .grande{font-size:15px}
-.stat.destaque{background:var(--topbg);color:#dbe6ff;border-color:var(--topbg)}
-.stat.destaque b{color:#fff}
-.stat.alerta{border-color:#f3b4ad;background:var(--red-l)}
-.stat.alerta b{color:var(--red)}
-
-/* FERIADOS */
-.meses{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px}
-.mes{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px}
-.mes-t{font-weight:800;font-size:12.5px;color:var(--navy);margin-bottom:6px}
-.mes-g{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;font-size:11px}
-.mes-g span{padding:4px 0;border-radius:5px;color:var(--text2)}
-.mes-g .dsem{color:var(--text3);font-weight:700}
-.mes-g .hol{font-weight:800;cursor:pointer}
-.mes-g .hol.nacional{background:var(--red-l);color:var(--red)}
-.mes-g .hol.estadual{background:var(--purple-l);color:var(--purple)}
-.mes-g .hol.ponto{background:var(--amber-l);color:var(--amber)}
-.mes-g .hol.municipal{background:var(--green-l);color:var(--green)}
-.mes-g .hoje{outline:2px solid var(--blue);outline-offset:-2px}
-table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
-th{background:var(--topbg);color:#fff;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px}
-tr:last-child td{border-bottom:none}
-tr.passado td{color:var(--text3)}
-.tipo{font-size:11px;font-weight:700;padding:2px 8px;border-radius:12px;white-space:nowrap}
-.tipo.nacional{background:var(--red-l);color:var(--red)}
-.tipo.estadual{background:var(--purple-l);color:var(--purple)}
-.tipo.ponto{background:var(--amber-l);color:var(--amber)}
-.tipo.municipal{background:var(--green-l);color:var(--green)}
-.tabela-wrap{overflow-x:auto}
-
-/* E-MAIL */
-.em-layout{display:grid;grid-template-columns:minmax(260px,340px) 1fr;gap:16px;align-items:start}
-@media(max-width:800px){.em-layout{grid-template-columns:1fr}}
-.em-painel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px}
-.em-painel label.rot{display:block;font-size:12px;font-weight:700;color:var(--text2);margin-bottom:4px}
-.em-painel input{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;font:13px var(--ff);background:var(--inp);color:var(--text)}
-.em-painel input:focus{outline:none;border-color:var(--blue)}
-.em-opcoes{display:flex;flex-direction:column;gap:8px}
-.em-opt{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--text2);cursor:pointer;border:1px solid var(--border);border-radius:8px;padding:9px 10px}
-.em-opt:has(input:checked){border-color:var(--blue);background:var(--blue-l)}
-.em-opt input{width:auto;margin-top:3px}
-.em-opt b{color:var(--text);display:block}
-.em-ass{display:flex;gap:8px}
-.em-ass .em-opt{flex:1;align-items:center}
-.em-acoes{display:flex;gap:8px;flex-wrap:wrap}
-.em-acoes .btn{flex:1;justify-content:center}
-.em-preview{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.em-head{padding:12px 16px;border-bottom:1px solid var(--border);font-size:12.5px;color:var(--text2);display:flex;flex-direction:column;gap:4px}
-.em-head b{color:var(--text)}
-.em-corpo{padding:18px 20px;font:14px/1.6 var(--ff);color:var(--text);white-space:pre-wrap;word-break:break-word;min-height:200px}
-.em-nota{font-size:12px;color:var(--text3)}
-
-/* HISTÓRICO */
-.hist-filtros{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:12px}
-.hist-filtros label{display:block;font-size:11.5px;font-weight:700;color:var(--text2);margin-bottom:3px}
-.hist-filtros input,.hist-filtros select{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:7px 9px;font:13px var(--ff);background:var(--inp);color:var(--text)}
-.hist-tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
-.b-env{background:var(--green-l);color:var(--green)}
-.b-cop{background:var(--blue-l);color:var(--blue)}
-.b-out{background:var(--purple-l);color:var(--purple)}
-
-/* AGENDA */
-.ag-form{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:16px}
-.ag-form .full{grid-column:1/-1}
-.ag-form input,.ag-form select,.ag-form textarea{width:100%;border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;font:13px var(--ff);background:var(--inp);color:var(--text)}
-.ag-form textarea{min-height:60px;resize:vertical}
-.ag-form label{display:block;font-size:12px;font-weight:700;color:var(--text2);margin-bottom:4px}
-.modelo-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.modelo-row select{flex:1;min-width:200px}
-.ag-acoes{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-.ag-acoes #a-aviso{margin-right:auto}
-.aviso-mini{font-size:12px;font-weight:700;color:var(--amber);background:var(--amber-l);padding:4px 10px;border-radius:6px}
-.linha-chk{font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px;cursor:pointer;font-weight:600}
-.ag-tools{display:flex;gap:8px;flex-wrap:wrap}
-.privacidade{font-size:12px;color:var(--text3);margin-bottom:12px}
-.ag-dia{font-size:12px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.4px;margin:18px 0 8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.bulk{display:none;align-items:center;gap:8px;flex-wrap:wrap;background:var(--blue-l);border:1px solid var(--blue);border-radius:10px;padding:10px 12px;margin-bottom:12px;color:var(--text)}
-.ag-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;margin-bottom:8px}
-.ag-item.urg-atr{border-left:4px solid var(--red)}
-.ag-item.urg-hoje{border-left:4px solid #e0a800}
-.ag-item.urg-prox{border-left:4px solid var(--blue)}
-.ag-item.feito{opacity:.55}
-.ag-item.feito .ag-titulo{text-decoration:line-through}
-.sel-ck{width:16px;height:16px;cursor:pointer;margin-top:3px}
-.ag-check{width:18px;height:18px;margin-top:2px;cursor:pointer;flex-shrink:0}
-.ag-corpo{flex:1;min-width:0}
-.ag-titulo{font-weight:700;font-size:13.5px}
-.ag-meta{font-size:12px;color:var(--text3);margin-top:3px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.ag-obs{font-size:12.5px;color:var(--text2);margin-top:4px;white-space:pre-wrap}
-.ag-btns{display:flex;gap:6px;flex-direction:column}
-.subs{margin-top:6px;display:flex;flex-direction:column;gap:3px}
-.sub{font-size:12.5px;color:var(--text2);display:flex;gap:6px;align-items:center;cursor:pointer}
-.sub.ok{text-decoration:line-through;color:var(--text3)}
-.subprog{font-size:11px;color:var(--text3);font-weight:700;margin-top:2px}
-.badge{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:12px}
-.b-atras{background:var(--red-l);color:var(--red)}
-.b-hoje{background:var(--blue-l);color:var(--blue)}
-.b-fer{background:var(--purple-l);color:var(--purple)}
-.b-prox{background:var(--amber-l);color:var(--amber)}
-.b-rec{background:var(--purple-l);color:var(--purple)}
-
-/* CALENDÁRIO */
-.cal-nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
-.cal-nav b{margin:0 6px;color:var(--navy)}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.cal-dsem{font-size:11px;font-weight:800;color:var(--text3);text-align:center;padding:4px 0}
-.cal-cel{background:var(--surface);border:1px solid var(--border);border-radius:8px;min-height:96px;padding:5px;cursor:pointer;overflow:hidden}
-.cal-cel.vazia{background:transparent;border-color:transparent;cursor:default}
-.cal-cel.hoje{outline:2px solid var(--blue);outline-offset:-2px}
-.cal-cel.feriado{background:var(--purple-l)}
-.cal-cel.over{background:var(--blue-l);border-color:var(--blue)}
-.cal-num{font-size:12px;font-weight:800;color:var(--text2)}
-.cal-fer{font-size:9.5px;color:var(--purple);font-weight:700;line-height:1.2;margin-bottom:2px}
-.cal-item{font-size:10.5px;background:var(--blue-l);color:var(--blue);border-radius:4px;padding:2px 4px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:grab}
-.cal-item.feito{opacity:.5;text-decoration:line-through}
-.cal-mais{font-size:10px;color:var(--text3);margin-top:2px}
-@media(max-width:640px){.cal-cel{min-height:64px;padding:3px}.cal-item{font-size:9px}}
-
-#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--topbg);color:#fff;padding:10px 20px;border-radius:10px;font-weight:600;opacity:0;transition:.2s;pointer-events:none;z-index:99;max-width:90vw;text-align:center}
-#toast.show{opacity:1}
-
-@media(max-width:640px){
-  #topbar{position:static;padding:10px 14px}
-  .tb-title{font-size:14px}
-  .tb-sub{display:none}
-  .tb-right{margin-left:0;width:100%;justify-content:space-between}
-  #tabs{top:0;padding:0 6px;-webkit-mask-image:linear-gradient(to right,#000 88%,transparent);mask-image:linear-gradient(to right,#000 88%,transparent)}
-  .tab{padding:13px 12px;font-size:12.5px}
-  #gbar{padding:8px 12px}
-  #gq-info{display:none}
-  #main{padding:16px 12px 60px}
-  .grid{grid-template-columns:1fr}
-  .ag-btns{flex-direction:row}
-  .btn{padding:10px 14px}
-  .chip{padding:7px 12px}
-}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,Arial,sans-serif;background:#f3f5fa;color:#0d1526;font-size:14px}
+header{background:#0f2d6b;color:#fff;padding:14px 18px}
+header h1{margin:0;font-size:16px}
+header p{margin:4px 0 0;font-size:12px;opacity:.8}
+nav{background:#fff;border-bottom:1px solid #e1e6f0;display:flex;gap:4px;overflow-x:auto;padding:0 8px;position:sticky;top:0;z-index:5}
+nav button{border:none;background:none;padding:12px 10px;font:600 13px system-ui,Arial;color:#7d879f;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+nav button.on{color:#1a56db;border-bottom-color:#1a56db}
+main{padding:16px;max-width:1000px;margin:0 auto}
+.aviso{background:#fff6df;color:#8a5a00;padding:10px 12px;border-radius:8px;font-size:12.5px;margin-bottom:12px}
+.caso{background:#fff;border:1px solid #e1e6f0;border-radius:10px;padding:12px;margin-bottom:14px}
+.caso h2{font-size:13px;margin:0 0 8px;color:#0f2d6b}
+.caso-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+label{display:block;font-size:12px;font-weight:700;color:#455069;margin-bottom:3px}
+input,select,textarea{width:100%;border:1px solid #d6dce8;border-radius:7px;padding:7px 9px;font:13px system-ui,Arial;background:#fff}
+textarea{min-height:60px;resize:vertical}
+.card{background:#fff;border:1px solid #e1e6f0;border-radius:10px;padding:12px;margin-bottom:12px}
+.card h3{margin:0 0 6px;font-size:14px;color:#0f2d6b}
+.card .pede{font-size:12px;background:#eaf1ff;color:#0f2d6b;padding:6px 8px;border-radius:6px;margin-bottom:8px}
+.card pre{white-space:pre-wrap;word-break:break-word;font:12.5px/1.6 system-ui,Arial;color:#455069;margin:0 0 10px;background:#fafbfe;padding:10px;border-radius:7px;border:1px solid #eef1f7}
+.falta{color:#8a5a00;background:#fff6df;font-size:12px;padding:5px 8px;border-radius:6px;margin-bottom:8px}
+.btn{border:none;border-radius:7px;padding:8px 12px;font:700 12px system-ui,Arial;cursor:pointer;background:#1a56db;color:#fff;margin-right:6px}
+.btn.sec{background:#eef1f7;color:#455069}
+.btn.perigo{background:#fdecea;color:#b42318}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.item{background:#fff;border:1px solid #e1e6f0;border-radius:9px;padding:10px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start}
+.item.feito{opacity:.5}
+.item.atras{border-left:4px solid #b42318}
+.item.hoje{border-left:4px solid #e0a800}
+.item .t{font-weight:700}
+.item .m{font-size:12px;color:#7d879f;margin-top:2px}
+.item .o{font-size:12.5px;color:#455069;margin-top:4px;white-space:pre-wrap}
+.row{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:10px}
+.sec-t{font-size:12px;font-weight:800;color:#7d879f;text-transform:uppercase;margin:16px 0 8px}
+#toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:#0f2d6b;color:#fff;padding:9px 16px;border-radius:9px;font-weight:600;display:none;z-index:9}
+.vazio{color:#7d879f;padding:16px;text-align:center;background:#fff;border:1px dashed #d6dce8;border-radius:10px}
 </style>
 </head>
 <body>
 
-<div id="erro-fatal"></div>
+<header>
+  <h1>Painel de Atendimento — Cássia</h1>
+  <p>OAB SP · 247ª Subseção Santana de Parnaíba · Assistência Judiciária</p>
+</header>
 
-<div id="topbar">
-  <div>
-    <div class="tb-title">Painel de Atendimento — Cássia</div>
-    <div class="tb-sub">OAB SP · 247ª Subseção Santana de Parnaíba · Assistência Judiciária</div>
-  </div>
-  <div class="tb-right">
-    <span class="tb-hoje" id="hoje"></span>
-    <span class="tb-clock" id="clock">--:--:--</span>
-    <button class="tema-btn" id="btn-tema" onclick="toggleTema()" title="Alternar modo escuro">🌙</button>
-  </div>
-</div>
-
-<div id="privacy">
-  <span>🔒 Este painel é público (GitHub Pages), mas o código não contém dados de assistidos. Seus dados ficam só neste navegador. Não coloque CPF nem número de processo na agenda.</span>
-  <button class="mais" onclick="fecharPrivacidade()">Entendi</button>
-</div>
-
-<nav id="tabs">
-  <button class="tab" data-tab="hoje" onclick="switchTab('hoje')">🏠 Hoje</button>
-  <button class="tab" data-tab="atend" onclick="switchTab('atend')">💬 Atendimento</button>
-  <button class="tab" data-tab="recl" onclick="switchTab('recl')">⚖️ Reclamação</button>
-  <button class="tab" data-tab="advs" onclick="switchTab('advs')">👨‍⚖️ Advogados</button>
-  <button class="tab" data-tab="cobr" onclick="switchTab('cobr')">📨 Cobrança Advogado</button>
-  <button class="tab" data-tab="forum" onclick="switchTab('forum')">🏛️ Fórum · Nomeações</button>
-  <button class="tab" data-tab="email" onclick="switchTab('email')">✉️ E-mail</button>
-  <button class="tab" data-tab="hist" onclick="switchTab('hist')">📋 Histórico de envios</button>
-  <button class="tab" data-tab="fer" onclick="switchTab('fer')">📅 Feriados 2027</button>
-  <button class="tab" data-tab="agenda" onclick="switchTab('agenda')">🗓️ Agenda</button>
+<nav id="nav">
+  <button data-t="atend" class="on">Atendimento</button>
+  <button data-t="advs">Advogados</button>
+  <button data-t="cobr">Cobrança</button>
+  <button data-t="forum">Fórum</button>
+  <button data-t="agenda">Agenda</button>
 </nav>
 
-<div id="gbar">
-  <div id="gbar-in">
-    <input id="gq" type="search" placeholder="Buscar mensagem em todas as abas... (Ctrl+K)" oninput="buscaGlobal(this.value)" autocomplete="off">
-    <span id="gq-info"></span>
-  </div>
-</div>
+<main>
+  <div class="aviso">Este painel é público, mas os dados ficam só neste navegador. Não coloque CPF nem número de processo na agenda.</div>
 
-<div id="caso">
-  <div id="caso-main">
-    <div class="caso-tt">Dados do caso <small>preencha uma vez; vale para Advogados, Cobrança e Fórum. Não são gravados no navegador.</small>
-      <button class="btn btn-sec" onclick="novoCaso()">Novo caso</button>
-    </div>
+  <div class="caso" id="caso">
+    <h2>Dados do caso (não são gravados)</h2>
     <div class="caso-grid">
-      <div class="campo"><label for="cs-adv">Advogado(a)</label><input id="cs-adv" data-k="adv" oninput="onCampo(this)" placeholder="Nome completo"></div>
-      <div class="campo"><label for="cs-oab">Nº OAB</label><input id="cs-oab" data-k="oab" oninput="onCampo(this)" placeholder="123.456/SP" inputmode="numeric"><div class="erro" id="err-oab"></div></div>
-      <div class="campo"><label for="cs-ass">Assistido(a)</label><input id="cs-ass" data-k="ass" oninput="onCampo(this)" placeholder="Nome completo"></div>
-      <div class="campo"><label for="cs-cpf">CPF do assistido</label><input id="cs-cpf" data-k="cpf" oninput="onCampo(this)" placeholder="000.000.000-00" inputmode="numeric"><div class="erro" id="err-cpf"></div></div>
-      <div class="campo"><label for="cs-proc">Nº do processo</label><input id="cs-proc" data-k="proc" oninput="onCampo(this)" placeholder="0000000-00.0000.0.00.0000" inputmode="numeric"><div class="erro" id="err-proc"></div></div>
-      <div class="campo"><label for="cs-vara">Vara / comarca</label><input id="cs-vara" data-k="vara" oninput="onCampo(this)" placeholder="Ex.: 2ª Vara Cível"></div>
-      <div class="campo"><label for="cs-tipo">Audiência ou prazo</label>
-        <select id="cs-tipo" data-k="tipo" onchange="onCampo(this)"><option value="">— escolha —</option><option>audiência</option><option>prazo processual</option></select>
-      </div>
-      <div class="campo"><label for="cs-data">Data</label><input type="date" id="cs-data" data-k="data" oninput="onCampo(this)"></div>
-      <div class="campo"><label for="cs-prazo">Prazo para resposta</label><input id="cs-prazo" data-k="prazo" oninput="onCampo(this)" placeholder="Ex.: 5 dias úteis"></div>
+      <div><label for="c-adv">Advogado(a)</label><input id="c-adv" oninput="renderTudo()"></div>
+      <div><label for="c-oab">Nº OAB</label><input id="c-oab" oninput="renderTudo()" placeholder="123.456/SP"></div>
+      <div><label for="c-ass">Assistido(a)</label><input id="c-ass" oninput="renderTudo()"></div>
+      <div><label for="c-proc">Nº do processo</label><input id="c-proc" oninput="renderTudo()"></div>
+      <div><label for="c-vara">Vara / comarca</label><input id="c-vara" oninput="renderTudo()"></div>
+      <div><label for="c-tipo">Audiência ou prazo</label><select id="c-tipo" onchange="renderTudo()"><option value="">—</option><option>audiência</option><option>prazo processual</option></select></div>
+      <div><label for="c-data">Data</label><input type="date" id="c-data" oninput="renderTudo()"></div>
+      <div><label for="c-prazo">Prazo para resposta</label><input id="c-prazo" oninput="renderTudo()" placeholder="Ex.: 5 dias úteis"></div>
     </div>
+    <button class="btn sec" onclick="limparCaso()">Novo caso</button>
   </div>
-</div>
 
-<main id="main">
+  <div id="conteudo"></div>
 
-  <div id="alerta"></div>
-
-  <section class="panel" id="p-hoje">
-    <div class="ptitle">Hoje</div>
-    <div class="pdesc">Resumo do seu dia: demandas, mensagens aguardando envio, próximo feriado e conferência institucional.</div>
-    <div class="stats" id="hoje-stats"></div>
-    <div class="hoje-cols">
-      <div>
-        <div class="h3">Atrasadas e para hoje</div>
-        <div id="hoje-agenda"></div>
-        <div class="h3">Vencem nos próximos 3 dias</div>
-        <div id="hoje-prox"></div>
-        <button class="btn btn-sec" onclick="switchTab('agenda')">Abrir agenda completa</button>
-      </div>
-      <div>
-        <div class="h3">Mensagens copiadas, aguardando envio</div>
-        <div id="hoje-envio"></div>
-        <div class="h3">Próximo feriado</div>
-        <div id="hoje-fer"></div>
-        <div class="h3">Conferência institucional</div>
-        <div class="muted" style="font-size:12px;margin-bottom:8px">Confira estas informações com a Subseção, a Assessoria de Convênios e os canais oficiais da OAB SP. Depois, marque como conferido.</div>
-        <div id="hoje-conf"></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="panel" id="p-busca">
-    <div class="ptitle">Resultados da busca</div>
-    <div class="pdesc">Mensagens de todas as abas que correspondem à pesquisa. Cada cartão mostra a aba de origem.</div>
-    <div class="grid" id="g-busca"></div>
-  </section>
-
-  <section class="panel" id="p-atend">
-    <div class="ptitle">Atendimento ao Assistido</div>
-    <div class="pdesc">Escolha o assunto ou pesquise. A apresentação completa fica na mensagem de boas-vindas.</div>
-    <div class="aviso aviso-azul"><b>Lembrete:</b> consultas de cadastro, andamento de inscrição e anuidade ficam na aba Advogados.</div>
-    <div class="toolbar">
-      <input class="busca" id="q-atend" placeholder="Pesquisar mensagem (ex.: documentos, pirapora, avaliação)..." oninput="setQ('atend',this.value)">
-      <div class="chips" id="chips-atend"></div>
-    </div>
-    <div class="grid" id="g-atend"></div>
-  </section>
-
-  <section class="panel" id="p-recl">
-    <div class="ptitle">Reclamação contra Advogado</div>
-    <div class="pdesc">Ordem: pedir o CPF, verificar a nomeação e orientar conforme o caso.</div>
-    <div class="aviso aviso-vermelho"><b>Reclamação contra advogado só é aceita presencialmente.</b> Não aceitamos por WhatsApp, e-mail, áudio ou outro meio eletrônico.</div>
-    <div class="toolbar">
-      <input class="busca" id="q-recl" placeholder="Pesquisar mensagem..." oninput="setQ('recl',this.value)">
-      <div class="chips" id="chips-recl"></div>
-    </div>
-    <div class="grid" id="g-recl"></div>
-  </section>
-
-  <section class="panel" id="p-advs">
-    <div class="ptitle">Orientações para Advogados</div>
-    <div class="pdesc">Consulta de cadastro, andamento de inscrição, inscrição, certificado digital, token e anuidade. Toda mensagem se apresenta ao advogado.</div>
-    <div class="toolbar">
-      <input class="busca" id="q-advs" placeholder="Pesquisar mensagem (ex.: token, anuidade, OAB)..." oninput="setQ('advs',this.value)">
-      <div class="chips" id="chips-advs"></div>
-    </div>
-    <div class="grid" id="g-advs"></div>
-  </section>
-
-  <section class="panel" id="p-cobr">
-    <div class="ptitle">Contato com Advogado Nomeado</div>
-    <div class="pdesc">Preencha os dados do caso no topo. Os campos entram nas mensagens automaticamente.</div>
-    <div class="toolbar">
-      <input class="busca" id="q-cobr" placeholder="Pesquisar mensagem..." oninput="setQ('cobr',this.value)">
-      <div class="chips" id="chips-cobr"></div>
-    </div>
-    <div class="grid" id="g-cobr"></div>
-  </section>
-
-  <section class="panel" id="p-forum">
-    <div class="ptitle">Fórum · Nomeações Especiais</div>
-    <div class="pdesc">Confira o que tem em mãos, marque cada passo no DOL e use as mensagens. Os dados do caso ficam no topo.</div>
-    <div class="h3">Passo a passo no DOL</div>
-    <div id="proc"></div>
-    <div class="h3">Mensagens para o Fórum</div>
-    <div class="toolbar">
-      <input class="busca" id="q-forum" placeholder="Pesquisar mensagem (ex.: curador, inventário, avaliação)..." oninput="setQ('forum',this.value)">
-      <div class="chips" id="chips-forum"></div>
-    </div>
-    <div class="grid" id="g-forum"></div>
-    <div class="contatos">
-      <b>Assessoria de Convênios DPESP:</b> (11) 4802-9622 e (11) 4802-9623 · ssi@defensoria.sp.def.br<br>
-      <b>Fórum de Santana de Parnaíba:</b> R. Prof. Eugênio Teani, 215 — Jardim Prof. Benoa<br>
-      1ª e 2ª Vara Cível: (11) 4322-9839 · Juizado Especial Cível: (11) 4322-9822 · Criminal: (11) 4322-9830<br>
-      Distribuição judicial: (11) 4322-9841 · Mandados: (11) 4322-9824 · Administração: (11) 4322-9836<br>
-      Atendimento ao público: seg. a sex., 13h às 17h · Advogado (com carteira OAB): seg. a sex., 9h às 17h<br>
-      <b>E-mails UPJ Cível:</b> parnaiba1cv@tjsp.jus.br · parnaiba2cv@tjsp.jus.br · parnaibafam@tjsp.jus.br · upj1e2famparnaiba@tjsp.jus.br
-    </div>
-  </section>
-
-  <section class="panel" id="p-email">
-    <div class="ptitle">E-mail padronizado</div>
-    <div class="pdesc">Textos prontos para enviar pelo Outlook. Escolha o modelo, preencha o destinatário e copie ou abra no Outlook.</div>
-    <div class="em-layout">
-      <div class="em-painel">
-        <div>
-          <label class="rot" for="em-dest">Nome do destinatário (opcional)</label>
-          <input type="text" id="em-dest" placeholder="Ex.: Dr(a). Maria da Silva" oninput="renderEmail()">
-        </div>
-        <div>
-          <label class="rot" for="em-para">E-mail do destinatário (opcional)</label>
-          <input type="email" id="em-para" placeholder="nome@exemplo.com" oninput="renderEmail()">
-        </div>
-        <div>
-          <label class="rot" for="em-assunto">Assunto (opcional, troca o padrão)</label>
-          <input type="text" id="em-assunto" oninput="renderEmail()">
-        </div>
-        <div>
-          <label class="rot">Modelo</label>
-          <div class="em-opcoes">
-            <label class="em-opt"><input type="radio" name="em-modelo" value="docs" checked onchange="escolherModelo()"><span><b>Documentação necessária</b>Lista de documentos e endereço para o atendimento.</span></label>
-            <label class="em-opt"><input type="radio" name="em-modelo" value="dias" onchange="escolherModelo()"><span><b>Dias e horários de atendimento</b>Atendimento ao público em Santana de Parnaíba e Pirapora.</span></label>
-            <label class="em-opt"><input type="radio" name="em-modelo" value="ambos" onchange="escolherModelo()"><span><b>Documentação e dias de atendimento</b>Os dois assuntos em um único e-mail.</span></label>
-            <label class="em-opt"><input type="radio" name="em-modelo" value="reforco" onchange="escolherModelo()"><span><b>Lembrete de documentação</b>Reforço para quem já recebeu a orientação e ainda não enviou.</span></label>
-          </div>
-        </div>
-        <div>
-          <label class="rot">Assinatura</label>
-          <div class="em-ass">
-            <label class="em-opt"><input type="radio" name="em-ass" value="formal" checked onchange="renderEmail()"><span><b>Formal</b></span></label>
-            <label class="em-opt"><input type="radio" name="em-ass" value="cordial" onchange="renderEmail()"><span><b>Cordial</b></span></label>
-          </div>
-        </div>
-        <div class="em-acoes">
-          <button class="btn btn-copiar" onclick="copiarEmail(this)">Copiar e-mail</button>
-          <button class="btn btn-sec" onclick="abrirOutlook()">Abrir no Outlook</button>
-        </div>
-        <div class="em-nota">"Abrir no Outlook" apenas abre o rascunho. Só fica registrado como enviado quando você marcar isso no Histórico.</div>
-      </div>
-      <div class="em-preview">
-        <div class="em-head">
-          <div><b>Para:</b> <span id="em-para-view"></span></div>
-          <div><b>Assunto:</b> <span id="em-assunto-view"></span></div>
-        </div>
-        <div class="em-corpo" id="em-corpo"></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="panel" id="p-hist">
-    <div class="ptitle">Histórico de envios</div>
-    <div class="pdesc">"Enviada" foi confirmada por você. "Copiada" significa que o texto foi copiado. "Abrir no Outlook" não confirma envio. Tudo fica salvo neste navegador.</div>
-    <div class="stats" id="h-resumo"></div>
-    <div class="hist-filtros">
-      <div><label for="h-de">De</label><input type="date" id="h-de" onchange="renderHist()"></div>
-      <div><label for="h-ate">Até</label><input type="date" id="h-ate" onchange="renderHist()"></div>
-      <div><label for="h-cat">Assunto</label><select id="h-cat" onchange="renderHist()"></select></div>
-      <div><label for="h-sit">Situação</label>
-        <select id="h-sit" onchange="renderHist()">
-          <option value="todas">Todas</option>
-          <option value="enviada">Enviadas</option>
-          <option value="copiada">Copiadas</option>
-          <option value="outlook">Abertas no Outlook</option>
-        </select>
-      </div>
-      <div><label for="h-dest">Destinatário</label><input type="text" id="h-dest" placeholder="Nome" oninput="renderHist()"></div>
-    </div>
-    <div class="hist-tools">
-      <button class="btn btn-sec" onclick="limparFiltrosHist()">Limpar filtros</button>
-      <button class="btn btn-sec" onclick="exportarHistorico()">⬇ Exportar .txt</button>
-      <button class="btn btn-perigo" onclick="limparHistorico()">Limpar histórico</button>
-    </div>
-    <div id="lista-hist"></div>
-  </section>
-
-  <section class="panel" id="p-fer">
-    <div class="ptitle">Feriados e Pontos Facultativos — 2027</div>
-    <div class="pdesc">Feriados nacionais, estadual de São Paulo e pontos facultativos. Os municipais de Santana de Parnaíba e Pirapora do Bom Jesus serão incluídos assim que o calendário oficial for cadastrado.</div>
-    <div class="stats" id="fer-stats"></div>
-    <div class="h3">Calendário 2027 <span style="text-transform:none;font-weight:500">· clique em um dia marcado para ver o nome</span></div>
-    <div class="meses" id="meses"></div>
-    <div class="h3">Lista de datas</div>
-    <div class="toolbar"><div class="chips" id="chips-fer"></div></div>
-    <div class="tabela-wrap">
-      <table>
-        <thead><tr><th>Data</th><th>Dia</th><th>Feriado</th><th>Tipo</th><th>Quando</th><th></th></tr></thead>
-        <tbody id="tb-fer"></tbody>
-      </table>
-    </div>
-  </section>
-
-  <section class="panel" id="p-agenda">
-    <div class="ptitle">Agenda — Demandas da Subseção</div>
-    <div class="pdesc">Anote as demandas do calendário da Subseção. Ctrl+Enter salva rapidamente. Os dados ficam salvos neste navegador.</div>
-
-    <div class="stats" id="ag-resumo"></div>
-
-    <div class="ag-form" id="ag-form">
-      <div><label for="a-data">Data</label><input type="date" id="a-data" oninput="avisoDia()"></div>
+  <div id="agenda-area" style="display:none">
+    <div class="sec-t">Nova demanda</div>
+    <div class="row">
+      <div><label for="a-data">Data</label><input type="date" id="a-data"></div>
       <div><label for="a-hora">Horário</label><input type="time" id="a-hora"></div>
-      <div><label for="a-tipo">Tipo</label>
-        <select id="a-tipo">
-          <option>Calendário da Subseção</option>
-          <option>Prazo</option>
-          <option>Audiência</option>
-          <option>Reunião</option>
-          <option>Outro</option>
-        </select>
-      </div>
-      <div><label for="a-rec">Repetir</label>
-        <select id="a-rec">
-          <option value="none">Não repetir</option>
-          <option value="semanal">Semanalmente</option>
-          <option value="mensal">Mensalmente</option>
-        </select>
-      </div>
-      <div class="full"><label for="a-titulo">Demanda</label><input id="a-titulo" placeholder="Ex.: Entregar relatório mensal"></div>
-      <div class="full"><label for="a-sub">Etapas (uma por linha, opcional)</label><textarea id="a-sub" rows="3" placeholder="Ex.: Juntar documentos&#10;Enviar e-mail"></textarea></div>
-      <div class="full"><label for="a-obs">Observações</label><textarea id="a-obs" placeholder="Detalhes gerais. Evite CPF e número completo de processo."></textarea></div>
-      <div class="full modelo-row">
-        <select id="a-modelo" class="sel-box" aria-label="Modelos de demanda"></select>
-        <button class="btn btn-sec" onclick="aplicarModelo()">Usar modelo</button>
-        <button class="btn btn-sec" onclick="salvarModelo()">Salvar como modelo</button>
-        <button class="btn btn-sec" onclick="excluirModelo()">Excluir modelo</button>
-      </div>
-      <div class="full ag-acoes">
-        <label class="linha-chk"><input type="checkbox" id="a-salvarobs" onchange="setSalvarObs(this.checked)"> Salvar observações neste navegador</label>
-        <div id="a-aviso"></div>
-        <button class="btn btn-sec" id="a-cancel" style="display:none" onclick="limparForm()">Cancelar edição</button>
-        <button class="btn btn-copiar" id="a-salvar" onclick="salvarAgenda()">+ Adicionar</button>
-      </div>
+      <div><label for="a-tipo">Tipo</label><select id="a-tipo"><option>Calendário da Subseção</option><option>Prazo</option><option>Audiência</option><option>Reunião</option><option>Outro</option></select></div>
     </div>
-
-    <div class="toolbar">
-      <input class="busca" id="q-ag" placeholder="Pesquisar demanda..." oninput="renderAgenda()">
-      <div class="ag-linha">
-        <div class="chips" id="chips-ag"></div>
-        <div class="chips">
-          <select id="ag-ordem" class="sel-box" onchange="setAgOrdem(this.value)" aria-label="Ordenar">
-            <option value="data">Ordenar por data</option>
-            <option value="titulo">Ordenar por título</option>
-            <option value="tipo">Ordenar por tipo</option>
-          </select>
-          <button class="chip" id="v-lista" onclick="setAgView('lista')">Lista</button>
-          <button class="chip" id="v-cal" onclick="setAgView('cal')">Calendário</button>
-        </div>
-      </div>
-      <div class="ag-tools">
-        <button class="btn btn-sec" onclick="exportarAgenda()">⬇ Exportar .txt</button>
-        <button class="btn btn-sec" onclick="exportarBackup()">💾 Fazer backup (.json)</button>
-        <button class="btn btn-sec" onclick="$('imp').click()">📂 Importar backup</button>
-        <input type="file" id="imp" accept="application/json,.json" style="display:none" onchange="importarBackup(event)">
-        <button class="btn btn-sec" onclick="limparConcluidas()">Limpar concluídas</button>
-        <button class="btn btn-perigo" onclick="apagarTudo()">Apagar dados deste navegador</button>
-      </div>
-    </div>
-    <div class="bulk" id="bulk"></div>
-    <div class="privacidade">🔒 Os dados ficam só neste navegador. Faça backup antes de trocar de computador ou de limpar o histórico do navegador. No celular, use "Editar" para mudar a data, pois arrastar funciona só no computador.</div>
-    <div id="lista-agenda"></div>
-  </section>
-
+    <div style="margin-bottom:10px"><label for="a-titulo">Demanda</label><input id="a-titulo" placeholder="Ex.: Entregar relatório mensal"></div>
+    <div style="margin-bottom:10px"><label for="a-obs">Observações (sem CPF nem processo)</label><textarea id="a-obs"></textarea></div>
+    <button class="btn" onclick="addAgenda()">+ Adicionar</button>
+    <div class="sec-t">Demandas</div>
+    <div id="lista"></div>
+    <div class="sec-t">Backup</div>
+    <button class="btn sec" onclick="exportar()">💾 Baixar backup (.json)</button>
+    <button class="btn sec" onclick="document.getElementById('imp').click()">📂 Importar backup</button>
+    <input type="file" id="imp" accept=".json,application/json" style="display:none" onchange="importar(event)">
+  </div>
 </main>
 
 <div id="toast"></div>
 
 <script>
-/* ===================== PROTEÇÃO CONTRA FALHAS ===================== */
-window.addEventListener('error', function(ev){
-  const box = document.getElementById('erro-fatal');
-  if(box){ box.style.display='block'; box.textContent = 'Erro ao carregar o painel:\n' + (ev.message||'') + '\nLinha ' + (ev.lineno||'?'); }
-});
+var MSGS_OK = true;
+var DOCS = "— RG original e CPF\n— Comprovante de residência atualizado (água, luz, gás, telefone ou aluguel)\n— Comprovante de renda de todos os membros da família (3 últimos holerites, ou carteira de trabalho e extrato bancário dos últimos 3 meses, para quem não é registrado)\n— Comprovante de patrimônio, se houver\n— Em casos de alimentos: documento da criança e endereço da parte contrária\n— Em casos de divórcio: certidão de casamento atualizada";
+var END_SANT = "Av. Tenente Marques, 5297 — Jardim do Luar (Fazendinha), Santana de Parnaíba/SP, dentro do Poupatempo";
+var END_PIRA = "R. Bom Jesus, 106 — Centro, Pirapora do Bom Jesus/SP, CEP 06550-000";
+var END_RECL = "Rua Alberto Frediani, 770 — Jardim Frediani, Santana de Parnaíba/SP — CEP 06502-155";
+var ASS = "\n\nAtenciosamente,\nCássia\nAssistência Judiciária — OAB SP · Subseção Santana de Parnaíba\n(11) 4154-5191";
+var FECHO = "\n\nFico à disposição.";
 
-/* ===================== UTILIDADES ===================== */
-const $ = id => document.getElementById(id);
-const pad = n => String(n).padStart(2,'0');
-const esc = t => String(t ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-function hojeISO(){ const d=new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
-function addDias(iso,n){ const [y,m,d]=iso.split('-').map(Number); const x=new Date(Date.UTC(y,m-1,d+n)); return x.getUTCFullYear()+'-'+pad(x.getUTCMonth()+1)+'-'+pad(x.getUTCDate()); }
-function addMes(iso,n){ const [y,m,d]=iso.split('-').map(Number); const x=new Date(Date.UTC(y,m-1+n,d)); return x.getUTCFullYear()+'-'+pad(x.getUTCMonth()+1)+'-'+pad(x.getUTCDate()); }
-function diffDias(a,b){ const [y1,m1,d1]=a.split('-').map(Number); const [y2,m2,d2]=b.split('-').map(Number); return Math.round((Date.UTC(y2,m2-1,d2)-Date.UTC(y1,m1-1,d1))/86400000); }
-function fmtData(iso){ const [y,m,d]=String(iso).split('-'); return d+'/'+m+'/'+y; }
-function diaSemana(iso, opts){ const [y,m,d]=iso.split('-').map(Number); return new Date(y,m-1,d).toLocaleDateString('pt-BR', opts||{weekday:'long'}); }
-function load(k,def){ try{ const v=JSON.parse(localStorage.getItem(k)); return (v===null || v===undefined) ? def : v; }catch(e){ return def; } }
-function save(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
-function arr(v){ return Array.isArray(v) ? v : []; }
-function obj(v){ return (v && typeof v==='object' && !Array.isArray(v)) ? v : {}; }
-function novoId(){ return Date.now()+Math.floor(Math.random()*1000000); }
-function toast(m){ const t=$('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(window._tt); window._tt=setTimeout(()=>t.classList.remove('show'),2400); }
-function copiar(texto, btn, cb){
-  const feito=()=>{ if(btn){ const o=btn.textContent; btn.textContent='Copiado ✓'; setTimeout(()=>btn.textContent=o,1500); } toast('Copiado!'); if(cb) cb(); };
-  const fallback=()=>{ const ta=document.createElement('textarea'); ta.value=texto; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); feito(); };
-  if(navigator.clipboard && window.isSecureContext!==false){ navigator.clipboard.writeText(texto).then(feito).catch(fallback); }
-  else fallback();
-}
-function possivelDadoSensivel(t){ return /\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b/.test(t) || /\b\d{7}-?\d{2}\.?\d{4}\b/.test(t); }
+function v(id){ var e=document.getElementById(id); return e ? e.value.trim() : ''; }
+function apres(){ var n=v('c-adv'); return "Olá, "+(n?"Dr(a). "+n:"Dr(a).")+", tudo bem? Aqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba."; }
+function apresGeral(){ return "Olá, tudo bem? Aqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba."; }
 
-/* ===================== FORMATAÇÃO E VALIDAÇÃO ===================== */
-function fmtCPF(s){
-  const d=s.replace(/\D/g,'').slice(0,11);
-  let r=d.slice(0,3);
-  if(d.length>3) r+='.'+d.slice(3,6);
-  if(d.length>6) r+='.'+d.slice(6,9);
-  if(d.length>9) r+='-'+d.slice(9,11);
-  return r;
-}
-function fmtCNJ(s){
-  const d=s.replace(/\D/g,'').slice(0,20);
-  const partes=[[0,7,'-'],[7,9,'.'],[9,13,'.'],[13,14,'.'],[14,16,'.'],[16,20,'']];
-  let r='';
-  partes.forEach(([a,b,sep])=>{ if(d.length>a){ r+=d.slice(a,Math.min(b,d.length)) + (d.length>b ? sep : ''); } });
-  return r;
-}
-function fmtOAB(s){
-  const d=s.replace(/\D/g,'').slice(0,6);
-  if(!d) return '';
-  const n = d.length>3 ? d.slice(0,d.length-3)+'.'+d.slice(-3) : d;
-  return n+'/SP';
-}
-function cpfValido(c){
-  const d=c.replace(/\D/g,'');
-  if(d.length!==11 || /^(\d)\1+$/.test(d)) return false;
-  for(let t=9;t<11;t++){
-    let s=0;
-    for(let i=0;i<t;i++) s+=Number(d[i])*(t+1-i);
-    const r=((s*10)%11)%10;
-    if(r!==Number(d[t])) return false;
-  }
-  return true;
-}
-const FMT = {cpf:fmtCPF, oab:fmtOAB, proc:fmtCNJ};
-const REGRAS = {
-  cpf:[v=>!v || cpfValido(v), 'CPF inválido. Confira os 11 números.'],
-  oab:[v=>{ if(!v) return true; const d=v.replace(/\D/g,''); return d.length>=4 && d.length<=6; }, 'OAB deve ter de 4 a 6 números.'],
-  proc:[v=>!v || /^\d{7}-\d{2}\.\d{4}\.\d\.\d{2}\.\d{4}$/.test(v), 'Processo fora do padrão: 0000000-00.0000.0.00.0000.']
+var CASO = {
+  ass: function(){ return v('c-ass') || '[assistido(a)]'; },
+  proc: function(){ return v('c-proc') || '[nº do processo]'; },
+  adv: function(){ return v('c-adv') || '[advogado(a)]'; },
+  oab: function(){ return v('c-oab') || '[nº OAB]'; },
+  vara: function(){ return v('c-vara') || '[vara/comarca]'; },
+  tipo: function(){ return v('c-tipo') || '[audiência/prazo]'; },
+  data: function(){ var d=v('c-data'); if(!d) return '[data]'; var p=d.split('-'); return p[2]+'/'+p[1]+'/'+p[0]; },
+  prazo: function(){ return v('c-prazo') || '[prazo]'; }
 };
-function validarCampos(){
-  Object.entries(REGRAS).forEach(([k,[ok,msg]])=>{
-    const v=bruto(k), valido=ok(v);
-    $('err-'+k).textContent = valido ? '' : msg;
-    $(CAMPOS[k]).classList.toggle('inv', !valido);
-  });
-}
-function onCampo(el){
-  const k=el.dataset.k;
-  if(FMT[k]) el.value = FMT[k](el.value);
-  validarCampos();
-  refrescar();
-}
 
-/* ===================== DADOS DO CASO ===================== */
-const CAMPOS = {adv:'cs-adv',oab:'cs-oab',ass:'cs-ass',cpf:'cs-cpf',proc:'cs-proc',vara:'cs-vara',tipo:'cs-tipo',data:'cs-data',prazo:'cs-prazo'};
-const ROTULO = {adv:'advogado(a)',oab:'nº OAB',ass:'assistido(a)',cpf:'CPF',proc:'nº do processo',vara:'vara/comarca',tipo:'audiência ou prazo',data:'data',prazo:'prazo'};
-const PH = {adv:'[advogado(a)]',oab:'[nº OAB]',ass:'[assistido(a)]',cpf:'[CPF]',proc:'[nº do processo]',vara:'[vara/comarca]',tipo:'[audiência/prazo]',data:'[data]',prazo:'[prazo]'};
-function bruto(k){ const el=$(CAMPOS[k]); return el ? el.value.trim() : ''; }
-function V(){
-  const v={};
-  Object.keys(CAMPOS).forEach(k=>{
-    let x=bruto(k);
-    if(k==='data' && x) x=fmtData(x);
-    v[k]=x || PH[k];
-  });
-  return v;
-}
-function faltam(needs){ return (needs||[]).filter(k=>!bruto(k)).map(k=>ROTULO[k]); }
-
-/* ===================== TEXTOS PADRÃO ===================== */
-const FECHO = "\n\nFico à disposição.";
-const ASS_F = "\n\nAtenciosamente,\nCássia\nAssistência Judiciária — OAB SP · Subseção Santana de Parnaíba\n(11) 4154-5191";
-const END_SANT = "Av. Tenente Marques, 5297 — Jardim do Luar (Fazendinha), Santana de Parnaíba/SP, dentro do Poupatempo";
-const END_RECL = "Rua Alberto Frediani, 770 — Jardim Frediani, Santana de Parnaíba/SP — CEP 06502-155";
-const END_PIRA = "R. Bom Jesus, 106 — Centro, Pirapora do Bom Jesus/SP, CEP 06550-000";
-const DOCS = "— RG original e CPF\n— Comprovante de residência atualizado (água, luz, gás, telefone ou aluguel)\n— Comprovante de renda de todos os membros da família:\n   • Trabalhador registrado: os 3 últimos holerites\n   • Não registrado: carteira de trabalho, extrato bancário dos últimos 3 meses, declaração do empregador ou carta de próprio punho reconhecida em cartório\n— Comprovante de patrimônio, se houver (certidão de valor venal, IPTU, veículos, extrato de poupança)\n— Em casos de alimentos: documento da criança e endereço da parte contrária\n— Em casos de divórcio: certidão de casamento atualizada";
-
-function saudaAdv(){ const n=bruto('adv'); return 'Olá, ' + (n ? 'Dr(a). '+n : 'Dr(a).') + ', tudo bem? '; }
-function APRES_ADV(){ return saudaAdv() + 'Aqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba.'; }
-const APRES_JUIZO = "Prezada(o) Meritíssima(o),\n\nAqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba.\n\n";
-const APRES_GERAL = "Prezada(o),\n\nAqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba.\n\n";
-
-/* ===================== MENSAGENS ===================== */
-const MSGS = [
-  {id:'bv', tab:'atend', cat:'Início', pin:true, titulo:'Boas-vindas (apresentação)', tc:'tag', needs:[], build:()=>
-`Olá, tudo bem? Aqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba.
-
-Seja bem-vindo(a). Como posso te ajudar hoje? Me conte sua necessidade e eu te oriento. Se o assunto for de outro setor, explico o caminho certo.`},
-
-  {id:'doc_san', tab:'atend', cat:'Documentos', pede:'Documentação completa e presença no atendimento', titulo:'Endereço e documentos — Santana de Parnaíba', tc:'tag-verde', needs:[], build:()=>
-`Segue o endereço e a documentação para o atendimento.
-
-Endereço: ${END_SANT}
-Atendimento: segunda a sexta-feira, das 9h às 12h. Distribuímos até 30 senhas por dia, no local, sem agendamento.
-Telefone: (11) 4154-5191
-
-Documentos necessários:
-${DOCS}
-
-Sem a documentação completa, o atendimento não é realizado.` + FECHO},
-
-  {id:'doc_pira', tab:'atend', cat:'Documentos', pede:'Documentação completa e presença na sexta-feira', titulo:'Endereço e documentos — Pirapora (CIC)', tc:'tag-roxo', needs:[], build:()=>
-`Em Pirapora do Bom Jesus, o atendimento é somente às sextas-feiras, das 9h às 12h, no CIC, com até 30 senhas por dia, distribuídas no local.
-
-Endereço: ${END_PIRA}
-
-Documentos necessários:
-${DOCS}
-
-Nos demais dias da semana não há atendimento no local.` + FECHO},
-
-  {id:'aval', tab:'atend', cat:'Pendência', pede:'Documentos atualizados e comparecimento presencial', titulo:'Avaliação financeira vencida', tc:'tag-vermelho', needs:[], build:()=>
-`Verifiquei que a sua avaliação financeira está vencida. A validade é de 1 (um) ano, e a renovação é feita presencialmente.
-
-Endereço: ${END_SANT}
-Atendimento: segunda a sexta-feira, das 9h às 12h (até 30 senhas por dia)
-
-Documentos necessários:
-${DOCS}
-
-Depois da renovação, a indicação do advogado segue normalmente.` + FECHO},
-
-  {id:'aguardo', tab:'atend', cat:'Orientação', titulo:'Aguardando retorno', tc:'tag-roxo', needs:[], build:()=>
-`Recebi o seu contato e estou verificando as informações. Assim que tiver o retorno, te aviso.` + FECHO},
-
-  {id:'audio', tab:'atend', cat:'Orientação', titulo:'Não recebemos áudio', tc:'tag-amarelo', needs:[], build:()=>
-`Por este canal não conseguimos ouvir mensagens de áudio. Pode enviar a sua dúvida por escrito, em texto, imagem ou documento, que eu te oriento.` + FECHO},
-
-  {id:'rec1', tab:'recl', cat:'Passo 1', pede:'CPF do assistido', titulo:'Pedir o CPF para verificar a nomeação', tc:'tag', needs:[], build:()=>
-`Olá, tudo bem? Aqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba.
-
-Para verificar a nomeação do seu caso, preciso do seu CPF. Pode me enviar, por favor?` + FECHO},
-
-  {id:'recA', tab:'recl', cat:'Caso A', pede:'Nova triagem presencial com documentos', titulo:'Nomeação recusada — nova triagem', tc:'tag-amarelo', needs:[], build:()=>
-`Olá, tudo bem? Aqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba.
-
-Verifiquei que a nomeação do seu caso consta como recusada pelo advogado. Por isso, será necessária uma nova triagem presencial.
-
-Endereço: ${END_SANT}
-Atendimento: segunda a sexta-feira, das 9h às 12h
-
-Documentos necessários:
-${DOCS}` + FECHO},
-
-  {id:'recB', tab:'recl', cat:'Caso B', pede:'Relato por escrito das tentativas de contato', titulo:'Sem contato com o advogado — relato por escrito', tc:'tag-roxo', needs:[], build:()=>
-`Olá, tudo bem? Aqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba.
-
-Verifiquei que há nomeação válida no seu processo, e sinto muito pela dificuldade de contato. Para encaminhar o caso, preciso que me envie, por escrito, um relato com:
-— os meios que você usou para tentar contato (telefone, WhatsApp, e-mail, escritório);
-— as datas ou períodos das tentativas;
-— se houve alguma resposta, mesmo parcial, e qual foi;
-— se há audiência, prazo ou ato processual próximo.
-
-Com essas informações, comunico o advogado e peço o retorno a você.` + FECHO},
-
-  {id:'recC', tab:'recl', cat:'Caso C', pede:'Reclamação escrita, nº do processo, senha, RG e CPF', titulo:'Reclamação presencial — orientação', tc:'tag-vermelho', needs:[], build:()=>
-`Olá, tudo bem? Aqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba.
-
-Entendo que você queira formalizar uma reclamação, e quero te orientar com cuidado. Esse registro só pode ser feito presencialmente. Não aceitamos reclamações por WhatsApp, e-mail, áudio ou outro meio eletrônico.
-
-Ao comparecer, leve:
-— reclamação escrita de próprio punho, descrevendo os fatos;
-— número do processo;
-— senha do processo (se não tiver, ela é gerada no atendimento presencial);
-— RG e CPF;
-— demais documentos do caso.
-
-Atendimento: segunda a sexta-feira, das 9h às 12h
-Endereço: ${END_RECL}
-Telefone: (11) 4154-5191` + FECHO},
-
-  {id:'adv_cad', tab:'advs', cat:'Cadastro', pede:'Número da OAB', titulo:'Consulta de cadastro', tc:'tag-amarelo', needs:[], build:()=>
-`${APRES_ADV()}
-
-Para consultar o seu cadastro, preciso do número da sua OAB. Pode me informar, por favor?` + FECHO},
-
-  {id:'adv_insc', tab:'advs', cat:'Inscrição', pede:'CPF e nome completo', titulo:'Andamento de inscrição', tc:'tag-amarelo', needs:[], build:()=>
-`${APRES_ADV()}
-
-Para verificar o andamento do seu pedido de inscrição, preciso do seu CPF e do seu nome completo. Pode me enviar, por favor?` + FECHO},
-
-  {id:'adv_insc_pp', tab:'advs', cat:'Inscrição', titulo:'Inscrição na OAB SP — passo a passo', tc:'tag', needs:[], build:()=>
-`${APRES_ADV()}
-
-Segue o passo a passo do pedido de inscrição:
-
-1. Acesse www2.oabsp.org.br e clique em "Pedido de Inscrição Online".
-2. Preencha a pré-inscrição com seus dados pessoais e do diploma.
-3. Gere e pague o boleto da taxa de inscrição.
-4. Agende o atendimento presencial em oabsp.org.br/servicos/agendamento-online.
-5. Compareça com os documentos originais e as cópias solicitados.
-6. Aguarde a análise e a aprovação pelo Conselho Seccional.
-
-A veracidade dos documentos é de responsabilidade do interessado.` + FECHO},
-
-  {id:'adv_cert', tab:'advs', cat:'Certificado', titulo:'Certificado digital — orientação', tc:'tag-roxo', needs:[], build:()=>
-`${APRES_ADV()}
-
-Segue a orientação sobre o certificado digital:
-
-1. Acesse oabsp.org.br e vá em Serviços → Certificado Digital.
-2. Escolha a certificadora parceira (Certdata ou Certisign).
-3. A compra e o agendamento da validação são feitos somente no site da certificadora escolhida.
-4. A validação pode ser presencial, por videoconferência ou online (esta última apenas para renovação de certificado ainda válido).
-
-A Subseção não realiza o agendamento de certificado digital.` + FECHO},
-
-  {id:'adv_token', tab:'advs', cat:'Certificado', pede:'Documento com foto e o número do pedido feito no site', titulo:'Retirada do token', tc:'tag-roxo', needs:[], build:()=>
-`${APRES_ADV()}
-
-Depois da compra pelo site da certificadora, o token é retirado na Subseção, mediante identificação e o número do pedido.
-
-Para retirar, leve:
-— documento de identificação com foto;
-— o número do pedido gerado no site da certificadora.` + FECHO},
-
-  {id:'adv_anu', tab:'advs', cat:'Anuidade', pede:'Verificar a dúvida e retornar', titulo:'Dúvida sobre anuidade — um momento', tc:'tag-amarelo', needs:[], build:()=>
-`${APRES_ADV()}
-
-Recebi a sua dúvida sobre a anuidade. Um momento, por favor: vou verificar essa informação e retorno em seguida.` + FECHO},
-
-  {id:'cob1', tab:'cobr', cat:'Cordial', pede:'Retorno do advogado ao assistido', titulo:'1ª cobrança — pedido de retorno', tc:'tag', needs:['adv','ass','proc'], build:v=>
-`${APRES_ADV()}
-
-Informo que o(a) assistido(a) ${v.ass}, processo nº ${v.proc}, relatou dificuldade para falar com o(a) senhor(a). Peço que entre em contato com ele(a) em breve.` + FECHO + ASS_F},
-
-  {id:'cob2', tab:'cobr', cat:'Reforço', pede:'Resposta à cobrança anterior', titulo:'2ª cobrança — sem resposta', tc:'tag-roxo', needs:['adv','ass','proc'], build:v=>
-`${APRES_ADV()}
-
-Já entramos em contato solicitando retorno ao(à) assistido(a) ${v.ass}, processo nº ${v.proc}, e ainda não identificamos resposta. Reitero a solicitação e aguardo seu posicionamento com a maior brevidade possível.` + FECHO + ASS_F},
-
-  {id:'cob3', tab:'cobr', cat:'Urgente', pede:'Contato imediato com o assistido', titulo:'Urgente — audiência ou prazo próximo', tc:'tag-vermelho', needs:['adv','ass','proc','tipo','data'], build:v=>
-`${APRES_ADV()}
-
-Entro em contato com caráter de urgência. O(a) assistido(a) ${v.ass}, processo nº ${v.proc}, tem ${v.tipo} marcado(a) para ${v.data} e ainda não conseguiu contato com o(a) senhor(a).
-
-Peço que retorne ao assistido com a máxima brevidade. Se houver algum impedimento, comunique-nos para que possamos ajudar.` + ASS_F},
-
-  {id:'cob4', tab:'cobr', cat:'Formal', pede:'Contato com o assistido dentro do prazo informado', titulo:'Notificação formal — última etapa', tc:'tag-vermelho', needs:['adv','ass','proc','prazo'], build:v=>
-`${APRES_ADV()}
-
-Por meio desta comunicação formal, informo a situação do(a) assistido(a) ${v.ass}, processo nº ${v.proc}. Conforme os registros desta Subseção, o(a) assistido(a) relatou ausência de contato ou retorno, apesar de tentativas por diferentes meios.
-
-Solicito que adote as providências necessárias e entre em contato com o(a) assistido(a) no prazo de ${v.prazo}, sob pena de encaminhamento do caso às instâncias competentes da OAB SP.
-
-Este comunicado será registrado no histórico do caso.` + ASS_F},
-
-  {id:'f_nom', tab:'forum', cat:'Nomeação', pede:'Dados do caso preenchidos no topo', titulo:'Confirmação de nomeação ao juízo', tc:'tag-verde', needs:['proc','vara','adv','oab','data'], build:v=>
-`${APRES_JUIZO}Em atenção ao ofício recebido, informo que foi realizada a indicação de advogado(a) conveniado(a) para o processo nº ${v.proc}, perante a ${v.vara}.
-
-Advogado(a): ${v.adv}
-Inscrição OAB: ${v.oab}
-Data da indicação: ${v.data}
-
-O ofício de indicação será encaminhado ao(à) advogado(a) pela Defensoria Pública, nos termos do Convênio DPESP/OAB-SP.` + ASS_F},
-
-  {id:'f_cur_ativa', tab:'forum', cat:'Curador', pede:'Nome, OAB e data da nomeação ativa', titulo:'Curador especial — nomeação ativa', tc:'tag-amarelo', needs:['proc','adv','oab','data'], build:v=>
-`${APRES_JUIZO}Em atenção ao ofício recebido, após consulta ao sistema DOL, verifiquei que, no processo nº ${v.proc}, já consta advogado(a) nomeado(a) como curador(a) especial:
-
-Advogado(a): ${v.adv}
-Inscrição OAB: ${v.oab}
-Data da indicação: ${v.data}
-
-O sistema não permite nova indicação enquanto a nomeação estiver ativa. Assim, o(a) advogado(a) acima atuará como curador(a) especial de todos os requeridos que necessitem de curador neste processo.
-
-Caso o Juízo entenda necessária a substituição, solicito comunicação formal para verificarmos as providências junto à Assessoria de Convênios.` + ASS_F},
-
-  {id:'f_cur_canc', tab:'forum', cat:'Curador', pede:'Nº do processo', titulo:'Curador especial — nomeação cancelada', tc:'tag-roxo', needs:['proc'], build:v=>
-`${APRES_JUIZO}Em atenção ao ofício recebido, informo que, no processo nº ${v.proc}, a nomeação anterior de curador(a) especial foi cancelada e não há advogado(a) ativo(a) indicado(a).
-
-Diante disso, encaminhamos nova solicitação de indicação à Assessoria de Convênios da Defensoria Pública, que emitirá o ofício ao(à) advogado(a) indicado(a).` + ASS_F},
-
-  {id:'f_cur_dados', tab:'forum', cat:'Curador', pede:'Nº completo do processo, dados da parte e cópia do despacho', titulo:'Solicitar dados para verificar curador', tc:'tag-amarelo', needs:[], build:()=>
-`${APRES_JUIZO}Em atenção ao ofício recebido, para verificar a existência de curador(a) especial já nomeado(a) e dar o encaminhamento adequado, solicito:
-
-— número completo do processo;
-— nome completo e dados da parte a ser assistida;
-— cópia do despacho ou decisão que determinou a nomeação.
-
-Após o recebimento, realizaremos a consulta e daremos retorno.` + ASS_F},
-
-  {id:'f_cur_envio', tab:'forum', cat:'Curador', pede:'Anexar o ofício de indicação gerado no DOL', titulo:'Envio de ofício de curador especial', tc:'tag-verde', needs:['proc'], build:v=>
-`${APRES_GERAL}Em atendimento à demanda de V. Sa., segue em anexo o Ofício de Indicação de Curador Especial referente ao processo nº ${v.proc}, para as devidas providências.` + ASS_F},
-
-  {id:'f_inv', tab:'forum', cat:'Inventário', pede:'CPF do falecido, herdeiros, comarca e vara', titulo:'Dados para inventário ou alvará', tc:'tag-roxo', needs:['proc','vara'], build:v=>
-`${APRES_JUIZO}Em atenção ao ofício recebido, para dar andamento à indicação no processo nº ${v.proc}, informo que, nos casos de inventário ou alvará, precisamos de:
-
-— CPF do(a) falecido(a);
-— identificação completa dos herdeiros;
-— número completo do processo, comarca e vara.
-
-Assim que recebermos os dados, daremos seguimento ao encaminhamento.` + ASS_F},
-
-  {id:'f_aval', tab:'forum', cat:'Impedimento', pede:'Comparecimento do assistido para renovar a avaliação', titulo:'Avaliação financeira vencida — intimação', tc:'tag-amarelo', needs:['proc','ass'], build:v=>
-`${APRES_JUIZO}Em atenção ao ofício recebido, informo que a avaliação financeira do(a) assistido(a) ${v.ass}, referente ao processo nº ${v.proc}, está vencida (validade de 1 ano), o que impede a indicação neste momento.
-
-Solicito que o(a) assistido(a) seja intimado(a) a comparecer presencialmente a:
-${END_SANT}
-Horário: segunda a sexta-feira, das 9h às 12h (até 30 senhas por dia, sem agendamento)
-
-Documentos necessários:
-${DOCS}
-
-Após a renovação, a indicação será providenciada.` + ASS_F},
-
-  {id:'f_acuse', tab:'forum', cat:'Geral', titulo:'Acuse de recebimento', tc:'tag-verde', needs:['proc'], build:v=>
-`${APRES_GERAL}Acuso o recebimento do ofício referente ao processo nº ${v.proc}, encaminhado ao setor competente para as providências cabíveis. Qualquer atualização será comunicada oportunamente.` + ASS_F},
-];
-const POR_ID = Object.fromEntries(MSGS.map(m=>[m.id,m]));
-const NOME_ABA = {atend:'Atendimento', recl:'Reclamação', advs:'Advogados', cobr:'Cobrança', forum:'Fórum'};
-
-/* ===================== E-MAIL ===================== */
-function valorEmDest(){ return $('em-dest').value.trim(); }
-function saudacaoEm(){ const n=valorEmDest(); return n ? `Prezada(o) ${n},` : 'Prezada(o),'; }
-function assinaturaEm(){
-  const tipo = document.querySelector('input[name="em-ass"]:checked');
-  const fecho = (tipo && tipo.value==='cordial') ? 'Com carinho e à disposição,' : 'Atenciosamente,';
-  return `\n\n${fecho}\nCássia\nAssistência Judiciária — OAB SP · Subseção Santana de Parnaíba\n(11) 4154-5191`;
-}
-const EM_DOCS_CORPO = () =>
-`${saudacaoEm()}
-
-Espero que esteja bem.
-
-Aqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba. Segue a relação de documentos necessários para o atendimento:
-
-${DOCS}
-
-Endereço para atendimento presencial:
-${END_SANT}
-
-O atendimento é realizado de segunda a sexta-feira, das 9h às 12h, com distribuição de até 30 senhas por dia, no local e sem agendamento. O atendimento só é realizado com a documentação completa.
-
-Caso tenha dúvidas, fico à disposição.`;
-
-const EM_DIAS_CORPO = () =>
-`${saudacaoEm()}
-
-Espero que esteja bem.
-
-Aqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba. Seguem os dias e horários de atendimento ao público:
-
-Santana de Parnaíba
-Endereço: ${END_SANT}
-Dias: segunda a sexta-feira
-Horário: das 9h às 12h
-Senhas: até 30 por dia, distribuídas no local, sem agendamento
-Telefone: (11) 4154-5191
-
-Pirapora do Bom Jesus (CIC)
-Endereço: ${END_PIRA}
-Dia: somente às sextas-feiras
-Horário: das 9h às 12h
-Senhas: até 30 por dia, distribuídas no local
-
-Caso tenha dúvidas, fico à disposição.`;
-
-const EM_AMBOS_CORPO = () =>
-`${saudacaoEm()}
-
-Espero que esteja bem.
-
-Aqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba. Seguem as informações sobre a documentação necessária e os dias de atendimento ao público.
-
-1. DOCUMENTAÇÃO NECESSÁRIA
-
-${DOCS}
-
-2. DIAS E HORÁRIOS DE ATENDIMENTO
-
-Santana de Parnaíba
-Endereço: ${END_SANT}
-Dias: segunda a sexta-feira
-Horário: das 9h às 12h
-Senhas: até 30 por dia, distribuídas no local, sem agendamento
-Telefone: (11) 4154-5191
-
-Pirapora do Bom Jesus (CIC)
-Endereço: ${END_PIRA}
-Dia: somente às sextas-feiras
-Horário: das 9h às 12h
-Senhas: até 30 por dia, distribuídas no local
-
-O atendimento só é realizado com a documentação completa.
-
-Caso tenha dúvidas, fico à disposição.`;
-
-const EM_REFORCO_CORPO = () =>
-`${saudacaoEm()}
-
-Espero que esteja bem.
-
-Aqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba. Retomo o contato sobre a documentação necessária para o atendimento, já informada anteriormente.
-
-Pedimos que traga, no dia do atendimento:
-
-${DOCS}
-
-Endereço: ${END_SANT}
-Atendimento: segunda a sexta-feira, das 9h às 12h, com até 30 senhas por dia.
-
-Se já tiver providenciado os documentos, pode desconsiderar este lembrete. Caso tenha dúvidas, fico à disposição.`;
-
-const EM_MODELOS = {
-  docs:    {assunto:'Documentação necessária para atendimento na Assistência Judiciária', corpo:EM_DOCS_CORPO},
-  dias:    {assunto:'Dias e horários de atendimento ao público — Assistência Judiciária', corpo:EM_DIAS_CORPO},
-  ambos:   {assunto:'Documentação e dias de atendimento — Assistência Judiciária', corpo:EM_AMBOS_CORPO},
-  reforco: {assunto:'Lembrete: documentação para atendimento — Assistência Judiciária', corpo:EM_REFORCO_CORPO}
+var TABS = {
+  atend: [
+    {t:'Boas-vindas', c:"Olá, tudo bem? Aqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba.\n\nSeja bem-vindo(a). Como posso te ajudar hoje? Me conte sua necessidade e eu te oriento. Se o assunto for de outro setor, explico o caminho certo."+FECHO},
+    {t:'Endereço e documentos — Santana de Parnaíba', pede:'Documentação completa e presença no atendimento', c:"Segue o endereço e a documentação para o atendimento.\n\nEndereço: "+END_SANT+"\nAtendimento: segunda a sexta-feira, das 9h às 12h. Distribuímos até 30 senhas por dia, no local, sem agendamento.\nTelefone: (11) 4154-5191\n\nDocumentos necessários:\n"+DOCS+"\n\nSem a documentação completa, o atendimento não é realizado."+FECHO},
+    {t:'Endereço e documentos — Pirapora (CIC)', pede:'Documentação e presença na sexta-feira', c:"Em Pirapora do Bom Jesus, o atendimento é somente às sextas-feiras, das 9h às 12h, no CIC, com até 30 senhas por dia, distribuídas no local.\n\nEndereço: "+END_PIRA+"\n\nDocumentos necessários:\n"+DOCS+"\n\nNos demais dias da semana não há atendimento no local."+FECHO},
+    {t:'Avaliação financeira vencida', pede:'Documentos atualizados e comparecimento presencial', c:"Verifiquei que a sua avaliação financeira está vencida. A validade é de 1 (um) ano, e a renovação é feita presencialmente.\n\nEndereço: "+END_SANT+"\nAtendimento: segunda a sexta-feira, das 9h às 12h (até 30 senhas por dia)\n\nDocumentos necessários:\n"+DOCS+"\n\nDepois da renovação, a indicação do advogado segue normalmente."+FECHO},
+    {t:'Aguardando retorno', c:"Recebi o seu contato e estou verificando as informações. Assim que tiver o retorno, te aviso."+FECHO},
+    {t:'Não recebemos áudio', c:"Por este canal não conseguimos ouvir mensagens de áudio. Pode enviar a sua dúvida por escrito, em texto, imagem ou documento, que eu te oriento."+FECHO},
+    {t:'Pedir CPF para verificar a nomeação', pede:'CPF do assistido', c:apresGeral()+"\n\nPara verificar a nomeação do seu caso, preciso do seu CPF. Pode me enviar, por favor?"+FECHO},
+    {t:'Nomeação recusada — nova triagem', pede:'Nova triagem presencial com documentos', c:apresGeral()+"\n\nVerifiquei que a nomeação do seu caso consta como recusada pelo advogado. Por isso, será necessária uma nova triagem presencial.\n\nEndereço: "+END_SANT+"\nAtendimento: segunda a sexta-feira, das 9h às 12h\n\nDocumentos necessários:\n"+DOCS+FECHO},
+    {t:'Sem contato com o advogado — relato por escrito', pede:'Relato por escrito das tentativas de contato', c:apresGeral()+"\n\nVerifiquei que há nomeação válida no seu processo, e sinto muito pela dificuldade de contato. Para encaminhar o caso, preciso que me envie, por escrito, um relato com:\n— os meios que você usou para tentar contato;\n— as datas ou períodos das tentativas;\n— se houve alguma resposta, mesmo parcial;\n— se há audiência, prazo ou ato processual próximo."+FECHO},
+    {t:'Reclamação presencial — orientação', pede:'Reclamação escrita, nº do processo, senha, RG e CPF', c:apresGeral()+"\n\nA reclamação contra advogado só pode ser feita presencialmente. Não aceitamos por WhatsApp, e-mail, áudio ou outro meio eletrônico.\n\nAo comparecer, leve:\n— reclamação escrita de próprio punho, descrevendo os fatos;\n— número do processo;\n— senha do processo (se não tiver, ela é gerada no atendimento presencial);\n— RG e CPF;\n— demais documentos do caso.\n\nAtendimento: segunda a sexta-feira, das 9h às 12h\nEndereço: "+END_RECL+"\nTelefone: (11) 4154-5191"+FECHO}
+  ],
+  advs: [
+    {t:'Consulta de cadastro', pede:'Número da OAB', c:function(){return apres()+"\n\nPara consultar o seu cadastro, preciso do número da sua OAB. Pode me informar, por favor?"+FECHO;}},
+    {t:'Andamento de inscrição', pede:'CPF e nome completo', c:function(){return apres()+"\n\nPara verificar o andamento do seu pedido de inscrição, preciso do seu CPF e do seu nome completo. Pode me enviar, por favor?"+FECHO;}},
+    {t:'Inscrição na OAB SP — passo a passo', c:function(){return apres()+"\n\nSegue o passo a passo do pedido de inscrição:\n\n1. Acesse www2.oabsp.org.br e clique em \"Pedido de Inscrição Online\".\n2. Preencha a pré-inscrição com seus dados pessoais e do diploma.\n3. Gere e pague o boleto da taxa de inscrição.\n4. Agende o atendimento presencial em oabsp.org.br/servicos/agendamento-online.\n5. Compareça com os documentos originais e as cópias solicitados.\n6. Aguarde a análise e a aprovação pelo Conselho Seccional.\n\nA veracidade dos documentos é de responsabilidade do interessado."+FECHO;}},
+    {t:'Certificado digital — orientação', c:function(){return apres()+"\n\nSegue a orientação sobre o certificado digital:\n\n1. Acesse oabsp.org.br e vá em Serviços → Certificado Digital.\n2. Escolha a certificadora parceira (Certdata ou Certisign).\n3. A compra e o agendamento da validação são feitos somente no site da certificadora escolhida.\n4. A validação pode ser presencial, por videoconferência ou online (esta última apenas para renovação de certificado ainda válido).\n\nA Subseção não realiza o agendamento de certificado digital."+FECHO;}},
+    {t:'Retirada do token', pede:'Documento com foto e o número do pedido feito no site', c:function(){return apres()+"\n\nDepois da compra pelo site da certificadora, o token é retirado na Subseção, mediante identificação e o número do pedido.\n\nPara retirar, leve:\n— documento de identificação com foto;\n— o número do pedido gerado no site da certificadora."+FECHO;}},
+    {t:'Dúvida sobre anuidade — um momento', c:function(){return apres()+"\n\nRecebi a sua dúvida sobre a anuidade. Um momento, por favor: vou verificar essa informação e retorno em seguida."+FECHO;}}
+  ],
+  cobr: [
+    {t:'1ª cobrança — pedido de retorno', c:function(){return apres()+"\n\nInformo que o(a) assistido(a) "+CASO.ass()+", processo nº "+CASO.proc()+", relatou dificuldade para falar com o(a) senhor(a). Peço que entre em contato com ele(a) em breve."+FECHO+ASS;}},
+    {t:'2ª cobrança — sem resposta', c:function(){return apres()+"\n\nJá entramos em contato solicitando retorno ao(à) assistido(a) "+CASO.ass()+", processo nº "+CASO.proc()+", e ainda não identificamos resposta. Reitero a solicitação e aguardo seu posicionamento com a maior brevidade possível."+FECHO+ASS;}},
+    {t:'Urgente — audiência ou prazo próximo', c:function(){return apres()+"\n\nEntro em contato com caráter de urgência. O(a) assistido(a) "+CASO.ass()+", processo nº "+CASO.proc()+", tem "+CASO.tipo()+" marcado(a) para "+CASO.data()+" e ainda não conseguiu contato com o(a) senhor(a).\n\nPeço que retorne ao assistido com a máxima brevidade. Se houver algum impedimento, comunique-nos para que possamos ajudar."+ASS;}},
+    {t:'Notificação formal — última etapa', c:function(){return apres()+"\n\nPor meio desta comunicação formal, informo a situação do(a) assistido(a) "+CASO.ass()+", processo nº "+CASO.proc()+". Conforme os registros desta Subseção, o(a) assistido(a) relatou ausência de contato ou retorno, apesar de tentativas por diferentes meios.\n\nSolicito que adote as providências necessárias e entre em contato com o(a) assistido(a) no prazo de "+CASO.prazo()+", sob pena de encaminhamento do caso às instâncias competentes da OAB SP.\n\nEste comunicado será registrado no histórico do caso."+ASS;}}
+  ],
+  forum: [
+    {t:'Confirmação de nomeação ao juízo', c:function(){return "Prezada(o) Meritíssima(o),\n\nAqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba.\n\nEm atenção ao ofício recebido, informo que foi realizada a indicação de advogado(a) conveniado(a) para o processo nº "+CASO.proc()+", perante a "+CASO.vara()+".\n\nAdvogado(a): "+CASO.adv()+"\nInscrição OAB: "+CASO.oab()+"\nData da indicação: "+CASO.data()+"\n\nO ofício de indicação será encaminhado ao(à) advogado(a) pela Defensoria Pública, nos termos do Convênio DPESP/OAB-SP."+ASS;}},
+    {t:'Curador especial — nomeação ativa', c:function(){return "Prezada(o) Meritíssima(o),\n\nAqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba.\n\nEm atenção ao ofício recebido, após consulta ao sistema DOL, verifiquei que, no processo nº "+CASO.proc()+", já consta advogado(a) nomeado(a) como curador(a) especial:\n\nAdvogado(a): "+CASO.adv()+"\nInscrição OAB: "+CASO.oab()+"\nData da indicação: "+CASO.data()+"\n\nO sistema não permite nova indicação enquanto a nomeação estiver ativa. Assim, o(a) advogado(a) acima atuará como curador(a) especial de todos os requeridos que necessitem de curador neste processo."+ASS;}},
+    {t:'Curador especial — nomeação cancelada', c:function(){return "Prezada(o) Meritíssima(o),\n\nAqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba.\n\nEm atenção ao ofício recebido, informo que, no processo nº "+CASO.proc()+", a nomeação anterior de curador(a) especial foi cancelada e não há advogado(a) ativo(a) indicado(a).\n\nDiante disso, encaminhamos nova solicitação de indicação à Assessoria de Convênios da Defensoria Pública."+ASS;}},
+    {t:'Solicitar dados para verificar curador', c:function(){return "Prezada(o) Meritíssima(o),\n\nAqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba.\n\nEm atenção ao ofício recebido, para verificar a existência de curador(a) especial já nomeado(a), solicito:\n\n— número completo do processo;\n— nome completo e dados da parte a ser assistida;\n— cópia do despacho ou decisão que determinou a nomeação.\n\nApós o recebimento, realizaremos a consulta e daremos retorno."+ASS;}},
+    {t:'Dados para inventário ou alvará', c:function(){return "Prezada(o) Meritíssima(o),\n\nAqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba.\n\nEm atenção ao ofício recebido, para dar andamento à indicação no processo nº "+CASO.proc()+", nos casos de inventário ou alvará, precisamos de:\n\n— CPF do(a) falecido(a);\n— identificação completa dos herdeiros;\n— número completo do processo, comarca e vara.\n\nAssim que recebermos os dados, daremos seguimento ao encaminhamento."+ASS;}},
+    {t:'Avaliação financeira vencida — intimação', c:function(){return "Prezada(o) Meritíssima(o),\n\nAqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba.\n\nEm atenção ao ofício recebido, informo que a avaliação financeira do(a) assistido(a) "+CASO.ass()+", referente ao processo nº "+CASO.proc()+", está vencida (validade de 1 ano), o que impede a indicação neste momento.\n\nSolicito que o(a) assistido(a) seja intimado(a) a comparecer presencialmente a:\n"+END_SANT+"\nHorário: segunda a sexta-feira, das 9h às 12h (até 30 senhas por dia, sem agendamento)\n\nDocumentos necessários:\n"+DOCS+"\n\nApós a renovação, a indicação será providenciada."+ASS;}},
+    {t:'Envio de ofício de curador especial', c:function(){return "Prezada(o),\n\nAqui é a Cássia, da Assistência Judiciária da OAB SP, Subseção Santana de Parnaíba.\n\nEm atendimento à demanda de V. Sa., segue em anexo o Ofício de Indicação de Curador Especial referente ao processo nº "+CASO.proc()+", para as devidas providências."+ASS;}}
+  ]
 };
-function modeloEscolhido(){ const r=document.querySelector('input[name="em-modelo"]:checked'); return r ? r.value : 'docs'; }
-function textoEmail(){
-  const m=EM_MODELOS[modeloEscolhido()] || EM_MODELOS.docs;
-  const assunto = $('em-assunto').value.trim() || m.assunto;
-  return {para:$('em-para').value.trim(), assunto, corpo:m.corpo()+assinaturaEm(), modelo:modeloEscolhido()};
+
+var ABA = 'atend';
+var AG_KEY = 'cassia-agenda-simples';
+var agenda = [];
+try { agenda = JSON.parse(localStorage.getItem(AG_KEY) || '[]'); if(!Array.isArray(agenda)) agenda = []; } catch(e){ agenda = []; }
+
+function toast(m){ var t=document.getElementById('toast'); t.textContent=m; t.style.display='block'; clearTimeout(window._t); window._t=setTimeout(function(){t.style.display='none';},2200); }
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function copiarTexto(txt){
+  if(navigator.clipboard){ navigator.clipboard.writeText(txt).then(function(){toast('Copiado!');}).catch(function(){fallbackCopy(txt);}); }
+  else fallbackCopy(txt);
 }
-function renderEmail(){
-  const t=textoEmail();
-  $('em-para-view').textContent = t.para || '(digite o e-mail do destinatário)';
-  $('em-assunto-view').textContent = t.assunto;
-  $('em-corpo').textContent = t.corpo;
-}
-function escolherModelo(){ $('em-assunto').value=''; renderEmail(); }
-function copiarEmail(btn){
-  const t=textoEmail();
-  const cab = (t.para ? 'Para: '+t.para+'\n' : '') + 'Assunto: '+t.assunto+'\n\n';
-  copiar(cab + t.corpo, btn, ()=>logEnvio('copiada','em_'+t.modelo,'',{titulo:'E-mail: '+t.assunto,cat:'E-mail'}));
-}
-function abrirOutlook(){
-  const t=textoEmail();
-  if(t.para && !/^\S+@\S+\.\S+$/.test(t.para)){ toast('Confira o e-mail do destinatário.'); return; }
-  logEnvio('outlook','em_'+t.modelo,t.para,{titulo:'E-mail: '+t.assunto,cat:'E-mail'});
-  const to = t.para ? encodeURIComponent(t.para) : '';
-  window.location.href = 'mailto:'+to+'?subject='+encodeURIComponent(t.assunto)+'&body='+encodeURIComponent(t.corpo);
+function fallbackCopy(txt){
+  var ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); toast('Copiado!'); }catch(e){ toast('Não foi possível copiar.'); }
+  ta.remove();
 }
 
-/* ===================== ESTADO (com validação) ===================== */
-const ENV_KEY='cassia-enviados', ENVIOS_KEY='cassia-envios', FAV_KEY='cassia-fav', PASSOS_KEY='cassia-passos', AG_KEY='cassia-agenda', CFG_KEY='cassia-config';
-const DEFAULT_MODELOS = [
-  {nome:'Retorno ao advogado', titulo:'Retorno ao advogado', tipo:'Prazo', rec:'none', subs:['Verificar o caso no sistema','Enviar cobrança ou retorno']},
-  {nome:'Relatório mensal', titulo:'Relatório mensal da Subseção', tipo:'Calendário da Subseção', rec:'mensal', subs:['Levantar os dados do mês','Revisar e enviar']}
-];
-const BLOCOS = [
-  {k:'proc', n:'Procedimentos do DOL (Fórum)'},
-  {k:'adv',  n:'Advogados: inscrição, certificado digital e token'},
-  {k:'rec',  n:'Reclamação e nomeações'},
-  {k:'dpesp',n:'Convênio DPESP/OAB-SP e Assessoria'},
-  {k:'ends', n:'Endereços, horários e senhas'},
-  {k:'fer',  n:'Feriados e expediente'}
-];
-function configPadrao(){
-  return {salvarObs:true, tema:'claro', aba:'hoje', agFiltro:'todas', agOrdem:'data', agView:'lista', conf:{}, privOk:false, modelos:JSON.parse(JSON.stringify(DEFAULT_MODELOS))};
-}
-function carregarCfg(){
-  const c = Object.assign(configPadrao(), obj(load(CFG_KEY, {})));
-  c.conf = obj(c.conf);
-  c.modelos = arr(c.modelos).filter(m=>m && typeof m==='object' && m.titulo).map(m=>({nome:String(m.nome||m.titulo), titulo:String(m.titulo), tipo:String(m.tipo||'Outro'), rec:String(m.rec||'none'), subs:arr(m.subs).map(String)}));
-  if(!c.modelos.length) c.modelos = JSON.parse(JSON.stringify(DEFAULT_MODELOS));
-  return c;
-}
-let CFG = carregarCfg();
-function saveCfg(){ save(CFG_KEY, CFG); }
+function textoDe(m){ return typeof m.c==='function' ? m.c() : m.c; }
 
-function normAg(x){
-  x = obj(x);
-  const subs = arr(x.subs).map(s=> typeof s==='string' ? {t:s, ok:false} : {t:String(s.t||''), ok:!!s.ok}).filter(s=>s.t);
-  return {
-    id: x.id || novoId(),
-    data: /^\d{4}-\d{2}-\d{2}$/.test(x.data) ? x.data : hojeISO(),
-    hora: typeof x.hora==='string' ? x.hora : '',
-    tipo: typeof x.tipo==='string' ? x.tipo : 'Outro',
-    titulo: String(x.titulo||'(sem título)'),
-    obs: typeof x.obs==='string' ? x.obs : '',
-    rec: ['none','semanal','mensal'].includes(x.rec) ? x.rec : 'none',
-    subs, feito: !!x.feito
+function renderTudo(){
+  if(ABA==='agenda') return renderAgenda();
+  var lista = TABS[ABA] || [];
+  var html = '<div class="grid">';
+  lista.forEach(function(m, i){
+    var txt = textoDe(m);
+    html += '<div class="card"><h3>'+esc(m.t)+'</h3>';
+    if(m.pede) html += '<div class="pede">📌 Pedir: '+esc(m.pede)+'</div>';
+    html += '<pre>'+esc(txt)+'</pre>';
+    html += '<button class="btn" onclick="copiarMsg(\''+ABA+'\','+i+')">Copiar</button></div>';
+  });
+  html += '</div>';
+  document.getElementById('conteudo').innerHTML = html;
+  document.getElementById('caso').style.display = (ABA==='advs'||ABA==='cobr'||ABA==='forum') ? 'block' : 'none';
+  document.getElementById('agenda-area').style.display = 'none';
+}
+function copiarMsg(aba, i){ copiarTexto(textoDe(TABS[aba][i])); }
+
+function trocar(aba){
+  ABA = aba;
+  document.querySelectorAll('nav button').forEach(function(b){ b.classList.toggle('on', b.dataset.t===aba); });
+  if(aba==='agenda'){ renderAgenda(); }
+  else renderTudo();
+  window.scrollTo(0,0);
+}
+
+function salvar(){ try{ localStorage.setItem(AG_KEY, JSON.stringify(agenda)); }catch(e){} }
+
+function addAgenda(){
+  var d=document.getElementById('a-data').value, t=document.getElementById('a-titulo').value.trim();
+  if(!d||!t){ toast('Preencha a data e a demanda.'); return; }
+  agenda.push({id:Date.now(), data:d, hora:document.getElementById('a-hora').value, tipo:document.getElementById('a-tipo').value, titulo:t, obs:document.getElementById('a-obs').value.trim(), feito:false});
+  salvar();
+  document.getElementById('a-titulo').value=''; document.getElementById('a-obs').value='';
+  renderAgenda(); toast('Adicionada.');
+}
+function alternar(id){ var it=agenda.find(function(x){return x.id===id;}); if(it){ it.feito=!it.feito; salvar(); renderAgenda(); } }
+function remover(id){ if(!confirm('Remover esta demanda?')) return; agenda=agenda.filter(function(x){return x.id!==id;}); salvar(); renderAgenda(); }
+
+function renderAgenda(){
+  document.getElementById('conteudo').innerHTML = '';
+  document.getElementById('caso').style.display = 'none';
+  document.getElementById('agenda-area').style.display = 'block';
+  var h = new Date(); var hoje = h.getFullYear()+'-'+String(h.getMonth()+1).padStart(2,'0')+'-'+String(h.getDate()).padStart(2,'0');
+  var ord = agenda.slice().sort(function(a,b){ return (a.data+a.hora).localeCompare(b.data+b.hora); });
+  var html = '';
+  if(!ord.length) html = '<div class="vazio">Nenhuma demanda anotada.</div>';
+  ord.forEach(function(x){
+    var p=x.data.split('-'), dataF=p[2]+'/'+p[1]+'/'+p[0];
+    var cls = x.feito ? 'feito' : (x.data<hoje ? 'atras' : (x.data===hoje ? 'hoje' : ''));
+    var rot = x.feito ? '' : (x.data<hoje ? ' · ATRASADA' : (x.data===hoje ? ' · HOJE' : ''));
+    html += '<div class="item '+cls+'"><input type="checkbox" '+(x.feito?'checked':'')+' onchange="alternar('+x.id+')" style="width:auto;margin-top:4px">'
+      + '<div style="flex:1"><div class="t">'+esc(x.titulo)+'</div><div class="m">'+dataF+(x.hora?' · '+esc(x.hora):'')+' · '+esc(x.tipo)+rot+'</div>'
+      + (x.obs?'<div class="o">'+esc(x.obs)+'</div>':'')+'</div>'
+      + '<button class="btn perigo" onclick="remover('+x.id+')">Remover</button></div>';
+  });
+  document.getElementById('lista').innerHTML = html;
+}
+
+function exportar(){
+  var blob = new Blob([JSON.stringify({versao:1, agenda:agenda}, null, 2)], {type:'application/json'});
+  var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = 'backup-agenda-'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  toast('Backup gerado.');
+}
+function importar(ev){
+  var f = ev.target.files[0]; if(!f) return;
+  var r = new FileReader();
+  r.onload = function(){
+    try{
+      var d = JSON.parse(r.result);
+      if(!d || !Array.isArray(d.agenda)) throw new Error('formato');
+      if(!confirm('Substituir a agenda atual pela do backup?')) return;
+      agenda = d.agenda.filter(function(x){ return x && x.data && x.titulo; });
+      salvar(); renderAgenda(); toast('Backup importado.');
+    }catch(e){ toast('Arquivo inválido.'); }
+    ev.target.value='';
   };
-}
-let ENVIADOS = arr(load(ENV_KEY, [])).filter(x=>typeof x==='string');
-let ENVIOS = arr(load(ENVIOS_KEY, [])).filter(e=>e && typeof e==='object').map(e=>Object.assign({tipo:'enviada'},e));
-let FAV = arr(load(FAV_KEY, [])).filter(x=>typeof x==='string');
-let agenda = arr(load(AG_KEY, [])).map(normAg);
-
-const PAINEIS = ['atend','recl','advs','cobr','forum'];
-const ESTADO = {atend:{cat:'Todas',q:''}, recl:{cat:'Todas',q:''}, advs:{cat:'Todas',q:''}, cobr:{cat:'Todas',q:''}, forum:{cat:'Todas',q:''}};
-const ABAS_COM_CASO = ['advs','cobr','forum'];
-let ATUAL = 'hoje';
-let ALERTA_ON = true;
-let editId = null, SEL = new Set(), dragId = null;
-let CAL = {ano:new Date().getFullYear(), mes:new Date().getMonth()};
-const AG_FILTROS = [['todas','Todas'],['hoje','Hoje'],['semana','Próximos 7 dias'],['pend','Pendentes'],['atras','Atrasadas'],['feitas','Concluídas']];
-
-function refrescar(){
-  renderAll();
-  renderHoje();
-  renderAlerta();
-  const q=$('gq').value.trim();
-  if(q) buscaGlobal(q);
+  r.readAsText(f);
 }
 
-/* ===================== REGISTRO DE ENVIOS ===================== */
-function logEnvio(tipo, id, dest, meta){
-  const m = meta || (POR_ID[id] ? {titulo:POR_ID[id].titulo, cat:POR_ID[id].cat} : {titulo:String(id), cat:'Outros'});
-  const hoje=hojeISO();
-  if(tipo==='copiada' && ENVIOS.some(e=>e.tipo==='copiada' && e.id===id && e.data===hoje)) return;
-  const agora=new Date();
-  ENVIOS.unshift({tipo, id, titulo:m.titulo, cat:m.cat, dest:(dest||'').trim(), data:hoje, hora:pad(agora.getHours())+':'+pad(agora.getMinutes())});
-  if(ENVIOS.length>2000) ENVIOS.length=2000;
-  save(ENVIOS_KEY, ENVIOS);
-}
-function pendentesEnvio(){
-  const vistos=new Set(), out=[];
-  ENVIOS.forEach(e=>{
-    if(e.tipo==='copiada' && !ENVIADOS.includes(e.id) && POR_ID[e.id] && !vistos.has(e.id)){ vistos.add(e.id); out.push(e); }
-  });
-  return out.slice(0,10);
-}
-
-/* ===================== CARTÕES ===================== */
-function cardHtml(m, v, comOrigem){
-  const txt = m.build(v);
-  const falta = faltam(m.needs);
-  const env = ENVIADOS.includes(m.id);
-  const fav = FAV.includes(m.id);
-  const pede = m.pede ? `<div class="pede">📌 <b>Pedir:</b> ${esc(m.pede)}</div>` : '';
-  const origem = comOrigem ? `<div class="origem">Aba: ${NOME_ABA[m.tab]}</div>` : '';
-  return `<div class="card ${env?'enviado':''}" id="c-${m.id}">
-    <div class="card-hd">
-      <div class="card-title">${m.pin?'📌 ':''}${m.titulo}</div>
-      <div class="hd-dir">
-        <button class="star ${fav?'on':''}" title="${fav?'Remover dos favoritos':'Marcar como favorita'}" onclick="toggleFav('${m.id}')">★</button>
-        <span class="tag ${m.tc}">${m.cat}</span>
-      </div>
-    </div>
-    <div class="card-txt">
-      ${origem}${pede}
-      <div class="msg" id="t-${m.id}">${esc(txt)}</div>
-      <button class="mais" onclick="toggleMais('${m.id}',this)">Ver mensagem completa ▾</button>
-      ${falta.length ? `<div class="faltam">⚠️ Falta preencher: ${falta.join(', ')}</div>` : ''}
-    </div>
-    <div class="card-ft">
-      <button class="btn btn-copiar" onclick="copiarMsg('${m.id}',this)">Copiar</button>
-      <label class="chk"><input type="checkbox" ${env?'checked':''} onchange="marcarEnviado('${m.id}',this.checked,this)"> Enviada</label>
-    </div>
-  </div>`;
-}
-function renderPanel(tab){
-  const st=ESTADO[tab], v=V(), q=st.q.trim().toLowerCase();
-  const doTab = MSGS.filter(m=>m.tab===tab);
-  const cats = ['Todas', ...new Set(doTab.map(m=>m.cat))];
-  $('chips-'+tab).innerHTML = cats.map(c=>`<button class="chip ${c===st.cat?'on':''}" onclick="setCat('${tab}','${c}')">${c}</button>`).join('');
-  const lista = doTab
-    .filter(m => (st.cat==='Todas' || m.cat===st.cat) && (!q || (m.titulo+' '+(m.pede||'')+' '+m.build(v)).toLowerCase().includes(q)))
-    .sort((a,b)=> (FAV.includes(b.id)?1:0) - (FAV.includes(a.id)?1:0));
-  $('g-'+tab).innerHTML = lista.length ? lista.map(m=>cardHtml(m,v,false)).join('') : '<div class="vazio">Nenhuma mensagem encontrada. Tente outra palavra ou escolha "Todas".</div>';
-}
-function setCat(tab,c){ ESTADO[tab].cat=c; renderPanel(tab); }
-function setQ(tab,q){ ESTADO[tab].q=q; renderPanel(tab); }
-function renderAll(){ PAINEIS.forEach(renderPanel); }
-function toggleMais(id,btn){
-  const t=$('t-'+id); t.classList.toggle('aberto');
-  btn.textContent = t.classList.contains('aberto') ? 'Recolher ▴' : 'Ver mensagem completa ▾';
-}
-function copiarMsg(id,btn){ copiar(POR_ID[id].build(V()), btn, ()=>logEnvio('copiada',id)); }
-function toggleFav(id){
-  FAV = FAV.includes(id) ? FAV.filter(x=>x!==id) : [...FAV, id];
-  save(FAV_KEY, FAV);
-  refrescar();
-}
-function marcarEnviado(id, checked, el){
-  if(checked){
-    const sugestao = bruto('adv') || bruto('ass') || '';
-    const dest = prompt('Para quem foi enviada? (opcional — use só o nome, sem CPF ou processo)', sugestao);
-    if(dest===null){ if(el) el.checked=false; return; }
-    if(!ENVIADOS.includes(id)) ENVIADOS.push(id);
-    logEnvio('enviada', id, dest);
-  } else {
-    ENVIADOS = ENVIADOS.filter(x=>x!==id);
-  }
-  save(ENV_KEY, ENVIADOS);
-  refrescar();
-  if(ATUAL==='hist') renderHist();
-}
-function novoCaso(){
-  Object.values(CAMPOS).forEach(id=>{ const el=$(id); if(el) el.value=''; });
-  ENVIADOS = ENVIADOS.filter(id=>{ const m=POR_ID[id]; return !m || (m.tab!=='cobr' && m.tab!=='forum'); });
-  save(ENV_KEY, ENVIADOS);
-  validarCampos(); refrescar();
-  toast('Caso limpo.');
-}
-
-/* ===================== BUSCA GLOBAL ===================== */
-function mostrarPainel(name){
-  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active', b.dataset.tab===name));
-  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active', p.id==='p-'+name));
-}
-function buscaGlobal(termo){
-  const q=(termo||'').trim().toLowerCase();
-  if(!q){
-    $('gq-info').textContent='';
-    mostrarPainel(ATUAL);
-    $('caso').classList.toggle('show', ABAS_COM_CASO.includes(ATUAL));
-    return;
-  }
-  const v=V();
-  const res=MSGS.filter(m=>(m.titulo+' '+(m.pede||'')+' '+m.build(v)).toLowerCase().includes(q));
-  $('gq-info').textContent = res.length + ' resultado' + (res.length===1?'':'s');
-  $('g-busca').innerHTML = res.length ? res.map(m=>cardHtml(m,v,true)).join('') : '<div class="vazio">Nenhuma mensagem encontrada em nenhuma aba.</div>';
-  mostrarPainel('busca');
-  $('caso').classList.remove('show');
-}
-function limparBusca(){ $('gq').value=''; buscaGlobal(''); }
-
-/* ===================== HOJE ===================== */
-function urgencia(x){
-  if(x.feito) return null;
-  const h=hojeISO();
-  if(x.data<h) return {cls:'urg-atr', label:'Atrasada', b:'b-atras'};
-  if(x.data===h) return {cls:'urg-hoje', label:'Hoje', b:'b-hoje'};
-  const d=diffDias(h,x.data);
-  if(d<=3) return {cls:'urg-prox', label:'Vence em '+d+' dia'+(d>1?'s':''), b:'b-prox'};
-  return null;
-}
-function blocosPendentesConf(){
-  const h=hojeISO();
-  return BLOCOS.filter(b=>{ const d=CFG.conf[b.k]; return !d || diffDias(d,h)>180; });
-}
-function confirmarBloco(k){
-  CFG.conf[k]=hojeISO(); saveCfg();
-  toast('Conferência registrada para hoje.');
-  renderHoje(); renderAlerta();
-}
-function miniHoje(x){
-  const u=urgencia(x) || {cls:'', label:'', b:'b-prox'};
-  return `<div class="ag-item ${u.cls}">
-    <input type="checkbox" class="ag-check" onchange="alternarFeito(${x.id})" title="Concluir">
-    <div class="ag-corpo">
-      <div class="ag-titulo">${esc(x.titulo)}</div>
-      <div class="ag-meta"><span>${fmtData(x.data)}${x.hora?' · '+x.hora:''}</span><span class="badge ${u.b}">${u.label}</span></div>
-    </div>
-  </div>`;
-}
-function renderHoje(){
-  const h=hojeISO(), lim=addDias(h,3);
-  const pend=agenda.filter(x=>!x.feito);
-  const atr=pend.filter(x=>x.data<h), hj=pend.filter(x=>x.data===h);
-  const prox=pend.filter(x=>x.data>h && x.data<=lim).sort((a,b)=>a.data.localeCompare(b.data));
-  const env=pendentesEnvio();
-  const enviHoje=ENVIOS.filter(e=>e.tipo==='enviada' && e.data===h).length;
-
-  $('hoje-stats').innerHTML = `
-    <div class="stat ${atr.length?'alerta':''}"><b>${atr.length}</b>Atrasadas</div>
-    <div class="stat destaque"><b>${hj.length}</b>Para hoje</div>
-    <div class="stat"><b>${prox.length}</b>Vencem em 3 dias</div>
-    <div class="stat"><b>${pend.length}</b>Pendentes no total</div>
-    <div class="stat"><b>${agenda.filter(x=>x.feito).length}</b>Concluídas</div>
-    <div class="stat"><b>${enviHoje}</b>Enviadas hoje</div>
-    <div class="stat"><b>${env.length}</b>Aguardando envio</div>`;
-
-  const lista=[...atr,...hj].sort((a,b)=>(a.data+a.hora).localeCompare(b.data+b.hora));
-  $('hoje-agenda').innerHTML = lista.length ? lista.map(miniHoje).join('') : '<div class="vazio">Nenhuma demanda atrasada ou para hoje.</div>';
-  $('hoje-prox').innerHTML = prox.length ? prox.map(miniHoje).join('') : '<div class="muted" style="font-size:12.5px;margin-bottom:10px">Nada nos próximos 3 dias.</div>';
-
-  $('hoje-envio').innerHTML = env.length ? env.map(e=>`<div class="ag-item">
-    <div class="ag-corpo">
-      <div class="ag-titulo">${esc(e.titulo)}</div>
-      <div class="ag-meta"><span>Copiada em ${fmtData(e.data)} às ${e.hora}</span><span>· ${esc(e.cat)}</span></div>
-    </div>
-    <div class="ag-btns"><button class="btn btn-copiar" onclick="marcarEnviado('${e.id}',true,null)">Marcar enviada</button></div>
-  </div>`).join('') : '<div class="muted" style="font-size:12.5px;margin-bottom:10px">Nenhuma mensagem aguardando envio.</div>';
-
-  const fer = TODOS_FER.find(([iso])=>iso>=h);
-  $('hoje-fer').innerHTML = fer
-    ? `<div class="ag-item"><div class="ag-corpo"><div class="ag-titulo">${esc(fer[1])}</div><div class="ag-meta"><span>${fmtData(fer[0])}</span><span>· ${quando(fer[0]).replace(/<[^>]+>/g,'')}</span></div></div></div>`
-    : '<div class="muted">Nenhum feriado cadastrado.</div>';
-
-  $('hoje-conf').innerHTML = BLOCOS.map(b=>{
-    const d=CFG.conf[b.k]; let st, cls;
-    if(!d){ st='Nunca conferido'; cls='st-red'; }
-    else if(diffDias(d,h)>180){ st='Conferir: último em '+fmtData(d); cls='st-amber'; }
-    else { st='Conferido em '+fmtData(d); cls='st-green'; }
-    return `<div class="conf-row">
-      <div><b>${b.n}</b><div style="font-size:12px"><span class="${cls}">${st}</span></div></div>
-      <button class="btn btn-sec" onclick="confirmarBloco('${b.k}')">Conferido hoje</button>
-    </div>`;
-  }).join('');
-}
-
-/* ===================== HISTÓRICO ===================== */
-function fillCats(){
-  const cats=[...new Set([...MSGS.map(m=>m.cat),'E-mail'])].sort();
-  $('h-cat').innerHTML = '<option value="">Todos os assuntos</option>' + cats.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');
-}
-function limparFiltrosHist(){
-  ['h-de','h-ate','h-dest'].forEach(id=>$(id).value='');
-  $('h-cat').value=''; $('h-sit').value='todas';
-  renderHist();
-}
-function renderHist(){
-  const de=$('h-de').value, ate=$('h-ate').value, cat=$('h-cat').value, sit=$('h-sit').value, dst=$('h-dest').value.trim().toLowerCase();
-  const l=ENVIOS.filter(e=>(!de||e.data>=de) && (!ate||e.data<=ate) && (!cat||e.cat===cat) && (sit==='todas'||e.tipo===sit) && (!dst||(e.dest||'').toLowerCase().includes(dst)));
-  const cnt=t=>ENVIOS.filter(e=>e.tipo===t).length;
-  $('h-resumo').innerHTML = `
-    <div class="stat"><b>${cnt('enviada')}</b>Enviadas (confirmadas)</div>
-    <div class="stat"><b>${cnt('copiada')}</b>Copiadas</div>
-    <div class="stat"><b>${cnt('outlook')}</b>Abertas no Outlook</div>
-    <div class="stat"><b>${l.length}</b>Neste filtro</div>`;
-  const rotulo={enviada:['b-env','Enviada'], copiada:['b-cop','Copiada'], outlook:['b-out','Aberta no Outlook']};
-  $('lista-hist').innerHTML = l.length
-    ? l.slice(0,300).map(e=>{ const r=rotulo[e.tipo]||rotulo.copiada; return `<div class="ag-item"><div class="ag-corpo">
-        <div class="ag-titulo">${esc(e.titulo)}</div>
-        <div class="ag-meta"><span>${fmtData(e.data)} às ${e.hora}</span><span>· ${esc(e.cat)}</span>${e.dest?`<span>· Para: ${esc(e.dest)}</span>`:''}<span class="badge ${r[0]}">${r[1]}</span></div>
-      </div></div>`; }).join('') + (l.length>300 ? '<div class="muted">Mostrando os 300 mais recentes. Use os filtros ou exporte.</div>' : '')
-    : '<div class="vazio">Nenhum registro com estes filtros.</div>';
-}
-function limparHistorico(){
-  if(!ENVIOS.length){ toast('O histórico já está vazio.'); return; }
-  if(!confirm('Limpar todo o histórico de envios? As mensagens continuarão marcadas como enviadas.')) return;
-  ENVIOS=[]; save(ENVIOS_KEY, ENVIOS); renderHist(); renderHoje(); toast('Histórico limpo.');
-}
-function exportarHistorico(){
-  if(!ENVIOS.length){ toast('O histórico está vazio.'); return; }
-  const nomes={enviada:'ENVIADA', copiada:'COPIADA', outlook:'ABERTA NO OUTLOOK'};
-  const linhas=['HISTÓRICO DE ENVIOS — ASSISTÊNCIA JUDICIÁRIA SANTANA DE PARNAÍBA',''];
-  ENVIOS.forEach(e=>{
-    linhas.push(`${fmtData(e.data)} ${e.hora} [${nomes[e.tipo]||'COPIADA'}] ${e.titulo} (${e.cat})${e.dest?' — Para: '+e.dest:''}`);
-  });
-  baixarArquivo('historico-envios-'+hojeISO()+'.txt', linhas.join('\n'), 'text/plain;charset=utf-8');
-  toast('Arquivo gerado.');
-}
-
-/* ===================== PASSOS DO DOL ===================== */
-const PROC = [
-  {key:'dep', aberto:true, titulo:'Depoimento Especial (Lei 13.431/17)',
-   quando:'Quando indicar: vítima de violência, acolhida institucionalmente ou em internação; proteção de identidade de gênero com oposição dos responsáveis. Não exige avaliação financeira.',
-   tenha:['Ofício ou despacho do juiz','Número completo do processo','CPF, nome ou nº de identificação DPESP da vítima','Nº OAB do advogado da triagem (para validação)','Documentos da audiência, para anexar'],
-   passos:[
-    '<b>Cadastro:</b> pesquise por CPF, nome ou nº de identificação DPESP e clique na seta (›) à direita.',
-    '<b>Histórico DPESP → Inserir novo problema:</b> Área <b>Criminal — Criminal (Vara Singular)</b>; Problema <b>Depoimento Especial da Vítima</b>.',
-    '<b>Envolvidos (ícone de pessoas):</b> posição <b>Autor/a</b>; marque <b>Usuário</b> e <b>Representado pela Defensoria</b>; Salvar; Fechar janela.',
-    '<b>Encaminhamento:</b> marque <b>Convênio OAB</b>, informe e valide o nº OAB, preencha o responsável conveniado e Salvar.',
-    '<b>Encaminhamento DPESP-OAB:</b> nº do processo, instância/comarca/foro/vara, justificativa (ex.: vítima em acolhimento institucional), anexe despacho ou ofício e documentos da audiência. Salvar.',
-    '<b>Confirmação:</b> a mensagem "Solicitação encaminhada com sucesso" indica o envio. A análise é da Assessoria de Convênios, e o resultado chega por e-mail. Se deferido, o ofício é gerado automaticamente.'
-   ]},
-  {key:'inv', aberto:false, titulo:'Inventário / Arrolamento e Alvará de pessoa falecida (CAJ 017/2023)',
-   quando:'Atenção: o falecido deve ser incluído como envolvido, senão o sistema bloqueia a conclusão. Ele não aparece no ofício final, e isso é normal.',
-   tenha:['Dados do herdeiro principal (CPF, nome ou nº DPESP)','CPF do falecido','Número completo do processo','Comarca e vara','Avaliação financeira do herdeiro válida (1 ano)','Tipo: inventário/arrolamento ou alvará'],
-   passos:[
-    '<b>Cadastro:</b> localize o herdeiro principal (CPF, nome ou nº DPESP). Se não existir, clique em "Não encontrou? Cadastre aqui".',
-    '<b>Histórico DPESP → Inserir novo problema:</b> Área <b>Cível — Família e Sucessões</b>; Problema <b>Inventário/Arrolamento</b> (ou o tipo de alvará).',
-    '<b>Envolvidos — herdeiros:</b> posição <b>Autor/a</b>; marque <b>Usuário</b> e <b>Representado pela Defensoria</b>; Salvar. Cada herdeiro assistido entra separadamente.',
-    '<b>Envolvido falecido (obrigatório):</b> "Inserir novo envolvido", pesquise pelo <b>CPF do falecido</b>, clique em "Envolver" e escolha a posição <b>Falecido</b>. <b>Não</b> marque Usuário nem Representado pela Defensoria. Salvar.',
-    '<b>Verificação:</b> confirme os herdeiros (Autor/a, com avaliação financeira válida) e o falecido (Falecido). Fechar janela.',
-    '<b>Convênio OAB:</b> marque a opção e Salvar.',
-    '<b>Encaminhamento:</b> Tipo <b>Propositura</b>; nº do processo; instância/comarca/foro/vara. Clique em "Solicitar Indicação". O ofício é gerado automaticamente.',
-    '<b>Advogado já nomeado:</b> se aparecer "Já existe advogado indicado — Clique aqui", consulte os dados. Se nenhum nome ou data aparecer, a nomeação anterior foi cancelada e é possível indicar de novo.'
-   ]},
-  {key:'cur', aberto:false, titulo:'Curador Especial',
-   quando:'Regra: se já existe nomeação ativa no processo, o sistema não permite nova indicação. O advogado nomeado atua como curador de todos os requeridos. Nova indicação só quando a anterior estiver cancelada.',
-   tenha:['Número completo do processo informado no ofício','Acesso ao DOL','Resultado da consulta: sem nomeação, ativa ou cancelada','Se ativa: nome, OAB e data da nomeação'],
-   passos:[
-    'Anote o número completo do processo informado no ofício.',
-    'Consulte no DOL, na aba <b>Encaminhamento DPESP-OAB</b>.',
-    'Identifique o resultado: sem nomeação, nomeação ativa ou nomeação cancelada.',
-    '<b>Se ativa:</b> anote nome, OAB e data. Use a mensagem "Curador especial — nomeação ativa".',
-    '<b>Se cancelada:</b> use "Curador especial — nomeação cancelada" e encaminhe a nova indicação.',
-    '<b>Se faltar o nº do processo:</b> use "Solicitar dados para verificar curador".',
-    'Depois de gerado o ofício de indicação, envie com "Envio de ofício de curador especial".'
-   ]}
-];
-function renderProc(){
-  const st = obj(load(PASSOS_KEY, {}));
-  $('proc').innerHTML = PROC.map(p=>{
-    const marc = arr(st[p.key]);
-    const feitos = p.passos.filter((_,i)=>marc[i]).length;
-    return `<details id="det-${p.key}" ${p.aberto?'open':''}>
-      <summary>${p.titulo} <span class="prog">${feitos}/${p.passos.length}</span></summary>
-      <div class="det-body">
-        <div class="tenha"><b>Tenha em mãos:</b><ul>${p.tenha.map(t=>`<li>${t}</li>`).join('')}</ul></div>
-        <div class="sub-h">${p.quando}</div>
-        ${p.passos.map((t,i)=>`<label class="passo ${marc[i]?'ok':''}"><input type="checkbox" ${marc[i]?'checked':''} onchange="togglePasso('${p.key}',${i},this.checked,this)"><span>${t}</span></label>`).join('')}
-        <button class="btn btn-sec" onclick="reiniciarProc('${p.key}')">Reiniciar passos</button>
-      </div>
-    </details>`;
-  }).join('');
-}
-function togglePasso(k,i,v,el){
-  const st = obj(load(PASSOS_KEY, {}));
-  st[k] = arr(st[k]); st[k][i] = v; save(PASSOS_KEY, st);
-  el.closest('label').classList.toggle('ok', v);
-  const det=$('det-'+k);
-  det.querySelector('.prog').textContent = det.querySelectorAll('.passo input:checked').length+'/'+det.querySelectorAll('.passo').length;
-}
-function reiniciarProc(k){
-  const st = obj(load(PASSOS_KEY, {})); st[k]=[]; save(PASSOS_KEY, st);
-  const det=$('det-'+k);
-  det.querySelectorAll('.passo').forEach(l=>{ l.classList.remove('ok'); l.querySelector('input').checked=false; });
-  det.querySelector('.prog').textContent = '0/'+det.querySelectorAll('.passo').length;
-  toast('Passos reiniciados.');
-}
-
-/* ===================== FERIADOS 2027 ===================== */
-const FERIADOS = [
-  ['2027-01-01','Confraternização Universal','nacional'],
-  ['2027-02-08','Segunda-feira de Carnaval','ponto'],
-  ['2027-02-09','Terça-feira de Carnaval','ponto'],
-  ['2027-02-10','Quarta-feira de Cinzas','ponto'],
-  ['2027-03-26','Sexta-feira Santa','nacional'],
-  ['2027-04-21','Tiradentes','nacional'],
-  ['2027-05-01','Dia do Trabalho','nacional'],
-  ['2027-05-27','Corpus Christi','ponto'],
-  ['2027-07-09','Revolução Constitucionalista','estadual'],
-  ['2027-09-07','Independência do Brasil','nacional'],
-  ['2027-10-12','Nossa Senhora Aparecida','nacional'],
-  ['2027-11-02','Finados','nacional'],
-  ['2027-11-15','Proclamação da República','nacional'],
-  ['2027-11-20','Dia Nacional de Zumbi e da Consciência Negra','nacional'],
-  ['2027-12-25','Natal','nacional'],
-];
-const MUNICIPAIS = [];
-const TODOS_FER = [...FERIADOS, ...MUNICIPAIS].sort((a,b)=>a[0].localeCompare(b[0]));
-const FER_MAP = Object.fromEntries(TODOS_FER.map(([iso,nome,tipo])=>[iso,{nome,tipo}]));
-const TIPO_LBL = {nacional:'Nacional', estadual:'Estadual (SP)', ponto:'Ponto facultativo', municipal:'Municipal'};
-const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-let ferFiltro='todos';
-
-function quando(iso){
-  const d=diffDias(hojeISO(), iso);
-  if(d<0) return '<span class="muted">já passou</span>';
-  if(d===0) return '<b>hoje</b>';
-  return 'faltam '+d+' dia'+(d>1?'s':'');
-}
-function miniMes(mes){
-  const ini=new Date(2027,mes,1).getDay();
-  const dias=new Date(2027,mes+1,0).getDate();
-  const h=hojeISO();
-  let cells='';
-  for(let i=0;i<ini;i++) cells+='<span></span>';
-  for(let d=1; d<=dias; d++){
-    const iso=`2027-${pad(mes+1)}-${pad(d)}`;
-    const f=FER_MAP[iso];
-    const cls=[f?'hol '+f.tipo:'', iso===h?'hoje':''].join(' ').trim();
-    cells+=`<span class="${cls}" ${f?`title="${esc(f.nome)}" onclick="toastFer('${iso}')"`:''}>${d}</span>`;
-  }
-  return `<div class="mes"><div class="mes-t">${MESES[mes]}</div>
-    <div class="mes-g"><span class="dsem">D</span><span class="dsem">S</span><span class="dsem">T</span><span class="dsem">Q</span><span class="dsem">Q</span><span class="dsem">S</span><span class="dsem">S</span></div>
-    <div class="mes-g">${cells}</div></div>`;
-}
-function toastFer(iso){ toast(fmtData(iso)+' — '+FER_MAP[iso].nome); }
-function setFerFiltro(f){ ferFiltro=f; renderFeriados(); }
-function renderFeriados(){
-  const h=hojeISO();
-  const prox=TODOS_FER.find(([iso])=>iso>=h);
-  const cont={nacional:0,estadual:0,ponto:0,municipal:0};
-  TODOS_FER.forEach(([,,t])=>cont[t]++);
-  $('fer-stats').innerHTML = `
-    <div class="stat destaque"><span>Próximo feriado</span>
-      <b class="grande">${prox ? esc(prox[1]) : 'Nenhum'}</b>
-      ${prox ? fmtData(prox[0])+' · '+quando(prox[0]).replace(/<[^>]+>/g,'') : ''}</div>
-    <div class="stat"><b>${TODOS_FER.length}</b>Datas em 2027</div>
-    <div class="stat"><b>${cont.nacional}</b>Nacionais</div>
-    <div class="stat"><b>${cont.estadual}</b>Estaduais (SP)</div>
-    <div class="stat"><b>${cont.ponto}</b>Pontos facultativos</div>
-    <div class="stat"><b>${cont.municipal}</b>Municipais${cont.municipal?'':' <span class="muted">(a cadastrar)</span>'}</div>`;
-
-  $('chips-fer').innerHTML = [['todos','Todos'],['nacional','Nacionais'],['estadual','Estaduais'],['ponto','Pontos facultativos'],['municipal','Municipais']]
-    .map(([k,l])=>`<button class="chip ${ferFiltro===k?'on':''}" onclick="setFerFiltro('${k}')">${l}</button>`).join('');
-
-  $('meses').innerHTML=[...Array(12)].map((_,i)=>miniMes(i)).join('');
-
-  const lista=TODOS_FER.filter(([,,t])=> ferFiltro==='todos' || t===ferFiltro);
-  let linhas = lista.map(([iso,nome,tipo])=>{
-    const passou=diffDias(h,iso)<0;
-    return `<tr class="${passou?'passado':''}">
-      <td><b>${fmtData(iso)}</b></td>
-      <td style="text-transform:capitalize">${diaSemana(iso)}</td>
-      <td>${esc(nome)}</td>
-      <td><span class="tipo ${tipo}">${TIPO_LBL[tipo]}</span></td>
-      <td>${quando(iso)}</td>
-      <td><button class="btn btn-sec" onclick="agendarFeriado('${iso}')">Agendar</button></td>
-    </tr>`;
-  }).join('');
-  if(!lista.length && ferFiltro==='municipal'){
-    linhas = '<tr><td colspan="6" class="muted">Feriados municipais de Santana de Parnaíba e Pirapora do Bom Jesus ainda não cadastrados. Envie o calendário oficial das prefeituras para incluir.</td></tr>';
-  } else if(!lista.length){
-    linhas = '<tr><td colspan="6" class="muted">Nenhum feriado neste filtro.</td></tr>';
-  }
-  $('tb-fer').innerHTML = linhas;
-}
-function agendarFeriado(iso){
-  switchTab('agenda');
-  $('a-data').value=iso;
-  $('a-tipo').value='Outro';
-  $('a-titulo').value='Sem expediente — '+FER_MAP[iso].nome;
-  avisoDia();
-}
-
-/* ===================== AGENDA ===================== */
-function setAgFiltro(f){ CFG.agFiltro=f; saveCfg(); renderAgenda(); }
-function setAgOrdem(v){ CFG.agOrdem=v; saveCfg(); renderAgenda(); }
-function setAgView(v){ CFG.agView=v; saveCfg(); renderAgenda(); }
-function passaFiltro(it){
-  const h=hojeISO(), fim=addDias(h,7);
-  switch(CFG.agFiltro){
-    case 'hoje': return it.data===h;
-    case 'semana': return !it.feito && it.data>=h && it.data<=fim;
-    case 'pend': return !it.feito;
-    case 'atras': return !it.feito && it.data<h;
-    case 'feitas': return it.feito;
-    default: return true;
-  }
-}
-function listaFiltrada(){
-  const q=$('q-ag').value.trim().toLowerCase();
-  const l=agenda.filter(x=>passaFiltro(x) && (!q || (x.titulo+' '+x.obs+' '+x.tipo+' '+x.subs.map(s=>s.t).join(' ')).toLowerCase().includes(q)));
-  const ord=CFG.agOrdem;
-  l.sort((a,b)=> ord==='titulo' ? a.titulo.localeCompare(b.titulo)
-              : ord==='tipo' ? (a.tipo.localeCompare(b.tipo) || a.data.localeCompare(b.data))
-              : (a.data+a.hora).localeCompare(b.data+b.hora));
-  return l;
-}
-function setSalvarObs(v){ CFG.salvarObs=v; saveCfg(); toast(v ? 'Observações serão salvas.' : 'Observações não serão salvas.'); }
-function avisoDia(){
-  const d=$('a-data').value, el=$('a-aviso');
-  if(!d){ el.innerHTML=''; return; }
-  const [y,m,dd]=d.split('-').map(Number);
-  const dow=new Date(y,m-1,dd).getDay();
-  const f=FER_MAP[d];
-  if(f) el.innerHTML=`<span class="aviso-mini">⚠️ Feriado: ${esc(f.nome)}. Sem expediente.</span>`;
-  else if(dow===0||dow===6) el.innerHTML=`<span class="aviso-mini">⚠️ Fim de semana. Sem expediente forense.</span>`;
-  else el.innerHTML='';
-}
-function limparForm(){
-  ['a-data','a-hora','a-titulo','a-obs','a-sub'].forEach(id=>$(id).value='');
-  $('a-tipo').selectedIndex=0;
-  $('a-rec').value='none';
-  editId=null;
-  $('a-salvar').textContent='+ Adicionar';
-  $('a-cancel').style.display='none';
-  avisoDia();
-}
-function salvarAgenda(){
-  const data=$('a-data').value, titulo=$('a-titulo').value.trim();
-  if(!data || !titulo){ toast('Preencha a data e a demanda.'); return; }
-  const obs=$('a-obs').value.trim();
-  const subsTxt=$('a-sub').value.split('\n').map(s=>s.trim()).filter(Boolean);
-  if(possivelDadoSensivel([titulo,obs,...subsTxt].join(' ')) && !confirm('Parece haver CPF ou número de processo neste texto. Recomendamos não guardar esses dados na agenda. Salvar mesmo assim?')) return;
-  const campos={data, hora:$('a-hora').value, tipo:$('a-tipo').value, titulo, obs:CFG.salvarObs?obs:'', rec:$('a-rec').value, subs:subsTxt.map(t=>({t,ok:false}))};
-  if(editId!==null){
-    const it=agenda.find(x=>x.id===editId);
-    if(it){
-      const antigos=it.subs;
-      Object.assign(it, campos);
-      it.subs = campos.subs.map(s=>{ const a=antigos.find(o=>o.t===s.t); return {t:s.t, ok:a?a.ok:false}; });
-    }
-    toast('Demanda atualizada.');
-  } else {
-    agenda.push(Object.assign({id:novoId(), feito:false}, campos));
-    toast('Adicionada à agenda.');
-  }
-  save(AG_KEY, agenda);
-  limparForm();
-  atualizarTudoAg();
-}
-function editarAgenda(id){
-  const it=agenda.find(x=>x.id===id); if(!it) return;
-  $('a-data').value=it.data; $('a-hora').value=it.hora||'';
-  $('a-tipo').value=it.tipo; $('a-titulo').value=it.titulo; $('a-obs').value=it.obs||'';
-  $('a-rec').value=it.rec||'none';
-  $('a-sub').value=it.subs.map(s=>s.t).join('\n');
-  editId=id;
-  $('a-salvar').textContent='Salvar alterações';
-  $('a-cancel').style.display='inline-flex';
-  avisoDia();
-  $('ag-form').scrollIntoView({behavior:'smooth', block:'center'});
-}
-function duplicar(id){
-  const it=agenda.find(x=>x.id===id); if(!it) return;
-  agenda.push(Object.assign({}, it, {id:novoId(), feito:false, subs:it.subs.map(s=>({t:s.t, ok:false}))}));
-  save(AG_KEY, agenda);
-  atualizarTudoAg();
-  toast('Demanda duplicada.');
-}
-function setFeito(it, val){
-  it.feito = val;
-  if(val && it.rec && it.rec!=='none'){
-    const h=hojeISO();
-    let d=it.data;
-    do{ d = it.rec==='semanal' ? addDias(d,7) : addMes(d,1); } while(d<=h);
-    agenda.push(Object.assign({}, it, {id:novoId(), feito:false, data:d, subs:it.subs.map(s=>({t:s.t, ok:false}))}));
-    toast('Próxima ocorrência criada para '+fmtData(d)+'.');
-  }
-}
-function alternarFeito(id){
-  const it=agenda.find(x=>x.id===id);
-  if(it){ setFeito(it, !it.feito); save(AG_KEY, agenda); atualizarTudoAg(); }
-}
-function toggleSub(id,i){
-  const it=agenda.find(x=>x.id===id);
-  if(it && it.subs[i]){ it.subs[i].ok=!it.subs[i].ok; save(AG_KEY, agenda); atualizarTudoAg(); }
-}
-function removerAgenda(id){
-  if(!confirm('Remover esta demanda da agenda?')) return;
-  agenda=agenda.filter(x=>x.id!==id);
-  SEL.delete(id);
-  if(editId===id) limparForm();
-  save(AG_KEY, agenda); atualizarTudoAg(); toast('Removida.');
-}
-function limparConcluidas(){
-  const n=agenda.filter(x=>x.feito).length;
-  if(!n){ toast('Não há demandas concluídas.'); return; }
-  if(!confirm(`Remover ${n} demanda(s) concluída(s)?`)) return;
-  agenda=agenda.filter(x=>!x.feito);
-  save(AG_KEY, agenda); atualizarTudoAg(); toast('Concluídas removidas.');
-}
-
-/* ===================== MODELOS ===================== */
-function renderModelos(){
-  $('a-modelo').innerHTML = '<option value="">— modelos salvos —</option>' + CFG.modelos.map((m,i)=>`<option value="${i}">${esc(m.nome)}</option>`).join('');
-}
-function aplicarModelo(){
-  const i=$('a-modelo').value;
-  if(i===''){ toast('Escolha um modelo.'); return; }
-  const m=CFG.modelos[Number(i)];
-  $('a-titulo').value=m.titulo; $('a-tipo').value=m.tipo; $('a-rec').value=m.rec;
-  $('a-sub').value=m.subs.join('\n');
-  toast('Modelo aplicado. Escolha a data e salve.');
-}
-function salvarModelo(){
-  const t=$('a-titulo').value.trim();
-  if(!t){ toast('Escreva a demanda antes de salvar como modelo.'); return; }
-  const nome=prompt('Nome do modelo:', t);
-  if(!nome) return;
-  CFG.modelos.push({nome:nome.trim(), titulo:t, tipo:$('a-tipo').value, rec:$('a-rec').value, subs:$('a-sub').value.split('\n').map(s=>s.trim()).filter(Boolean)});
-  saveCfg(); renderModelos(); toast('Modelo salvo.');
-}
-function excluirModelo(){
-  const i=$('a-modelo').value;
-  if(i===''){ toast('Escolha um modelo.'); return; }
-  if(!confirm('Excluir este modelo?')) return;
-  CFG.modelos.splice(Number(i),1); saveCfg(); renderModelos(); toast('Modelo excluído.');
-}
-
-/* ===================== SELEÇÃO EM LOTE ===================== */
-function toggleSel(id,v){ if(v) SEL.add(id); else SEL.delete(id); renderBulk(); }
-function renderBulk(){
-  const b=$('bulk');
-  if(!SEL.size){ b.style.display='none'; b.innerHTML=''; return; }
-  b.style.display='flex';
-  b.innerHTML = `<b>${SEL.size} selecionada(s)</b>
-    <button class="btn btn-sec" onclick="bulkConcluir()">✔ Concluir</button>
-    <button class="btn btn-sec" onclick="bulkAmanha()">Mover para amanhã</button>
-    <button class="btn btn-perigo" onclick="bulkRemover()">Remover</button>
-    <button class="btn btn-sec" onclick="SEL.clear();atualizarTudoAg()">Limpar seleção</button>`;
-}
-function bulkConcluir(){
-  agenda.filter(x=>SEL.has(x.id) && !x.feito).forEach(it=>setFeito(it,true));
-  SEL.clear(); save(AG_KEY, agenda); atualizarTudoAg(); toast('Demandas concluídas.');
-}
-function bulkAmanha(){
-  const am=addDias(hojeISO(),1);
-  agenda.forEach(x=>{ if(SEL.has(x.id)) x.data=am; });
-  SEL.clear(); save(AG_KEY, agenda); atualizarTudoAg(); toast('Movidas para '+fmtData(am)+'.');
-}
-function bulkRemover(){
-  if(!confirm(`Remover ${SEL.size} demanda(s)?`)) return;
-  agenda=agenda.filter(x=>!SEL.has(x.id));
-  SEL.clear(); save(AG_KEY, agenda); atualizarTudoAg(); toast('Removidas.');
-}
-
-/* ===================== AGENDA: RENDER ===================== */
-function itemHtml(x){
-  const u=urgencia(x);
-  const done=x.subs.filter(s=>s.ok).length;
-  const meta=[x.hora, x.tipo, fmtData(x.data)].filter(Boolean).map(t=>`<span>${esc(t)}</span>`).join(' · ');
-  const badges=(u?`<span class="badge ${u.b}">${u.label}</span>`:'')
-    + (x.rec && x.rec!=='none' ? `<span class="badge b-rec">${x.rec==='semanal'?'Semanal':'Mensal'}</span>` : '');
-  const subs = x.subs.length
-    ? `<div class="subs">${x.subs.map((s,i)=>`<label class="sub ${s.ok?'ok':''}"><input type="checkbox" ${s.ok?'checked':''} onchange="toggleSub(${x.id},${i})"> ${esc(s.t)}</label>`).join('')}</div><div class="subprog">${done}/${x.subs.length} etapas</div>`
-    : '';
-  return `<div class="ag-item ${u?u.cls:''} ${x.feito?'feito':''}">
-    <div class="ag-sel"><input type="checkbox" class="sel-ck" ${SEL.has(x.id)?'checked':''} onchange="toggleSel(${x.id},this.checked)" title="Selecionar"></div>
-    <input type="checkbox" class="ag-check" ${x.feito?'checked':''} onchange="alternarFeito(${x.id})" title="Concluir">
-    <div class="ag-corpo">
-      <div class="ag-titulo">${esc(x.titulo)}</div>
-      <div class="ag-meta">${meta}${badges}</div>
-      ${subs}
-      ${x.obs?`<div class="ag-obs">${esc(x.obs)}</div>`:''}
-    </div>
-    <div class="ag-btns">
-      <button class="btn btn-sec" onclick="editarAgenda(${x.id})">Editar</button>
-      <button class="btn btn-sec" onclick="duplicar(${x.id})">Duplicar</button>
-      <button class="btn btn-perigo" onclick="removerAgenda(${x.id})">Remover</button>
-    </div>
-  </div>`;
-}
-function renderLista(lista){
-  if(!lista.length){ $('lista-agenda').innerHTML='<div class="vazio">Nenhuma demanda com este filtro.</div>'; return; }
-  cons
+document.querySelectorAll('nav button').forEach(function(b){
+  b.addEventListener('click', function(){ trocar(b.dataset.t); });
+});
+trocar('atend');
+</script>
+</body>
+</html>
